@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/restaurantPage.dart';
 import './signin.dart';
 
 void main() {
@@ -15,6 +16,7 @@ class App extends StatelessWidget {
         '/': (context) => const MyHomePage(
               title: 'good',
             ),
+        '/restaurants': (context) => const RestaurantsPage()
       },
     );
   }

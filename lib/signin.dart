@@ -18,28 +18,30 @@ class SigninPage extends StatelessWidget {
           child: Center(
             child: Container(
               margin: const EdgeInsets.all(50.0),
-              child: const FormExample(),
+              child: const SigninForm(),
             ),
           )),
     );
   }
 }
 
-class FormExample extends StatefulWidget {
-  const FormExample({super.key});
+class SigninForm extends StatefulWidget {
+  const SigninForm({super.key});
 
   @override
-  State<FormExample> createState() => _FormExampleState();
+  State<SigninForm> createState() => _SigninFormState();
 }
 
-class _FormExampleState extends State<FormExample> {
+class _SigninFormState extends State<SigninForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
-  void signin() async {
-    final session = await signinApi(email.text, password.text);
-    setState(() {
-      setToken(session.token);
+  void signin(BuildContext context) {
+    signinApi(email.text, password.text).then((session) {
+      Navigator.pop(context);
+      setState(() {
+        setToken(session.token);
+      });
     });
   }
 
@@ -79,10 +81,7 @@ class _FormExampleState extends State<FormExample> {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
               onPressed: () {
-                signin();
-                if (_formKey.currentState!.validate()) {
-                  signin();
-                }
+                signin(context);
               },
               child: const Text('登入'),
             ),
