@@ -4,7 +4,10 @@ import "../model/Session.dart";
 import "config.dart";
 
 Future<Session> signinApi(String email, String password) async {
-  final response = await http.post(Uri.parse("$baseUrl/account/session"));
+  var body = jsonEncode({'email': email, 'password': password});
+
+  final response =
+      await http.post(Uri.parse("$baseUrl/account/session"), body: body);
 
   if (response.statusCode == 201) {
     // If the server did return a 200 OK response,

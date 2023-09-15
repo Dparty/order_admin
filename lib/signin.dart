@@ -1,5 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import "api/account.dart";
+import "api/config.dart";
 
 class SigninPage extends StatelessWidget {
   const SigninPage({super.key});
@@ -7,7 +8,7 @@ class SigninPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('登入')),
+      appBar: AppBar(title: const Text('登入管理者帳號')),
       // Inherit MaterialApp text theme and override font size and font weight.
       body: DefaultTextStyle.merge(
           style: const TextStyle(
@@ -33,13 +34,12 @@ class FormExample extends StatefulWidget {
 
 class _FormExampleState extends State<FormExample> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final account = TextEditingController();
+  final email = TextEditingController();
   final password = TextEditingController();
-  String good = "init";
-  void signin() {
+  void signin() async {
+    final session = await signinApi(email.text, password.text);
     setState(() {
-      good = account.text;
-      // Navigator.pop(context);
+      setToken(session.token);
     });
   }
 
@@ -50,9 +50,8 @@ class _FormExampleState extends State<FormExample> {
         key: _formKey,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(good),
           TextFormField(
-            controller: account,
+            controller: email,
             decoration: const InputDecoration(
               hintText: '帳號',
             ),
@@ -85,7 +84,7 @@ class _FormExampleState extends State<FormExample> {
                   signin();
                 }
               },
-              child: const Text('Submit'),
+              child: const Text('登入'),
             ),
           ),
         ],

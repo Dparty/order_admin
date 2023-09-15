@@ -10,6 +10,7 @@ class Session {
   });
 
   factory Session.fromJson(Map<String, dynamic> json) {
-    return Session(account: json["account"], token: json["token"]);
+    return Session(
+        account: Account.fromJson(json["account"]), token: json["token"]);
   }
 }
