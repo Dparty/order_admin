@@ -6,13 +6,18 @@ void main() {
   runApp(const App());
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
+  @override
+  State<StatefulWidget> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/signin': (context) => const SigninPage(),
+        // '/signin': (context) => const SigninPage(),
         '/': (context) => const MyHomePage(
               title: 'good',
             ),
@@ -34,7 +39,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-      Navigator.pushNamed(context, '/signin');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SigninPage()),
+      );
       _counter++;
     });
   }
