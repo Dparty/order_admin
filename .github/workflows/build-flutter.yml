@@ -22,11 +22,13 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           source: "build/web"
-          target: /var/www/admin-uat.sum-foods.com/
+          target: /home/ubuntu/
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          script: mv /var/www/admin-uat.sum-foods.com/build/web/* /var/www/admin-uat.sum-foods.com
+          script: |
+            rm -rf /var/www/admin-uat.sum-foods.com/*
+            mv /home/ubuntu/build/web/* /var/www/admin-uat.sum-foods.com/
