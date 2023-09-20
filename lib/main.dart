@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:order_admin/restaurantPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,6 +55,13 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          WidgetsFlutterBinding.ensureInitialized();
+          await availableCameras();
+        },
+        child: const Icon(Icons.navigation),
       ),
       body: Center(
         child: Column(
