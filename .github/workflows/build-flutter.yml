@@ -15,11 +15,19 @@ jobs:
           flutter-version: "3.13.4"
           channel: "stable"
       - run: flutter build web
-      - name: copy file via ssh password
-        uses: appleboy/scp-action@v0.1.4
+      - name: Copy single file to remote
+        uses: garygrossgarten/github-action-scp@release
         with:
+          local: build/web/*
+          remote: /var/www/admin-uat.sum-foods.com/
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          source: "build/web/*"
-          target: /var/www/admin-uat.sum-foods.com/
+      # - name: copy file via ssh password
+      #   uses: appleboy/scp-action@v0.1.4
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     password: ${{ secrets.PASSWORD }}
+      #     source: "build/web/*"
+      #     target: /var/www/admin-uat.sum-foods.com/
