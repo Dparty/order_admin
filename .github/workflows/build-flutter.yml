@@ -14,7 +14,6 @@ jobs:
         with:
           flutter-version: "3.13.4"
           channel: "stable"
-      - run: flutter --version
       - run: flutter build web
       - run: ls build/web
       - name: copy file via ssh password
@@ -23,5 +22,5 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          source: "build/web"
+          source: "build/web/"
           target: /var/www/admin-uat.sum-foods.com
