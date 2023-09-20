@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/restaurantPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './signin.dart';
 
 void main() {
@@ -9,42 +10,42 @@ void main() {
 class App extends StatefulWidget {
   const App({super.key});
   @override
-  State<StatefulWidget> createState() => _AppState();
+  State<App> createState() => _AppState();
 }
 
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        // '/signin': (context) => const SigninPage(),
-        '/': (context) => const MyHomePage(
-              title: 'good',
-            ),
-        '/restaurants': (context) => const RestaurantsPage()
-      },
+    return const MaterialApp(
+      home: HomePage(title: "good"),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key, required this.title});
   final String title;
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<HomePage> {
+  String token = "Nikin";
 
-  void _incrementCounter() {
-    setState(() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SigninPage()),
-      );
-      _counter++;
-    });
+  void toSigninPage() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return const SigninPage();
+    }));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<String?> loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
   }
 
   @override
@@ -58,20 +59,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
+            Text(token),
             Text(
-              '$_counter',
+              '_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

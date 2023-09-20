@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "package:shared_preferences/shared_preferences.dart";
 import "api/account.dart";
 import "api/config.dart";
 
@@ -36,11 +37,12 @@ class _SigninFormState extends State<SigninForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
-  void signin(BuildContext context) {
+  void signin(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
     signinApi(email.text, password.text).then((session) {
-      Navigator.pop(context);
-      setState(() {
-        setToken(session.token);
+      prefs.setString('token', session.token).then((_) {
+        Navigator.pop(context);
       });
     });
   }
