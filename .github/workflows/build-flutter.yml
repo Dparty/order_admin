@@ -15,12 +15,11 @@ jobs:
           flutter-version: "3.13.4"
           channel: "stable"
       - run: flutter build web
-      - run: ls build/web
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          source: "build/web/"
-          target: /var/www/admin-uat.sum-foods.com
+          source: "./build/web"
+          target: /var/www/admin-uat.sum-foods.com/
