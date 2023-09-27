@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/createRestaurantPage.dart';
 import 'package:order_admin/main.dart';
 import 'package:order_admin/model/model.dart';
 import 'package:order_admin/model/restaurant.dart';
@@ -31,6 +32,13 @@ class _RestaurantState extends State<RestaurantsPage> {
     });
   }
 
+  createRestaurant() async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return const CreateRestaurantPage();
+    }));
+    loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +57,8 @@ class _RestaurantState extends State<RestaurantsPage> {
               icon: const Icon(Icons.logout))
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: createRestaurant, child: const Icon(Icons.add)),
       // Inherit MaterialApp text theme and override font size and font weight.
       body: DefaultTextStyle.merge(
           style: const TextStyle(
@@ -59,7 +69,10 @@ class _RestaurantState extends State<RestaurantsPage> {
               child: ListView.builder(
                   itemCount: restaurantList.data.length,
                   itemBuilder: (context, int index) {
-                    return Text(restaurantList.data[index].name);
+                    return Text(
+                      restaurantList.data[index].name,
+                      key: Key(restaurantList.data[index].id),
+                    );
                   }))),
     );
   }
