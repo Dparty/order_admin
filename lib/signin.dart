@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import "package:order_admin/restaurantPage.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "api/account.dart";
-import "api/config.dart";
 
 class SigninPage extends StatelessWidget {
   const SigninPage({super.key});
@@ -9,8 +9,7 @@ class SigninPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('登入管理者帳號')),
-      // Inherit MaterialApp text theme and override font size and font weight.
+      appBar: AppBar(title: const Text('登入管理員帳號')),
       body: DefaultTextStyle.merge(
           style: const TextStyle(
             fontSize: 24,
@@ -42,7 +41,8 @@ class _SigninFormState extends State<SigninForm> {
 
     signinApi(email.text, password.text).then((session) {
       prefs.setString('token', session.token).then((_) {
-        Navigator.pop(context);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const RestaurantsPage()));
       });
     });
   }
