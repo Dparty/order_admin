@@ -88,3 +88,40 @@ class ItemList {
         pagination: Pagination.fromJson(json['pagination']));
   }
 }
+
+class PrinterList {
+  final List<Printer> data;
+  final Pagination pagination;
+
+  PrinterList({required this.data, required this.pagination});
+  factory PrinterList.fromJson(Map<String, dynamic> json) {
+    Iterable printers = json['data'];
+    return PrinterList(
+        pagination: Pagination.fromJson(json['pagination']),
+        data: List<Printer>.from(
+            printers.map((printer) => Printer.fromJson(printer))));
+  }
+}
+
+class Printer {
+  final String id;
+  final String name;
+  final String sn;
+  final String description;
+  final String type;
+
+  Printer(
+      {required this.id,
+      required this.sn,
+      required this.name,
+      required this.description,
+      required this.type});
+  factory Printer.fromJson(Map<String, dynamic> json) {
+    return Printer(
+        sn: json['sn'],
+        id: json['id'],
+        name: json['name'],
+        description: json['description'],
+        type: json['type']);
+  }
+}

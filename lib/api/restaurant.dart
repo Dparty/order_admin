@@ -53,3 +53,31 @@ Future<ItemList> listItem(String restaurantId) async {
     throw Exception('Failed to create restaurant');
   }
 }
+
+Future<PrinterList> listPrinters(String restaurantId) async {
+  final token = await getToken();
+  final response = await http.get(
+      Uri.parse("$baseUrl/restaurants/$restaurantId/printers"),
+      headers: {'Authorization': "bearer $token"});
+  if (response.statusCode == 200) {
+    return PrinterList.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to create restaurant');
+  }
+}
+
+Future<Printer> createPrinter(
+    String restaurant, String name, String sn, String type) async {
+  var body =
+      jsonEncode({'name': name, 'sn': sn, 'type': type, 'description': ''});
+  final token = await getToken();
+  final response = await http.post(
+      Uri.parse("$baseUrl/restaurants/$restaurant/printers"),
+      body: body,
+      headers: {'Authorization': "bearer $token"});
+  if (response.statusCode == 201) {
+    return Printer.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to create restaurant');
+  }
+}

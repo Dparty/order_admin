@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/createItemPage.dart';
+import 'package:order_admin/createPrinterPage.dart';
 import 'package:order_admin/models/restaurant.dart';
 import 'api/restaurant.dart';
 
@@ -18,6 +19,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
   final String restaurantId;
   Restaurant restaurant = const Restaurant(id: '', name: '', description: '');
   List<Item> items = [];
+  List<Printer> printers = [];
   int _selectedIndex = 0;
 
   _RestaurantSettingsPageState({required this.restaurantId});
@@ -33,6 +35,9 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
         items = list.data;
       });
     });
+    listPrinters(restaurantId).then((list) => setState(() {
+          printers = list.data;
+        }));
   }
 
   @override
@@ -47,7 +52,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
     });
   }
 
-  void add(BuildContext context) {
+  void add(BuildContext context) async {
     switch (_selectedIndex) {
       case 0:
         Navigator.push(
@@ -55,9 +60,23 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
             MaterialPageRoute(
               builder: (context) => const CreateItemPage(),
             ));
+        break;
       case 1:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CreateItemPage(),
+            ));
+        break;
       case 2:
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreatePrinterPage(restaurantId),
+            ));
+        break;
     }
+    loadRestaurant();
   }
 
   @override
@@ -77,12 +96,10 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
           children: [
             Text('2'),
             Text('3'),
-            Text('2'),
-            Text('3'),
           ],
         ),
         const Text('2'),
-        const Text('3'),
+        PrinterListWidget(printers),
       ][_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: _onItemTapped,
@@ -103,6 +120,40 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
           ),
         ],
       ),
+    );
+  }
+}
+
+class PrinterListWidget extends StatelessWidget {
+  final List<Printer> printers;
+  const PrinterListWidget(
+    this.printers, {
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: printers.map((printer) {
+        return PrinterCard(name: printer.name, sn: printer.sn);
+      }).toList(),
+      // children: [PrinterCard(name: '1', sn: '2')],
+    );
+  }
+}
+
+class PrinterCard extends StatelessWidget {
+  final String name;
+  final String sn;
+  const PrinterCard({super.key, required this.name, required this.sn});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: Center(child: Text(name))),
+        Expanded(child: Center(child: Text(sn)))
+      ],
     );
   }
 }
