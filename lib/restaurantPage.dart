@@ -3,6 +3,7 @@ import 'package:order_admin/createRestaurantPage.dart';
 import 'package:order_admin/main.dart';
 import 'package:order_admin/models/model.dart';
 import 'package:order_admin/models/restaurant.dart';
+import 'package:order_admin/orderingPage.dart';
 import 'package:order_admin/restaurantSettingsPage.dart';
 
 import 'api/restaurant.dart';
@@ -85,12 +86,8 @@ class RestaurantCard extends StatelessWidget {
       Expanded(child: Text(restaurant.name)),
       IconButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => RestaurantSettingsPage(
-                          restaurantId: restaurant.id,
-                        )));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const OrderingPage()));
           },
           icon: const Icon(Icons.restaurant)),
       IconButton(
