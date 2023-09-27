@@ -1,7 +1,7 @@
 import "dart:convert";
 import 'package:http/http.dart' as http;
 import "package:order_admin/api/utils.dart";
-import "../model/session.dart";
+import '../models/session.dart';
 import "config.dart";
 
 Future<Session> signinApi(String email, String password) async {

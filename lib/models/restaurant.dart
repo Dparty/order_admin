@@ -1,4 +1,4 @@
-import 'package:order_admin/model/model.dart';
+import 'package:order_admin/models/model.dart';
 
 class Restaurant {
   final String id;
@@ -22,10 +22,11 @@ class RestaurantList {
     required this.data,
   });
 
-  factory RestaurantList.fromJson(Map<String, dynamic> json) => RestaurantList(
-      data: convert(json["data"]),
-      pagination: Pagination.fromJson(json["pagination"]));
+  factory RestaurantList.fromJson(Map<String, dynamic> json) {
+    Iterable restaurantList = json["data"];
+    return RestaurantList(
+        data: List<Restaurant>.from(restaurantList
+            .map((restaurant) => Restaurant.fromJson(restaurant))),
+        pagination: Pagination.fromJson(json["pagination"]));
+  }
 }
-
-List<Restaurant> convert(List<Map<String, dynamic>> array) =>
-    array.map((a) => Restaurant.fromJson(a)).toList();

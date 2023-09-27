@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/createRestaurantPage.dart';
 import 'package:order_admin/main.dart';
-import 'package:order_admin/model/model.dart';
-import 'package:order_admin/model/restaurant.dart';
+import 'package:order_admin/models/model.dart';
+import 'package:order_admin/models/restaurant.dart';
+import 'package:order_admin/restaurantSettingsPage.dart';
 
 import 'api/restaurant.dart';
 import 'api/utils.dart';
@@ -60,20 +61,48 @@ class _RestaurantState extends State<RestaurantsPage> {
       floatingActionButton: FloatingActionButton(
           onPressed: createRestaurant, child: const Icon(Icons.add)),
       // Inherit MaterialApp text theme and override font size and font weight.
-      body: DefaultTextStyle.merge(
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-          child: Center(
-              child: ListView.builder(
-                  itemCount: restaurantList.data.length,
-                  itemBuilder: (context, int index) {
-                    return Text(
-                      restaurantList.data[index].name,
-                      key: Key(restaurantList.data[index].id),
-                    );
-                  }))),
+      body: Center(
+          child: ListView.builder(
+              itemCount: restaurantList.data.length,
+              itemBuilder: (context, int index) {
+                return RestaurantCard(
+                  restaurant: restaurantList.data[index],
+                  key: Key(restaurantList.data[index].id),
+                );
+              })),
     );
+  }
+}
+
+class RestaurantCard extends StatelessWidget {
+  final Restaurant restaurant;
+
+  const RestaurantCard({super.key, required this.restaurant});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Expanded(child: Text(restaurant.name)),
+      IconButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RestaurantSettingsPage(
+                          restaurantId: restaurant.id,
+                        )));
+          },
+          icon: const Icon(Icons.restaurant)),
+      IconButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RestaurantSettingsPage(
+                          restaurantId: restaurant.id,
+                        )));
+          },
+          icon: const Icon(Icons.settings))
+    ]);
   }
 }

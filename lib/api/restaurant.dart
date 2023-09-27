@@ -1,7 +1,7 @@
 import "dart:convert";
 import 'package:http/http.dart' as http;
 import "package:order_admin/api/utils.dart";
-import "package:order_admin/model/restaurant.dart";
+import 'package:order_admin/models/restaurant.dart';
 import "config.dart";
 
 Future<RestaurantList> listRestaurant() async {
