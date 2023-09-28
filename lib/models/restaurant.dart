@@ -22,13 +22,10 @@ class RestaurantList {
     required this.data,
   });
 
-  factory RestaurantList.fromJson(Map<String, dynamic> json) {
-    Iterable restaurantList = json["data"];
-    return RestaurantList(
-        data: List<Restaurant>.from(restaurantList
-            .map((restaurant) => Restaurant.fromJson(restaurant))),
-        pagination: Pagination.fromJson(json["pagination"]));
-  }
+  factory RestaurantList.fromJson(Map<String, dynamic> json) => RestaurantList(
+      data: List<Restaurant>.from((json["data"] as Iterable)
+          .map((restaurant) => Restaurant.fromJson(restaurant))),
+      pagination: Pagination.fromJson(json["pagination"]));
 }
 
 class Option {
@@ -46,12 +43,10 @@ class Attribute {
 
   Attribute({required this.label, required this.options});
 
-  factory Attribute.fromJson(Map<String, dynamic> json) {
-    Iterable options = json['options'];
-    return Attribute(
-        label: json['label'],
-        options: List<Option>.from(options.map((o) => Option.fromJson(o))));
-  }
+  factory Attribute.fromJson(Map<String, dynamic> json) => Attribute(
+      label: json['label'],
+      options: List<Option>.from(
+          (json['options'] as Iterable).map((o) => Option.fromJson(o))));
 }
 
 class Item {
@@ -81,12 +76,10 @@ class ItemList {
   final Pagination pagination;
 
   ItemList({required this.data, required this.pagination});
-  factory ItemList.fromJson(Map<String, dynamic> json) {
-    Iterable items = json['data'];
-    return ItemList(
-        data: List<Item>.from(items.map((i) => Item.fromJson(i))),
-        pagination: Pagination.fromJson(json['pagination']));
-  }
+  factory ItemList.fromJson(Map<String, dynamic> json) => ItemList(
+      data: List<Item>.from(
+          (json['data'] as Iterable).map((i) => Item.fromJson(i))),
+      pagination: Pagination.fromJson(json['pagination']));
 }
 
 class PrinterList {
@@ -94,13 +87,10 @@ class PrinterList {
   final Pagination pagination;
 
   PrinterList({required this.data, required this.pagination});
-  factory PrinterList.fromJson(Map<String, dynamic> json) {
-    Iterable printers = json['data'];
-    return PrinterList(
-        pagination: Pagination.fromJson(json['pagination']),
-        data: List<Printer>.from(
-            printers.map((printer) => Printer.fromJson(printer))));
-  }
+  factory PrinterList.fromJson(Map<String, dynamic> json) => PrinterList(
+      pagination: Pagination.fromJson(json['pagination']),
+      data: List<Printer>.from((json['data'] as Iterable)
+          .map((printer) => Printer.fromJson(printer))));
 }
 
 class Printer {
@@ -116,12 +106,29 @@ class Printer {
       required this.name,
       required this.description,
       required this.type});
-  factory Printer.fromJson(Map<String, dynamic> json) {
-    return Printer(
-        sn: json['sn'],
-        id: json['id'],
-        name: json['name'],
-        description: json['description'],
-        type: json['type']);
-  }
+  factory Printer.fromJson(Map<String, dynamic> json) => Printer(
+      sn: json['sn'],
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      type: json['type']);
+}
+
+class Table {
+  final String id;
+  final String label;
+
+  Table({required this.id, required this.label});
+
+  factory Table.fromJson(Map<String, dynamic> json) =>
+      Table(id: json['id'], label: json['label']);
+}
+
+class TableList {
+  final List<Table> data;
+
+  TableList({required this.data});
+  factory TableList.fromJson(Map<String, dynamic> json) => TableList(
+      data: List<Table>.from((json['data'] as Iterable)
+          .map((printer) => Table.fromJson(printer))));
 }

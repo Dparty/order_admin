@@ -30,10 +30,9 @@ Future<RestaurantList> listRestaurant() async {
 
 Future<Restaurant> createRestaurant(String name, String description) async {
   final token = await getToken();
-  var body = jsonEncode({'name': name, 'description': description});
   final response = await http.post(
     Uri.parse("$baseUrl/restaurants"),
-    body: body,
+    body: jsonEncode({'name': name, 'description': description}),
     headers: {'Authorization': "bearer $token"},
   );
   if (response.statusCode == 201) {
@@ -68,16 +67,56 @@ Future<PrinterList> listPrinters(String restaurantId) async {
 
 Future<Printer> createPrinter(
     String restaurant, String name, String sn, String type) async {
-  var body =
-      jsonEncode({'name': name, 'sn': sn, 'type': type, 'description': ''});
   final token = await getToken();
   final response = await http.post(
       Uri.parse("$baseUrl/restaurants/$restaurant/printers"),
-      body: body,
+      body:
+          jsonEncode({'name': name, 'sn': sn, 'type': type, 'description': ''}),
       headers: {'Authorization': "bearer $token"});
   if (response.statusCode == 201) {
     return Printer.fromJson(jsonDecode(response.body));
   } else {
+    throw Exception('Failed to create restaurant');
+  }
+}
+
+Future<void> deletePrinter(String id) async {
+  final token = await getToken();
+  final response = await http.delete(Uri.parse("$baseUrl/printers/$id"),
+      headers: {'Authorization': "bearer $token"});
+  if (response.statusCode != 204) {
+    throw Exception('Failed to create restaurant');
+  }
+}
+
+Future<Table> createTable(String restaurantId, String label) async {
+  final token = await getToken();
+  final response = await http.post(
+      Uri.parse("$baseUrl/restaurants/$restaurantId/tables"),
+      body: jsonEncode({'label': label}),
+      headers: {'Authorization': "bearer $token"});
+  if (response.statusCode == 201) {
+    return Table.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to create restaurant');
+  }
+}
+
+Future<List<Table>> listTable(String restaurantId) async {
+  final response =
+      await http.get(Uri.parse("$baseUrl/restaurants/$restaurantId/tables"));
+  if (response.statusCode == 200) {
+    return TableList.fromJson(jsonDecode(response.body)).data;
+  } else {
+    throw Exception('Failed to create restaurant');
+  }
+}
+
+Future<void> deleteTable(String id) async {
+  final token = await getToken();
+  final response = await http.delete(Uri.parse("$baseUrl/tables/$id"),
+      headers: {'Authorization': "bearer $token"});
+  if (response.statusCode != 204) {
     throw Exception('Failed to create restaurant');
   }
 }

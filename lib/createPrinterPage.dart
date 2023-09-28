@@ -11,6 +11,7 @@ class CreatePrinterPage extends StatefulWidget {
   });
 
   @override
+  // ignore: no_logic_in_create_state
   State<StatefulWidget> createState() => _CreatePrinterPageState(restaurantId);
 }
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/createItemPage.dart';
 import 'package:order_admin/createPrinterPage.dart';
-import 'package:order_admin/models/restaurant.dart';
+import 'package:order_admin/createTablePage.dart';
+import 'package:order_admin/models/restaurant.dart' as model;
 import 'api/restaurant.dart';
 
 class RestaurantSettingsPage extends StatefulWidget {
@@ -17,9 +18,11 @@ class RestaurantSettingsPage extends StatefulWidget {
 class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
     with TickerProviderStateMixin {
   final String restaurantId;
-  Restaurant restaurant = const Restaurant(id: '', name: '', description: '');
-  List<Item> items = [];
-  List<Printer> printers = [];
+  model.Restaurant restaurant =
+      const model.Restaurant(id: '', name: '', description: '');
+  List<model.Item> items = [];
+  List<model.Printer> printers = [];
+  List<model.Table> tables = [];
   int _selectedIndex = 0;
 
   _RestaurantSettingsPageState({required this.restaurantId});
@@ -38,6 +41,9 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
     listPrinters(restaurantId).then((list) => setState(() {
           printers = list.data;
         }));
+    listTable(restaurantId).then((list) => setState(() {
+          tables = list;
+        }));
   }
 
   @override
@@ -53,31 +59,32 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
   }
 
   void add(BuildContext context) async {
-    switch (_selectedIndex) {
-      case 0:
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CreateItemPage(),
-            ));
-        break;
-      case 1:
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CreateItemPage(),
-            ));
-        break;
-      case 2:
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreatePrinterPage(restaurantId),
-            ));
-        break;
+    if (_selectedIndex == 0) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CreateItemPage(),
+          ));
+    } else if (_selectedIndex == 1) {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreateTablePage(restaurantId),
+          ));
+    } else if (_selectedIndex == 2) {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreatePrinterPage(restaurantId),
+          ));
     }
     loadRestaurant();
   }
+
+  void removePrinter(String id) =>
+      deletePrinter(id).then((_) => loadRestaurant());
+
+  void removeTable(String id) => deleteTable(id).then((_) => loadRestaurant());
 
   @override
   Widget build(BuildContext context) {
@@ -98,12 +105,20 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
             Text('3'),
           ],
         ),
-        const Text('2'),
-        PrinterListWidget(printers),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: TableListWidget(
+              tables: tables,
+              delete: removeTable,
+            )),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: PrinterListWidget(printers, deletePrinter: removePrinter),
+        ),
       ][_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: _onItemTapped,
-        selectedItemColor: const Color.fromARGB(255, 0, 55, 255),
+        selectedItemColor: const Color.fromARGB(255, 118, 148, 255),
         currentIndex: _selectedIndex,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -125,19 +140,44 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
 }
 
 class PrinterListWidget extends StatelessWidget {
-  final List<Printer> printers;
+  final List<model.Printer> printers;
+  final Function(String) deletePrinter;
   const PrinterListWidget(
     this.printers, {
     super.key,
+    required this.deletePrinter,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: printers.map((printer) {
-        return PrinterCard(name: printer.name, sn: printer.sn);
+        return PrinterCard(
+            type: printer.type,
+            name: printer.name,
+            sn: printer.sn,
+            deletePrinter: () => deletePrinter(printer.id));
       }).toList(),
-      // children: [PrinterCard(name: '1', sn: '2')],
+    );
+  }
+}
+
+class TableListWidget extends StatelessWidget {
+  final List<model.Table> tables;
+  final Function(String) delete;
+  const TableListWidget(
+      {super.key, required this.tables, required this.delete});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: tables.map((table) {
+        return Row(children: [
+          Expanded(child: Text(table.label)),
+          IconButton(
+              onPressed: () => delete(table.id), icon: const Icon(Icons.delete))
+        ]);
+      }).toList(),
     );
   }
 }
@@ -145,14 +185,26 @@ class PrinterListWidget extends StatelessWidget {
 class PrinterCard extends StatelessWidget {
   final String name;
   final String sn;
-  const PrinterCard({super.key, required this.name, required this.sn});
+  final String type;
+  final Function() deletePrinter;
+  const PrinterCard(
+      {super.key,
+      required this.name,
+      required this.sn,
+      required this.deletePrinter,
+      required this.type});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(child: Center(child: Text(name))),
-        Expanded(child: Center(child: Text(sn)))
+        Expanded(child: Center(child: Text(sn))),
+        Expanded(child: Center(child: Text(type))),
+        IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: deletePrinter,
+        )
       ],
     );
   }
