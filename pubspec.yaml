@@ -40,6 +40,7 @@ dependencies:
   camera: ^0.10.5+4
   path_provider: ^2.1.1
   path: ^1.8.3
+  image_picker:
 
 dev_dependencies:
   flutter_test:
