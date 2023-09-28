@@ -31,8 +31,7 @@ class _CreateTablePageState extends State<CreateTablePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: <Widget>[
             TextFormField(
               controller: label,

@@ -38,7 +38,6 @@ class _SigninFormState extends State<SigninForm> {
   final password = TextEditingController();
   void signin(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-
     signinApi(email.text, password.text).then((session) {
       prefs.setString('token', session.token).then((_) {
         Navigator.pushReplacement(context,
@@ -50,9 +49,8 @@ class _SigninFormState extends State<SigninForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      child: Column(
+      child: ListView(
         key: _formKey,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
             controller: email,

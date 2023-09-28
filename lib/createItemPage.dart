@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/addAttribute.dart';
 
 class CreateItemPage extends StatefulWidget {
   const CreateItemPage({super.key});
@@ -12,6 +13,12 @@ class _CreateItemPageState extends State<CreateItemPage> {
   final pricing = TextEditingController();
   final tag = TextEditingController();
   void create() {}
+
+  void addAttribute() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const AddAttributePage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +27,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
       ),
       body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(children: [
+          child: ListView(children: [
             TextFormField(
               controller: name,
               decoration: const InputDecoration(
@@ -41,6 +48,13 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 hintText: '分類',
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 16.0),
+            //   child: ElevatedButton(
+            //     onPressed: addAttribute,
+            //     child: const Text('新增屬性'),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: ElevatedButton(

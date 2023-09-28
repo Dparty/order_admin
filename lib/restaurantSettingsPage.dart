@@ -60,7 +60,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
 
   void add(BuildContext context) async {
     if (_selectedIndex == 0) {
-      Navigator.push(
+      await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const CreateItemPage(),
@@ -170,7 +170,7 @@ class TableListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: tables.map((table) {
         return Row(children: [
           Expanded(child: Text(table.label)),

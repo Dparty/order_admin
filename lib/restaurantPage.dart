@@ -65,12 +65,10 @@ class _RestaurantState extends State<RestaurantsPage> {
       body: Center(
           child: ListView.builder(
               itemCount: restaurantList.data.length,
-              itemBuilder: (context, int index) {
-                return RestaurantCard(
-                  restaurant: restaurantList.data[index],
-                  key: Key(restaurantList.data[index].id),
-                );
-              })),
+              itemBuilder: (context, index) => RestaurantCard(
+                    restaurant: restaurantList.data[index],
+                    key: Key(restaurantList.data[index].id),
+                  ))),
     );
   }
 }
