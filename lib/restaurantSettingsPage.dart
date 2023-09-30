@@ -63,7 +63,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
       await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const CreateItemPage(),
+            builder: (context) => CreateItemPage(restaurantId),
           ));
     } else if (_selectedIndex == 1) {
       await Navigator.push(
@@ -99,10 +99,13 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
         title: Text(restaurant.name),
       ),
       body: <Widget>[
-        const Column(
+        Column(
           children: [
-            Text('2'),
-            Text('3'),
+            ...items
+                .map(
+                  (i) => Text(i.name),
+                )
+                .toList()
           ],
         ),
         Padding(

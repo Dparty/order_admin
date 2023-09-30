@@ -71,6 +71,20 @@ class Item {
   }
 }
 
+class PutItem {
+  final String name;
+  final int pricing;
+  final List<String> tags;
+  final List<String> printers;
+  final List<Attribute> attributes;
+  PutItem(
+      {required this.printers,
+      required this.tags,
+      required this.name,
+      required this.pricing,
+      required this.attributes});
+}
+
 class ItemList {
   final List<Item> data;
   final Pagination pagination;

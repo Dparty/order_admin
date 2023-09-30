@@ -121,10 +121,10 @@ Future<void> deleteTable(String id) async {
   }
 }
 
-Future<Item> createItem(String restaurantId, Item item) async {
+Future<Item> createItem(String restaurantId, PutItem item) async {
   final token = await getToken();
-  final response = await http.delete(
-      Uri.parse("$baseUrl/restaurants/$restaurantId"),
+  final response = await http.post(
+      Uri.parse("$baseUrl/restaurants/$restaurantId/items"),
       headers: {'Authorization': "bearer $token"});
   if (response.statusCode == 201) {
     return Item.fromJson(jsonDecode(response.body));

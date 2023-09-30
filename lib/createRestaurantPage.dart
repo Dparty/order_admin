@@ -13,8 +13,8 @@ class _CreateRestaurantPageState extends State<CreateRestaurantPage> {
   final name = TextEditingController();
   final description = TextEditingController();
   create() {
-    createRestaurant(name.text, description.text);
-    Navigator.pop(context);
+    createRestaurant(name.text, description.text)
+        .then((value) => Navigator.pop(context));
   }
 
   @override

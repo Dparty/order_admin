@@ -3,14 +3,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:order_admin/addAttribute.dart';
+import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/components/dialog.dart';
 import 'package:order_admin/models/restaurant.dart';
 
 class CreateItemPage extends StatefulWidget {
-  const CreateItemPage({super.key});
+  final String restaurantId;
+  const CreateItemPage(this.restaurantId, {super.key});
 
   @override
-  State<StatefulWidget> createState() => _CreateItemPageState();
+  State<StatefulWidget> createState() => _CreateItemPageState(restaurantId);
 }
 
 class _CreateItemPageState extends State<CreateItemPage> {
@@ -19,7 +21,11 @@ class _CreateItemPageState extends State<CreateItemPage> {
   final tag = TextEditingController();
   final List<Attribute> attributes = [];
   final ImagePicker picker = ImagePicker();
+  final String restaurantId;
+  final List<Printer> printers = [];
   XFile? image;
+
+  _CreateItemPageState(this.restaurantId);
   void create() {
     if (name.text.isEmpty) {
       showDeleteConfirmDialog(context, "請輸入品項名稱");
@@ -33,6 +39,15 @@ class _CreateItemPageState extends State<CreateItemPage> {
       showDeleteConfirmDialog(context, '請輸入分類');
       return;
     }
+    createItem(
+            restaurantId,
+            PutItem(
+                printers: [],
+                tags: [tag.text],
+                name: name.text,
+                pricing: int.parse(pricing.text) * 100,
+                attributes: attributes))
+        .then((value) => Navigator.pop(context));
   }
 
   void addAttribute() async {
