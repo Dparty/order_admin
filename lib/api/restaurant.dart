@@ -120,3 +120,15 @@ Future<void> deleteTable(String id) async {
     throw Exception('Failed to create restaurant');
   }
 }
+
+Future<Item> createItem(String restaurantId, Item item) async {
+  final token = await getToken();
+  final response = await http.delete(
+      Uri.parse("$baseUrl/restaurants/$restaurantId"),
+      headers: {'Authorization': "bearer $token"});
+  if (response.statusCode == 201) {
+    return Item.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to create restaurant');
+  }
+}
