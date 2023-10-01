@@ -104,27 +104,31 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
         title: Text(restaurant.name),
       ),
       body: <Widget>[
-        Column(
-          children: [
-            ...items
-                .map(
-                  (i) => Row(children: [
-                    Expanded(child: Text(i.name)),
-                    Expanded(child: Text((i.pricing / 100).toString())),
-                    ElevatedButton(
-                      onPressed: () {
-                        removeItem(i.id);
-                      },
-                      child: const Text('刪除'),
-                    )
-                  ]),
-                )
-                .toList()
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              ...items
+                  .map(
+                    (i) => Row(children: [
+                      Expanded(child: Text(i.name)),
+                      Expanded(child: Text((i.pricing / 100).toString())),
+                      ElevatedButton(
+                        onPressed: () {
+                          removeItem(i.id);
+                        },
+                        child: const Text('刪除'),
+                      )
+                    ]),
+                  )
+                  .toList()
+            ],
+          ),
         ),
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: TableListWidget(
+              restaurantId,
               tables: tables,
               delete: removeTable,
             )),
@@ -180,15 +184,16 @@ class PrinterListWidget extends StatelessWidget {
 }
 
 class TableListWidget extends StatelessWidget {
+  final String restaurantId;
   final List<model.Table> tables;
   final Function(String) delete;
-  const TableListWidget(
+  const TableListWidget(this.restaurantId,
       {super.key, required this.tables, required this.delete});
-  void qrcode(BuildContext context) {
+  void qrcode(BuildContext context, String tableId) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const OrderingQrcodePage("sdf")));
+            builder: (context) => OrderingQrcodePage(restaurantId, tableId)));
   }
 
   @override
@@ -197,11 +202,13 @@ class TableListWidget extends StatelessWidget {
       children: tables.map((table) {
         return Row(children: [
           Expanded(child: Text(table.label)),
-          IconButton(
-              onPressed: () {
-                qrcode(context);
-              },
-              icon: const Icon(Icons.qr_code)),
+          Expanded(
+            child: IconButton(
+                onPressed: () {
+                  qrcode(context, table.id);
+                },
+                icon: const Icon(Icons.qr_code)),
+          ),
           IconButton(
               onPressed: () => delete(table.id), icon: const Icon(Icons.delete))
         ]);

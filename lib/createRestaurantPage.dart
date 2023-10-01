@@ -41,7 +41,6 @@ class _CreateRestaurantPageState extends State<CreateRestaurantPage> {
             ),
             TextFormField(
               controller: description,
-              obscureText: true,
               decoration: const InputDecoration(
                 hintText: '描述',
               ),

@@ -61,7 +61,6 @@ class _RestaurantState extends State<RestaurantsPage> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: createRestaurant, child: const Icon(Icons.add)),
-      // Inherit MaterialApp text theme and override font size and font weight.
       body: Center(
           child: ListView.builder(
               itemCount: restaurantList.data.length,
@@ -80,24 +79,29 @@ class RestaurantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      Expanded(child: Text(restaurant.name)),
-      IconButton(
-          onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const OrderingPage()));
-          },
-          icon: const Icon(Icons.restaurant)),
-      IconButton(
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => RestaurantSettingsPage(
-                          restaurantId: restaurant.id,
-                        )));
-          },
-          icon: const Icon(Icons.settings))
-    ]);
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(children: [
+        Expanded(child: Text(restaurant.name)),
+        IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const OrderingPage()));
+            },
+            icon: const Icon(Icons.restaurant)),
+        IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RestaurantSettingsPage(
+                            restaurantId: restaurant.id,
+                          )));
+            },
+            icon: const Icon(Icons.settings))
+      ]),
+    );
   }
 }
