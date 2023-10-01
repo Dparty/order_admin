@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:order_admin/addAttribute.dart';
@@ -21,11 +24,10 @@ class _CreateItemPageState extends State<CreateItemPage> {
   final pricing = TextEditingController();
   final tag = TextEditingController();
   final List<Attribute> attributes = [];
-  final ImagePicker picker = ImagePicker();
   final String restaurantId;
   List<Printer> printers = [];
   String? printerId;
-  XFile? image;
+  File? image;
 
   _CreateItemPageState(this.restaurantId);
 
@@ -64,7 +66,14 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 name: name.text,
                 pricing: int.parse(pricing.text) * 100,
                 attributes: attributes))
-        .then((value) => Navigator.pop(context));
+        .then((value) {
+      if (image != null) {
+        uploadItemImage(value.id, File(image!.path))
+            .then((value) => Navigator.pop(context));
+      } else {
+        Navigator.pop(context);
+      }
+    });
   }
 
   void addAttribute() async {
@@ -76,10 +85,11 @@ class _CreateItemPageState extends State<CreateItemPage> {
     });
   }
 
-  Future getImage(ImageSource media) async {
-    var img = await picker.pickImage(source: media);
+  void _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
-      image = img;
+      image = File(pickedFile!.path);
     });
   }
 
@@ -166,28 +176,28 @@ class _CreateItemPageState extends State<CreateItemPage> {
                       )
                     ]))
                 : const Text('請新增打印機'),
-            image != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        //to show image, you type like this.
-                        File(image!.path),
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width,
-                        height: 300,
-                      ),
-                    ),
-                  )
-                : const Text(
-                    '請上傳圖片',
-                    style: TextStyle(fontSize: 20),
-                  ),
+            // image != null
+            //     ? Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 20),
+            //         child: ClipRRect(
+            //           borderRadius: BorderRadius.circular(8),
+            //           child: Image.file(
+            //             //to show image, you type like this.
+            //             image!,
+            //             fit: BoxFit.cover,
+            //             width: MediaQuery.of(context).size.width,
+            //             height: 300,
+            //           ),
+            //         ),
+            //       )
+            //     : const Text(
+            //         '請上傳圖片',
+            //         style: TextStyle(fontSize: 20),
+            //       ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: ElevatedButton(
-                onPressed: () => getImage(ImageSource.gallery),
+                onPressed: () => _pickImage(),
                 child: const Text('上傳圖片'),
               ),
             ),

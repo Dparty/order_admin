@@ -170,3 +170,12 @@ class TableList {
       data: List<Table>.from((json['data'] as Iterable)
           .map((printer) => Table.fromJson(printer))));
 }
+
+class UploadImage {
+  final String url;
+
+  UploadImage({required this.url});
+
+  factory UploadImage.fromJson(Map<String, dynamic> json) =>
+      UploadImage(url: json['url']);
+}

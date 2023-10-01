@@ -1,4 +1,5 @@
 import "dart:convert";
+import "dart:io";
 import 'package:http/http.dart' as http;
 import "package:order_admin/api/utils.dart";
 import 'package:order_admin/models/restaurant.dart';
@@ -142,6 +143,34 @@ Future<void> deleteItem(String id) async {
     'Authorization': "bearer $token",
   });
   if (response.statusCode != 204) {
+    throw Exception('Failed to create restaurant');
+  }
+}
+
+Future<UploadImage> uploadItemImage(String itemId, File file) async {
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse("$baseUrl/items/$itemId/image"),
+  );
+  final token = await getToken();
+  Map<String, String> headers = {
+    "Content-type": "multipart/form-data",
+    'Authorization': "bearer $token"
+  };
+  request.files.add(
+    http.MultipartFile(
+      'image',
+      file.readAsBytes().asStream(),
+      file.lengthSync(),
+      filename: file.path.split('/').last,
+    ),
+  );
+  request.headers.addAll(headers);
+  var res = await request.send();
+  http.Response response = await http.Response.fromStream(res);
+  if (res.statusCode == 201) {
+    return UploadImage.fromJson(jsonDecode(response.body));
+  } else {
     throw Exception('Failed to create restaurant');
   }
 }

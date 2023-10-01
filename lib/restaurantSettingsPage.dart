@@ -110,16 +110,19 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
             children: [
               ...items
                   .map(
-                    (i) => Row(children: [
-                      Expanded(child: Text(i.name)),
-                      Expanded(child: Text((i.pricing / 100).toString())),
-                      ElevatedButton(
-                        onPressed: () {
-                          removeItem(i.id);
-                        },
-                        child: const Text('刪除'),
-                      )
-                    ]),
+                    (i) => Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(children: [
+                          Expanded(child: Text(i.name)),
+                          Expanded(
+                              child: Text("\$${(i.pricing / 100).toString()}")),
+                          ElevatedButton(
+                            onPressed: () {
+                              removeItem(i.id);
+                            },
+                            child: const Text('刪除'),
+                          )
+                        ])),
                   )
                   .toList()
             ],
