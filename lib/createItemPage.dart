@@ -12,6 +12,7 @@ class CreateItemPage extends StatefulWidget {
   const CreateItemPage(this.restaurantId, {super.key});
 
   @override
+  // ignore: no_logic_in_create_state
   State<StatefulWidget> createState() => _CreateItemPageState(restaurantId);
 }
 
@@ -22,10 +23,23 @@ class _CreateItemPageState extends State<CreateItemPage> {
   final List<Attribute> attributes = [];
   final ImagePicker picker = ImagePicker();
   final String restaurantId;
-  final List<Printer> printers = [];
+  List<Printer> printers = [];
+  String? printerId;
   XFile? image;
 
   _CreateItemPageState(this.restaurantId);
+
+  @override
+  void initState() {
+    super.initState();
+    listPrinters(restaurantId).then((list) => setState(() {
+          printers = list.data;
+          if (printers.isNotEmpty) {
+            printerId = printers[0].id;
+          }
+        }));
+  }
+
   void create() {
     if (name.text.isEmpty) {
       showDeleteConfirmDialog(context, "請輸入品項名稱");
@@ -42,7 +56,10 @@ class _CreateItemPageState extends State<CreateItemPage> {
     createItem(
             restaurantId,
             PutItem(
-                printers: [],
+                printers: printers
+                    .where((p) => p.id == printerId)
+                    .map((p) => p.id)
+                    .toList(),
                 tags: [tag.text],
                 name: name.text,
                 pricing: int.parse(pricing.text) * 100,
@@ -118,6 +135,37 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 child: const Text('增加屬性'),
               ),
             ),
+            printers.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Row(children: [
+                      const Text('打印機：'),
+                      Expanded(
+                        child: DropdownButton<String>(
+                          value: printerId,
+                          icon: const Icon(Icons.arrow_downward),
+                          elevation: 16,
+                          style: const TextStyle(color: Colors.deepPurple),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.deepPurpleAccent,
+                          ),
+                          onChanged: (String? value) {
+                            setState(() {
+                              printerId = value;
+                            });
+                          },
+                          items: printers
+                              .map<DropdownMenuItem<String>>((Printer value) {
+                            return DropdownMenuItem<String>(
+                              value: value.id,
+                              child: Text(value.name),
+                            );
+                          }).toList(),
+                        ),
+                      )
+                    ]))
+                : const Text('請新增打印機'),
             image != null
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

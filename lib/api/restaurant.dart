@@ -125,10 +125,23 @@ Future<Item> createItem(String restaurantId, PutItem item) async {
   final token = await getToken();
   final response = await http.post(
       Uri.parse("$baseUrl/restaurants/$restaurantId/items"),
-      headers: {'Authorization': "bearer $token"});
+      body: jsonEncode(item),
+      headers: {
+        'Authorization': "bearer $token",
+      });
   if (response.statusCode == 201) {
     return Item.fromJson(jsonDecode(response.body));
   } else {
+    throw Exception('Failed to create restaurant');
+  }
+}
+
+Future<void> deleteItem(String id) async {
+  final token = await getToken();
+  final response = await http.delete(Uri.parse("$baseUrl/items/$id"), headers: {
+    'Authorization': "bearer $token",
+  });
+  if (response.statusCode != 204) {
     throw Exception('Failed to create restaurant');
   }
 }

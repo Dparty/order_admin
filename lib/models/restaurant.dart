@@ -30,9 +30,17 @@ class RestaurantList {
 
 class Option {
   final String label;
-  final int extra;
+  final double extra;
 
   Option({required this.label, required this.extra});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'label': label,
+      'extra': extra,
+    };
+  }
+
   factory Option.fromJson(Map<String, dynamic> json) =>
       Option(label: json['label'], extra: json['extra']);
 }
@@ -42,6 +50,13 @@ class Attribute {
   final List<Option> options;
 
   Attribute({required this.label, required this.options});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'label': label,
+      'options': options,
+    };
+  }
 
   factory Attribute.fromJson(Map<String, dynamic> json) => Attribute(
       label: json['label'],
@@ -83,6 +98,15 @@ class PutItem {
       required this.name,
       required this.pricing,
       required this.attributes});
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'pricing': pricing,
+      'tags': tags,
+      'printers': printers,
+      'attributes': attributes,
+    };
+  }
 }
 
 class ItemList {

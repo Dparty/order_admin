@@ -3,6 +3,7 @@ import 'package:order_admin/createItemPage.dart';
 import 'package:order_admin/createPrinterPage.dart';
 import 'package:order_admin/createTablePage.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
+import 'package:order_admin/orderingQrcodePage.dart';
 import 'api/restaurant.dart';
 
 class RestaurantSettingsPage extends StatefulWidget {
@@ -81,6 +82,10 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
     loadRestaurant();
   }
 
+  void removeItem(String id) {
+    deleteItem(id).then((value) => loadRestaurant());
+  }
+
   void removePrinter(String id) =>
       deletePrinter(id).then((_) => loadRestaurant());
 
@@ -103,7 +108,16 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
           children: [
             ...items
                 .map(
-                  (i) => Text(i.name),
+                  (i) => Row(children: [
+                    Expanded(child: Text(i.name)),
+                    Expanded(child: Text((i.pricing / 100).toString())),
+                    ElevatedButton(
+                      onPressed: () {
+                        removeItem(i.id);
+                      },
+                      child: const Text('刪除'),
+                    )
+                  ]),
                 )
                 .toList()
           ],
@@ -170,6 +184,12 @@ class TableListWidget extends StatelessWidget {
   final Function(String) delete;
   const TableListWidget(
       {super.key, required this.tables, required this.delete});
+  void qrcode(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const OrderingQrcodePage("sdf")));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +197,11 @@ class TableListWidget extends StatelessWidget {
       children: tables.map((table) {
         return Row(children: [
           Expanded(child: Text(table.label)),
+          IconButton(
+              onPressed: () {
+                qrcode(context);
+              },
+              icon: const Icon(Icons.qr_code)),
           IconButton(
               onPressed: () => delete(table.id), icon: const Icon(Icons.delete))
         ]);

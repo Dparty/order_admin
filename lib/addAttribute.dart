@@ -11,7 +11,6 @@ class AddAttributePage extends StatefulWidget {
 }
 
 class _AddAttributePageState extends State<AddAttributePage> {
-  String alertText = "";
   final attributeLabel = TextEditingController();
   final label = TextEditingController();
   List<OptionEditList> options = [OptionEditList()];
@@ -32,14 +31,12 @@ class _AddAttributePageState extends State<AddAttributePage> {
     var optionSet = <String>{};
     if (label.text.isEmpty) {
       setState(() {
-        alertText = "請輸入屬性名";
         showDeleteConfirmDialog(context, '請輸入屬性名');
       });
       return;
     }
     if (options.isEmpty) {
       setState(() {
-        alertText = "不能沒有選項";
         showDeleteConfirmDialog(context, '不能沒有選項');
       });
       return;
@@ -48,14 +45,12 @@ class _AddAttributePageState extends State<AddAttributePage> {
       String text = options[i].label.text;
       if (text.isEmpty) {
         setState(() {
-          alertText = "第${i + 1}個選項為空";
           showDeleteConfirmDialog(context, "第${i + 1}個選項為空");
         });
         return;
       }
       if (optionSet.contains(text)) {
         setState(() {
-          alertText = '有重複的選項';
           showDeleteConfirmDialog(context, '有重複的選項');
         });
         return;
@@ -71,7 +66,7 @@ class _AddAttributePageState extends State<AddAttributePage> {
                 .map((o) => Option(
                     label: o.label.text,
                     extra: o.pricing.text.isNotEmpty
-                        ? int.parse(o.pricing.text)
+                        ? double.parse(o.pricing.text) * 100
                         : 0))
                 .toList()));
   }
