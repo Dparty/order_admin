@@ -18,16 +18,6 @@ class _OrderingPageState extends State<OrderingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RestaurantsPage()));
-              },
-              icon: const Icon(Icons.exit_to_app))
-        ],
         title: const Text("點餐"),
       ),
     );

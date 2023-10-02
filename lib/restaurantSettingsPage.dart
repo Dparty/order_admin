@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/components/dialog.dart';
 import 'package:order_admin/createItemPage.dart';
 import 'package:order_admin/createPrinterPage.dart';
 import 'package:order_admin/createTablePage.dart';
@@ -20,7 +21,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
     with TickerProviderStateMixin {
   final String restaurantId;
   model.Restaurant restaurant =
-      const model.Restaurant(id: '', name: '', description: '');
+      const model.Restaurant(id: '', name: '', description: '', items: []);
   List<model.Item> items = [];
   List<model.Printer> printers = [];
   List<model.Table> tables = [];
@@ -32,11 +33,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
     getRestaurant(restaurantId).then((restaurant) {
       setState(() {
         this.restaurant = restaurant;
-      });
-    });
-    listItem(restaurantId).then((list) {
-      setState(() {
-        items = list.data;
+        items = restaurant.items;
       });
     });
     listPrinters(restaurantId).then((list) => setState(() {
@@ -87,7 +84,8 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
   }
 
   void removePrinter(String id) =>
-      deletePrinter(id).then((_) => loadRestaurant());
+      deletePrinter(id).then((_) => loadRestaurant()).onError(
+          (error, stackTrace) => showDeleteConfirmDialog(context, "有品項使用此打印機"));
 
   void removeTable(String id) => deleteTable(id).then((_) => loadRestaurant());
 
@@ -106,9 +104,9 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
       body: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
+          child: ListView(
             children: [
-              ...items
+              ...restaurant.items
                   .map(
                     (i) => Padding(
                         padding: const EdgeInsets.all(12.0),

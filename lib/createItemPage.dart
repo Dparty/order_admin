@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,8 +25,10 @@ class _CreateItemPageState extends State<CreateItemPage> {
   final String restaurantId;
   List<Printer> printers = [];
   String? printerId;
-  File? image;
-
+  XFile? image;
+  File? imageFile;
+  Uint8List webImage = Uint8List(8);
+  bool showImage = false;
   _CreateItemPageState(this.restaurantId);
 
   @override
@@ -43,6 +43,10 @@ class _CreateItemPageState extends State<CreateItemPage> {
   }
 
   void create() {
+    if (printers.isEmpty) {
+      showDeleteConfirmDialog(context, "請先創建打印機");
+      return;
+    }
     if (name.text.isEmpty) {
       showDeleteConfirmDialog(context, "請輸入品項名稱");
       return;
@@ -67,12 +71,15 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 pricing: int.parse(pricing.text) * 100,
                 attributes: attributes))
         .then((value) {
-      if (image != null) {
-        uploadItemImage(value.id, File(image!.path))
-            .then((value) => Navigator.pop(context));
-      } else {
-        Navigator.pop(context);
-      }
+      // if (showImage) {
+      //   if (!kIsWeb) {
+      //     uploadItemImage(value.id, imageFile!)
+      //         .then((value) => Navigator.pop(context));
+      //   }
+      // } else {
+      //   Navigator.pop(context);
+      // }
+      Navigator.pop(context);
     });
   }
 
@@ -86,11 +93,14 @@ class _CreateItemPageState extends State<CreateItemPage> {
   }
 
   void _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      image = File(pickedFile!.path);
-    });
+    ImagePicker picker = ImagePicker();
+    image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        showImage = true;
+        imageFile = File(image!.path);
+      });
+    }
   }
 
   @override
@@ -176,24 +186,16 @@ class _CreateItemPageState extends State<CreateItemPage> {
                       )
                     ]))
                 : const Text('請新增打印機'),
-            // image != null
-            //     ? Padding(
-            //         padding: const EdgeInsets.symmetric(horizontal: 20),
-            //         child: ClipRRect(
-            //           borderRadius: BorderRadius.circular(8),
-            //           child: Image.file(
-            //             //to show image, you type like this.
-            //             image!,
-            //             fit: BoxFit.cover,
-            //             width: MediaQuery.of(context).size.width,
-            //             height: 300,
-            //           ),
-            //         ),
-            //       )
-            //     : const Text(
-            //         '請上傳圖片',
-            //         style: TextStyle(fontSize: 20),
-            //       ),
+            showImage
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: kIsWeb
+                        ? const Text("在電腦上無法上傳圖片")
+                        : Image.file(imageFile!, fit: BoxFit.cover))
+                : const Text(
+                    '請上傳圖片',
+                    style: TextStyle(fontSize: 20),
+                  ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: ElevatedButton(

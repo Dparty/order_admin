@@ -35,6 +35,7 @@ class _CreateTablePageState extends State<CreateTablePage> {
           children: <Widget>[
             TextFormField(
               controller: label,
+              autofocus: true,
               decoration: const InputDecoration(
                 hintText: '輸入餐桌標籤',
               ),

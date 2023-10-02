@@ -4,14 +4,19 @@ class Restaurant {
   final String id;
   final String name;
   final String description;
+  final List<Item> items;
   const Restaurant({
     required this.id,
     required this.name,
     required this.description,
+    required this.items,
   });
 
   factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
-      id: json["id"], name: json["name"], description: json["description"]);
+      id: json["id"],
+      name: json["name"],
+      description: json["description"],
+      items: (json['items'] as Iterable).map((i) => Item.fromJson(i)).toList());
 }
 
 class RestaurantList {
@@ -30,7 +35,7 @@ class RestaurantList {
 
 class Option {
   final String label;
-  final double extra;
+  final int extra;
 
   Option({required this.label, required this.extra});
 
@@ -58,10 +63,8 @@ class Attribute {
     };
   }
 
-  factory Attribute.fromJson(Map<String, dynamic> json) => Attribute(
-      label: json['label'],
-      options: List<Option>.from(
-          (json['options'] as Iterable).map((o) => Option.fromJson(o))));
+  factory Attribute.fromJson(Map<String, dynamic> json) =>
+      Attribute(label: json['label'], options: []);
 }
 
 class Item {
@@ -76,10 +79,10 @@ class Item {
       required this.attributes});
 
   factory Item.fromJson(Map<String, dynamic> json) {
-    Iterable attributes = json['attributes'];
     return Item(
-        attributes:
-            List<Attribute>.from(attributes.map((a) => Attribute.fromJson(a))),
+        attributes: (json['attributes'] as Iterable)
+            .map((a) => Attribute.fromJson(a))
+            .toList(),
         id: json['id'],
         name: json['name'],
         pricing: json['pricing']);

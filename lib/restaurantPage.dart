@@ -85,7 +85,7 @@ class RestaurantCard extends StatelessWidget {
         Expanded(child: Text(restaurant.name)),
         IconButton(
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => const OrderingPage()));

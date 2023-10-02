@@ -66,7 +66,7 @@ class _AddAttributePageState extends State<AddAttributePage> {
                 .map((o) => Option(
                     label: o.label.text,
                     extra: o.pricing.text.isNotEmpty
-                        ? double.parse(o.pricing.text) * 100
+                        ? (double.parse(o.pricing.text) * 100).toInt()
                         : 0))
                 .toList()));
   }
