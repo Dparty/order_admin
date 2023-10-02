@@ -31,13 +31,13 @@ class _AddAttributePageState extends State<AddAttributePage> {
     var optionSet = <String>{};
     if (label.text.isEmpty) {
       setState(() {
-        showDeleteConfirmDialog(context, '請輸入屬性名');
+        showAlertDialog(context, '請輸入屬性名');
       });
       return;
     }
     if (options.isEmpty) {
       setState(() {
-        showDeleteConfirmDialog(context, '不能沒有選項');
+        showAlertDialog(context, '不能沒有選項');
       });
       return;
     }
@@ -45,13 +45,13 @@ class _AddAttributePageState extends State<AddAttributePage> {
       String text = options[i].label.text;
       if (text.isEmpty) {
         setState(() {
-          showDeleteConfirmDialog(context, "第${i + 1}個選項為空");
+          showAlertDialog(context, "第${i + 1}個選項為空");
         });
         return;
       }
       if (optionSet.contains(text)) {
         setState(() {
-          showDeleteConfirmDialog(context, '有重複的選項');
+          showAlertDialog(context, '有重複的選項');
         });
         return;
       }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<bool?> showDeleteConfirmDialog(BuildContext context, String text) {
+Future<bool?> showAlertDialog(BuildContext context, String text) {
   return showDialog<bool>(
     context: context,
     builder: (context) {
@@ -9,15 +9,15 @@ Future<bool?> showDeleteConfirmDialog(BuildContext context, String text) {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             Row(
-              children: <Widget>[
+              children: [
                 Text(text),
               ],
             ),
           ],
         ),
-        actions: <Widget>[
+        actions: [
           TextButton(
             child: const Text("關閉"),
             onPressed: () => Navigator.of(context).pop(),

@@ -44,19 +44,23 @@ class _CreateItemPageState extends State<CreateItemPage> {
 
   void create() {
     if (printers.isEmpty) {
-      showDeleteConfirmDialog(context, "請先創建打印機");
+      showAlertDialog(context, "請先創建打印機");
       return;
     }
     if (name.text.isEmpty) {
-      showDeleteConfirmDialog(context, "請輸入品項名稱");
+      showAlertDialog(context, "請輸入品項名稱");
       return;
     }
     if (pricing.text.isEmpty) {
-      showDeleteConfirmDialog(context, '請輸入價錢');
+      showAlertDialog(context, '請輸入價錢');
       return;
     }
     if (tag.text.isEmpty) {
-      showDeleteConfirmDialog(context, '請輸入分類');
+      showAlertDialog(context, '請輸入分類');
+      return;
+    }
+    if (!showImage) {
+      showAlertDialog(context, '請上傳圖片');
       return;
     }
     createItem(
@@ -71,15 +75,15 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 pricing: int.parse(pricing.text) * 100,
                 attributes: attributes))
         .then((value) {
-      // if (showImage) {
-      //   if (!kIsWeb) {
-      //     uploadItemImage(value.id, imageFile!)
-      //         .then((value) => Navigator.pop(context));
-      //   }
-      // } else {
-      //   Navigator.pop(context);
-      // }
-      Navigator.pop(context);
+      if (!kIsWeb) {
+        uploadItemImage(value.id, imageFile!)
+            .then((value) => Navigator.pop(context))
+            .catchError((err) {
+          showAlertDialog(context, err.toString());
+        });
+      } else {
+        Navigator.pop(context);
+      }
     });
   }
 

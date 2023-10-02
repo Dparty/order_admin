@@ -83,9 +83,9 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
     deleteItem(id).then((value) => loadRestaurant());
   }
 
-  void removePrinter(String id) =>
-      deletePrinter(id).then((_) => loadRestaurant()).onError(
-          (error, stackTrace) => showDeleteConfirmDialog(context, "有品項使用此打印機"));
+  void removePrinter(String id) => deletePrinter(id)
+      .then((_) => loadRestaurant())
+      .onError((error, stackTrace) => showAlertDialog(context, "有品項使用此打印機"));
 
   void removeTable(String id) => deleteTable(id).then((_) => loadRestaurant());
 

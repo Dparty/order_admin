@@ -159,7 +159,7 @@ Future<UploadImage> uploadItemImage(String itemId, File file) async {
   };
   request.files.add(
     http.MultipartFile(
-      'image',
+      'file',
       file.readAsBytes().asStream(),
       file.lengthSync(),
       filename: file.path.split('/').last,
