@@ -53,10 +53,10 @@ class _OrderingQrcodePageState extends State<OrderingQrcodePage> {
               );
             },
           ))),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text('下載'),
-          )
+          // ElevatedButton(
+          //   onPressed: () {},
+          //   child: const Text('下載'),
+          // )
         ],
       ),
     );

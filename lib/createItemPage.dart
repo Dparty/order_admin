@@ -23,6 +23,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
   final tag = TextEditingController();
   final List<Attribute> attributes = [];
   final String restaurantId;
+  bool loading = false;
   List<Printer> printers = [];
   String? printerId;
   XFile? image;
@@ -43,6 +44,8 @@ class _CreateItemPageState extends State<CreateItemPage> {
   }
 
   void create() {
+    loading = true;
+    if (loading) return;
     if (printers.isEmpty) {
       showAlertDialog(context, "請先創建打印機");
       return;
@@ -81,8 +84,10 @@ class _CreateItemPageState extends State<CreateItemPage> {
             .catchError((err) {
           showAlertDialog(context, err.toString());
         });
+        loading = false;
       } else {
         Navigator.pop(context);
+        loading = false;
       }
     });
   }

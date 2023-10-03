@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/api/utils.dart';
 import 'package:order_admin/restaurantPage.dart';
+import 'package:path/path.dart';
 import 'signinPage.dart';
 
 void main() {
@@ -30,10 +31,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void toSigninPage(BuildContext context) async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return const SigninPage();
-    }));
+  void toSigninPage() async {
+    Navigator.pushReplacement(this.context,
+        MaterialPageRoute(builder: (context) => const SigninPage()));
   }
 
   @override
@@ -41,15 +41,23 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  void init() {
+    getToken().then((token) {
+      if (token == "") {
+        Navigator.pushReplacement(this.context,
+            MaterialPageRoute(builder: (context) => const SigninPage()));
+      } else {
+        Navigator.pushReplacement(this.context,
+            MaterialPageRoute(builder: (context) => const RestaurantsPage()));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-        future: getToken(),
-        builder: (context, snapshot) {
-          if (snapshot.data! == "") {
-            return const SigninPage();
-          }
-          return const RestaurantsPage();
-        });
+    init();
+    return const Scaffold(
+      body: Text('Loading..'),
+    );
   }
 }
