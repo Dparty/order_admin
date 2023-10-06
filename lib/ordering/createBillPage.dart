@@ -51,7 +51,7 @@ class _CreateBillPageState extends State<CreateBillPage> {
               ...s.options.map((o) => Padding(
                   padding: const EdgeInsets.all(2),
                   child: Text(
-                    "${o.left}:${o.right}",
+                    "${o.left}->${o.right}",
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: textSize),
                   ))),
