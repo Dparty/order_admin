@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/models/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/ordering/shoppingCartPage.dart';
 import 'package:order_admin/ordering/specificationPage.dart';
 
 class CreateBillPage extends StatefulWidget {
@@ -13,6 +12,8 @@ class CreateBillPage extends StatefulWidget {
   // ignore: no_logic_in_create_state
   State<StatefulWidget> createState() => _CreateBillPageState(items, table);
 }
+
+const textSize = 24.0;
 
 class _CreateBillPageState extends State<CreateBillPage> {
   final model.Table table;
@@ -30,18 +31,63 @@ class _CreateBillPageState extends State<CreateBillPage> {
     }
   }
 
-  void toShoppingCart() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ShoppingCartPage(items, specifications)));
+  void showShoppingCart() {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+          child: ListView(
+        children: [
+          ...specifications.map((s) {
+            final item = items.firstWhere((i) => i.id == s.itemId);
+            return Row(children: [
+              Padding(
+                padding: const EdgeInsets.all(2),
+                child: Text(
+                  item.name,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: textSize),
+                ),
+              ),
+              ...s.options.map((o) => Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Text(
+                    "${o.left}:${o.right}",
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: textSize),
+                  ))),
+              Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          specifications =
+                              specifications.where((sp) => sp != s);
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: const Text(
+                        "刪除",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: textSize),
+                      )))
+            ]);
+          }).toList(),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("關閉"),
+          )
+        ],
+      )),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          onPressed: toShoppingCart, child: const Icon(Icons.shopping_bag)),
+          onPressed: showShoppingCart, child: const Icon(Icons.shopping_bag)),
       appBar: AppBar(
         title: Text(table.label),
       ),
