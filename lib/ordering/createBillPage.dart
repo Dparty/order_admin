@@ -84,8 +84,9 @@ class _CreateBillPageState extends State<CreateBillPage> {
     );
   }
 
-  void submit() async {
-    await createBill(table.id, specifications.toList());
+  void submit() {
+    createBill(table.id, specifications.toList())
+        .then((value) => Navigator.pop(context));
   }
 
   @override

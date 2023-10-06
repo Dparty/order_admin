@@ -176,7 +176,7 @@ class Specification {
   Map<String, dynamic> toJson() {
     return {
       'itemId': itemId,
-      'options': options.map((o) => o.toJson()),
+      'options': options,
     };
   }
 
