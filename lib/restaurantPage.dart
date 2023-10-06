@@ -3,7 +3,7 @@ import 'package:order_admin/createRestaurantPage.dart';
 import 'package:order_admin/main.dart';
 import 'package:order_admin/models/model.dart';
 import 'package:order_admin/models/restaurant.dart';
-import 'package:order_admin/orderingPage.dart';
+import 'package:order_admin/ordering/orderingPage.dart';
 import 'package:order_admin/restaurantSettingsPage.dart';
 
 import 'api/restaurant.dart';
@@ -50,10 +50,10 @@ class _RestaurantState extends State<RestaurantsPage> {
           IconButton(
               onPressed: () {
                 signout().then((_) {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return const HomePage();
-                  }));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomePage()));
                 });
               },
               icon: const Icon(Icons.logout))
@@ -88,7 +88,7 @@ class RestaurantCard extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const OrderingPage()));
+                      builder: (context) => OrderingPage(restaurant.id)));
             },
             icon: const Icon(Icons.restaurant)),
         IconButton(

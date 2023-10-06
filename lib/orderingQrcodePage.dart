@@ -1,4 +1,9 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_downloader_web/image_downloader_web.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:order_admin/models/restaurant.dart' as api;
 
 const qrcodeApi =
     'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=';
@@ -20,13 +25,36 @@ class OrderingQrcodePage extends StatefulWidget {
   @override
   // ignore: no_logic_in_create_state
   State<StatefulWidget> createState() =>
+      // ignore: no_logic_in_create_state
       _OrderingQrcodePageState(restaurantId, tableId);
 }
 
 class _OrderingQrcodePageState extends State<OrderingQrcodePage> {
   final String restaurantId;
   final String tableId;
+  api.Table? table;
   _OrderingQrcodePageState(this.restaurantId, this.tableId);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _downloadImage(String url) async {
+    if (kIsWeb) {
+      await WebImageDownloader.downloadImageFromWeb(url);
+    } else {
+      await _saveNetworkImage(url);
+    }
+  }
+
+  _saveNetworkImage(String url) async {
+    final response = await Dio()
+        .get(url, options: Options(responseType: ResponseType.bytes));
+    await ImageGallerySaver.saveImage(Uint8List.fromList(response.data),
+        quality: 60, name: "qrcode");
+  }
+
   @override
   Widget build(BuildContext context) {
     final url = createOrderingUrl(restaurantId, tableId);
@@ -53,10 +81,12 @@ class _OrderingQrcodePageState extends State<OrderingQrcodePage> {
               );
             },
           ))),
-          // ElevatedButton(
-          //   onPressed: () {},
-          //   child: const Text('下載'),
-          // )
+          ElevatedButton(
+            onPressed: () {
+              _downloadImage(url);
+            },
+            child: const Text('下載'),
+          )
         ],
       ),
     );

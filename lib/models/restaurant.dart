@@ -63,8 +63,11 @@ class Attribute {
     };
   }
 
-  factory Attribute.fromJson(Map<String, dynamic> json) =>
-      Attribute(label: json['label'], options: []);
+  factory Attribute.fromJson(Map<String, dynamic> json) => Attribute(
+      label: json['label'],
+      options: (json['options'] as Iterable)
+          .map((o) => Option.fromJson(o))
+          .toList());
 }
 
 class Item {
@@ -163,6 +166,12 @@ class Table {
 
   factory Table.fromJson(Map<String, dynamic> json) =>
       Table(id: json['id'], label: json['label']);
+}
+
+class Specification {
+  final String itemId;
+  final Iterable<Pair> options;
+  Specification({required this.itemId, required this.options});
 }
 
 class TableList {
