@@ -172,6 +172,17 @@ class Specification {
   final String itemId;
   final Iterable<Pair> options;
   Specification({required this.itemId, required this.options});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'itemId': itemId,
+      'options': options.map((o) => o.toJson()),
+    };
+  }
+
+  factory Specification.fromJson(Map<String, dynamic> json) => Specification(
+      itemId: json['itemId'],
+      options: (json['options'] as Iterable).map((o) => Pair.fromJson(o)));
 }
 
 class TableList {

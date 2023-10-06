@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/ordering/createBillPage.dart';
-import 'package:order_admin/ordering/shoppingCartPage.dart';
-import 'package:order_admin/restaurantPage.dart';
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 

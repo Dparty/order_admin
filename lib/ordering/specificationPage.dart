@@ -22,7 +22,7 @@ class _SpecificationPageState extends State<SpecificationPage> {
     setState(() {
       specification = [
         ...specification.where((s) => s.left != left),
-        Pair(left, right)
+        Pair(left: left, right: right)
       ];
     });
   }
@@ -32,7 +32,7 @@ class _SpecificationPageState extends State<SpecificationPage> {
     super.initState();
     setState(() {
       specification = item.attributes
-          .map((a) => Pair(a.label, a.options[0].label))
+          .map((a) => Pair(left: a.label, right: a.options[0].label))
           .toList();
     });
   }
@@ -47,45 +47,43 @@ class _SpecificationPageState extends State<SpecificationPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: Text(item.name)),
-        floatingActionButton: Wrap(
-            direction: Axis.horizontal, //use vertical
-            children: [
-              Container(
-                  padding: const EdgeInsets.all(10),
-                  child: FloatingActionButton(
-                      onPressed: () {
-                        if (number == 1) return;
-                        setState(() {
-                          number--;
-                        });
-                      },
-                      child: const Icon(Icons.exposure_minus_1))),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: FloatingActionButton(
-                  onPressed: null,
-                  child: Text(number.toString()),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: FloatingActionButton(
+        floatingActionButton: Wrap(direction: Axis.horizontal, children: [
+          Container(
+              padding: const EdgeInsets.all(10),
+              child: FloatingActionButton(
                   onPressed: () {
+                    if (number == 1) return;
                     setState(() {
-                      number++;
+                      number--;
                     });
                   },
-                  child: const Icon(Icons.exposure_plus_1),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: FloatingActionButton(
-                  onPressed: submit,
-                  child: const Icon(Icons.send),
-                ),
-              ),
-            ]),
+                  child: const Icon(Icons.exposure_minus_1))),
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: FloatingActionButton(
+              onPressed: null,
+              child: Text(number.toString()),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  number++;
+                });
+              },
+              child: const Icon(Icons.exposure_plus_1),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: FloatingActionButton(
+              onPressed: submit,
+              child: const Icon(Icons.send),
+            ),
+          ),
+        ]),
         body: ListView(
             children: item.attributes
                 .map((a) => SpecificationSelector(

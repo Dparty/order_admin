@@ -174,3 +174,15 @@ Future<UploadImage> uploadItemImage(String itemId, File file) async {
     throw Exception('Failed to create restaurant');
   }
 }
+
+Future<void> createBill(String tableId, Iterable<Specification> orders) async {
+  final response = await http.post(
+    Uri.parse("$baseUrl/tables/$tableId/orders"),
+    body: jsonEncode({'orders': orders}),
+  );
+  if (response.statusCode == 201) {
+    // return TableList.fromJson(jsonDecode(response.body)).data;
+  } else {
+    throw Exception('Failed to create restaurant');
+  }
+}

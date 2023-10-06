@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/ordering/specificationPage.dart';
@@ -83,11 +84,29 @@ class _CreateBillPageState extends State<CreateBillPage> {
     );
   }
 
+  void submit() async {
+    await createBill(table.id, specifications.toList());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          onPressed: showShoppingCart, child: const Icon(Icons.shopping_bag)),
+      floatingActionButton: Wrap(
+        direction: Axis.horizontal,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(2),
+            child: FloatingActionButton(
+                onPressed: submit, child: const Icon(Icons.send)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(2),
+            child: FloatingActionButton(
+                onPressed: showShoppingCart,
+                child: const Icon(Icons.shopping_bag)),
+          )
+        ],
+      ),
       appBar: AppBar(
         title: Text(table.label),
       ),

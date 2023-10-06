@@ -5,9 +5,17 @@ abstract class Model {
 class Pair {
   final String left;
   final String right;
-  Pair(this.left, this.right);
+  const Pair({required this.left, required this.right});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'left': left,
+      'right': right,
+    };
+  }
+
   factory Pair.fromJson(Map<String, dynamic> json) =>
-      Pair(json['left'], json['right']);
+      Pair(left: json['left'], right: json['right']);
 }
 
 class Pagination {
