@@ -123,6 +123,7 @@ Future<void> deleteTable(String id) async {
 }
 
 Future<Item> createItem(String restaurantId, PutItem item) async {
+  print("createItem");
   final token = await getToken();
   final response = await http.post(
       Uri.parse("$baseUrl/restaurants/$restaurantId/items"),
@@ -181,7 +182,6 @@ Future<void> createBill(String tableId, Iterable<Specification> orders) async {
     body: jsonEncode({'orders': orders}),
   );
   if (response.statusCode == 201) {
-    // return TableList.fromJson(jsonDecode(response.body)).data;
   } else {
     throw Exception('Failed to create restaurant');
   }

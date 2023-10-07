@@ -44,25 +44,30 @@ class _CreateItemPageState extends State<CreateItemPage> {
   }
 
   void create() {
-    loading = true;
     if (loading) return;
+    loading = true;
     if (printers.isEmpty) {
+      loading = false;
       showAlertDialog(context, "請先創建打印機");
       return;
     }
     if (name.text.isEmpty) {
+      loading = false;
       showAlertDialog(context, "請輸入品項名稱");
       return;
     }
     if (pricing.text.isEmpty) {
+      loading = false;
       showAlertDialog(context, '請輸入價錢');
       return;
     }
     if (tag.text.isEmpty) {
+      loading = false;
       showAlertDialog(context, '請輸入分類');
       return;
     }
     if (!showImage) {
+      loading = false;
       showAlertDialog(context, '請上傳圖片');
       return;
     }

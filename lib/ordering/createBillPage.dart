@@ -85,6 +85,7 @@ class _CreateBillPageState extends State<CreateBillPage> {
   }
 
   void submit() {
+    if (specifications.isEmpty) return;
     createBill(table.id, specifications.toList())
         .then((value) => Navigator.pop(context));
   }
@@ -142,9 +143,15 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(2),
         child: SizedBox(
-          height: 50,
+          height: 80,
           child: OutlinedButton(
-              onPressed: onPressed, child: Center(child: Text(item.name))),
+              onPressed: onPressed,
+              child: Center(
+                  child: Text(
+                item.name,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: textSize),
+              ))),
         ),
       );
 }

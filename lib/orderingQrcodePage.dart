@@ -49,10 +49,11 @@ class _OrderingQrcodePageState extends State<OrderingQrcodePage> {
   }
 
   _saveNetworkImage(String url) async {
+    if (table == null) return;
     final response = await Dio()
         .get(url, options: Options(responseType: ResponseType.bytes));
     await ImageGallerySaver.saveImage(Uint8List.fromList(response.data),
-        quality: 60, name: "qrcode");
+        quality: 60, name: "${table!.label}-qrcode");
   }
 
   @override
