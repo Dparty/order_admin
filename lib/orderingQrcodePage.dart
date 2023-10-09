@@ -14,7 +14,8 @@ String createQrcodeUrl(String text) {
 }
 
 String createOrderingUrl(String restaurantId, String tableId) {
-  return createQrcodeUrl("$orderWebDomain/order/$restaurantId/$tableId");
+  return createQrcodeUrl(Uri.encodeComponent(
+      "$orderWebDomain/ordering/?restaurantId=$restaurantId&tableId=$tableId"));
 }
 
 class OrderingQrcodePage extends StatefulWidget {
@@ -63,7 +64,6 @@ class _OrderingQrcodePageState extends State<OrderingQrcodePage> {
       appBar: AppBar(title: const Text('桌號二維碼')),
       body: Column(
         children: [
-          Expanded(child: Text(url)),
           Expanded(
               child: Center(
                   child: Image.network(
@@ -83,11 +83,15 @@ class _OrderingQrcodePageState extends State<OrderingQrcodePage> {
               );
             },
           ))),
-          ElevatedButton(
-            onPressed: () {
-              _downloadImage(url);
-            },
-            child: const Text('下載'),
+          Column(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  _downloadImage(url);
+                },
+                child: const Text('下載'),
+              )
+            ],
           )
         ],
       ),

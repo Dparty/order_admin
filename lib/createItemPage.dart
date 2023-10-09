@@ -80,7 +80,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
                     .toList(),
                 tags: [tag.text],
                 name: name.text,
-                pricing: int.parse(pricing.text) * 100,
+                pricing: (double.parse(pricing.text) * 100).toInt(),
                 attributes: attributes))
         .then((value) {
       if (!kIsWeb) {
