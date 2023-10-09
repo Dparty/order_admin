@@ -63,6 +63,7 @@ class _OrderingQrcodePageState extends State<OrderingQrcodePage> {
       appBar: AppBar(title: const Text('桌號二維碼')),
       body: Column(
         children: [
+          Expanded(child: Text(url)),
           Expanded(
               child: Center(
                   child: Image.network(
