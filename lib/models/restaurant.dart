@@ -5,12 +5,17 @@ class Restaurant {
   final String name;
   final String description;
   final List<Item> items;
-  const Restaurant({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.items,
-  });
+
+  final List<Printer>? printers;
+  final List<Table>? tables;
+
+  const Restaurant(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.items,
+      this.printers,
+      this.tables});
 
   factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
       id: json["id"],
@@ -74,11 +79,13 @@ class Item {
   final String id;
   final String name;
   final int pricing;
+  final List<String> tags;
   final List<Attribute> attributes;
   Item(
       {required this.id,
       required this.name,
       required this.pricing,
+      required this.tags,
       required this.attributes});
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -88,6 +95,7 @@ class Item {
             .toList(),
         id: json['id'],
         name: json['name'],
+        tags: (json['tags'] as Iterable).map((a) => a as String).toList(),
         pricing: json['pricing']);
   }
 }
