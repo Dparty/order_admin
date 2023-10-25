@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:order_admin/models/restaurant.dart';
 import '../item_detail.dart';
 
+import 'package:provider/provider.dart';
+import 'package:order_admin/provider/shopping_cart_provider.dart';
+
 class ItemListView extends StatefulWidget {
   final List<Item>? itemList;
   Item? selectedItem;
@@ -15,13 +18,13 @@ class ItemListView extends StatefulWidget {
 class _ItemListViewState extends State<ItemListView> {
   Map _selectedItems = {};
 
-  void _showAttribute(items) async {
+  void _showAttribute(item) async {
     // print(items.attributes[0].label);
 
     final Map? results = await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return MultiSelect(items: items.attributes);
+        return MultiSelect(item: item);
       },
     );
 
@@ -61,8 +64,8 @@ class _ItemListViewState extends State<ItemListView> {
 // Multi Select widget
 // This widget is reusable
 class MultiSelect extends StatefulWidget {
-  final List items;
-  const MultiSelect({Key? key, required this.items}) : super(key: key);
+  final item;
+  const MultiSelect({Key? key, required this.item}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MultiSelectState();
@@ -78,13 +81,15 @@ class _MultiSelectState extends State<MultiSelect> {
 
 // this function is called when the Submit button is tapped
   void _submit() {
+    print(_selectedItems);
+    context.read<CartProvider>().addToCart(widget.item);
     Navigator.pop(context, _selectedItems);
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('選規格'),
+      title: Text(widget.item.name),
       content: Builder(builder: (context) {
         // Get available height and width of the build area of this widget. Make a choice depending on the size.
         var height = MediaQuery.of(context).size.height;
@@ -93,7 +98,7 @@ class _MultiSelectState extends State<MultiSelect> {
             height: height - 400,
             width: width - 400,
             child: Column(children: [
-              ...widget.items
+              ...widget.item.attributes
                   .map((item) => Column(
                         children: [
                           Text(
@@ -137,18 +142,32 @@ class _MultiSelectState extends State<MultiSelect> {
                         ],
                       ))
                   .toList(),
+              Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: _submit,
+                    style: ElevatedButton.styleFrom(
+                        shape: StadiumBorder(),
+                        backgroundColor: Color(0xFFC88D67)),
+                    child: Text(
+                      "+ 加入購物車",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              )
             ]));
       }),
-      actions: [
-        TextButton(
-          onPressed: _cancel,
-          child: const Text('取消'),
-        ),
-        ElevatedButton(
-          onPressed: _submit,
-          child: const Text('確認'),
-        ),
-      ],
+      // actions: [
+      //   TextButton(
+      //     onPressed: _cancel,
+      //     child: const Text('取消'),
+      //   ),
+      //   ElevatedButton(
+      //     onPressed: _submit,
+      //     child: const Text('確認'),
+      //   ),
+      // ],
     );
   }
 }

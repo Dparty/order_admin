@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'provider/selection_button_provider.dart';
 import 'provider/restaurant_provider.dart';
 import 'provider/selected_table_provider.dart';
+import 'provider/shopping_cart_provider.dart';
 
 import 'configs/app_theme.dart';
 
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SelectionButtonProvider()),
         ChangeNotifierProvider(create: (_) => RestaurantProvider()),
         ChangeNotifierProvider(create: (_) => SelectedTableProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
 
         // ChangeNotifierProvider(create: (_) => FavouriteProvider()),
       ],

@@ -58,13 +58,12 @@ class _OrderingPageState extends State<OrderingPage> {
   }
 
   void toCreateBillPage(model.Table table) {
-    // final restaurant = context.watch<RestaurantProvider>();
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => CreateBillPage(
                   table: table,
-                  items: context.watch()<RestaurantProvider>().items,
+                  items: context.watch<RestaurantProvider>().items,
                 )));
   }
 
