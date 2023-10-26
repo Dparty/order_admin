@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
+
+// providers
 import 'package:order_admin/provider/selected_table_provider.dart';
 import 'package:provider/provider.dart';
-import '../cookie_page.dart';
-import 'package:order_admin/createItemPage.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
-import 'package:order_admin/provider/selected_table_provider.dart';
 import 'package:order_admin/views/components/navbar.dart';
-import 'item_list.dart';
-import 'dart:math';
-import 'shopping_cart.dart';
+
+// components
+import './item_list.dart';
+import './shopping_cart.dart';
 
 class OrderItem extends StatefulWidget {
   OrderItem({super.key});
-  final List<String> _tabs = [];
   List shoppingList = [];
   int tabListLength = 0;
 
   @override
-  _OrderItemState createState() => _OrderItemState();
+  State<OrderItem> createState() => _OrderItemState();
 }
 
 class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
@@ -46,19 +45,21 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
             backgroundColor: Colors.white,
             elevation: 0.0,
             centerTitle: true,
-            // leading: IconButton(
-            //   icon: const Icon(Icons.arrow_back, color: Color(0xFF545D68)),
-            //   onPressed: () {},
-            // ),
             title: const Text('點餐',
                 style: TextStyle(fontSize: 20.0, color: Color(0xFF545D68))),
           ),
           body: ListView(
             padding: const EdgeInsets.only(left: 20.0),
             children: <Widget>[
-              SizedBox(height: 15.0),
-              Text(
-                  '餐廳名稱：${context.read<RestaurantProvider>().name}。餐桌號：${context.read<SelectedTableProvider>().selectedTable?.label}'),
+              const SizedBox(height: 15.0),
+              Row(
+                children: [
+                  Text('餐廳名稱：${context.read<RestaurantProvider>().name}'),
+                  const SizedBox(width: 10),
+                  Text(
+                      '餐桌號：${context.read<SelectedTableProvider>().selectedTable?.label}')
+                ],
+              ),
               Row(
                 children: [
                   Expanded(
@@ -71,7 +72,7 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
                           labelPadding: EdgeInsets.only(right: 45.0),
                           unselectedLabelColor: Color(0xFFCDCDCD),
                           tabs: [
-                            Tab(
+                            const Tab(
                               child: Text('所有品項',
                                   style: TextStyle(
                                     fontSize: 18.0,
@@ -80,7 +81,7 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
                             ...restaurant.itemsMap.keys.map(
                               (label) => Tab(
                                 child: Text(label,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 18.0,
                                     )),
                               ),

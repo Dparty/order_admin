@@ -40,7 +40,6 @@ class RestaurantProvider with ChangeNotifier {
     String description,
     List<model.Item> items,
   ) {
-    print(name);
     _id = id;
     _name = name;
     _description = description;
@@ -57,5 +56,12 @@ class RestaurantProvider with ChangeNotifier {
   void setRestaurantTables(List<model.Table> tables) {
     _tables = tables;
     notifyListeners();
+  }
+
+  void resetRestaurant() {
+    setRestaurant('', '', '', []);
+    _itemsMap = {};
+    setRestaurantPrinter([]);
+    setRestaurantTables([]);
   }
 }

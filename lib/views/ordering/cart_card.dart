@@ -72,8 +72,6 @@ class CartCard extends StatelessWidget {
                         onPressed: () => {
                               [
                                 provider.deleteQuantity(item.id ?? ''),
-                                provider.removeTotalPrice(
-                                    item.productPrice! / 100 ?? 0.0)
                               ]
                             },
                         icon: const Icon(Icons.remove)),
@@ -82,8 +80,6 @@ class CartCard extends StatelessWidget {
                         onPressed: () => {
                               [
                                 provider.addQuantity(item.id ?? ''),
-                                provider.addTotalPrice(
-                                    item.productPrice! / 100 ?? 0.0)
                               ]
                             },
                         icon: const Icon(Icons.add)),

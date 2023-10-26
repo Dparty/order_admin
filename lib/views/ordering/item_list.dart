@@ -19,8 +19,6 @@ class _ItemListViewState extends State<ItemListView> {
   Map _selectedItems = {};
 
   void _showAttribute(item) async {
-    // print(items.attributes[0].label);
-
     final Map? results = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -158,16 +156,6 @@ class _MultiSelectState extends State<MultiSelect> {
               )
             ]));
       }),
-      // actions: [
-      //   TextButton(
-      //     onPressed: _cancel,
-      //     child: const Text('取消'),
-      //   ),
-      //   ElevatedButton(
-      //     onPressed: _submit,
-      //     child: const Text('確認'),
-      //   ),
-      // ],
     );
   }
 }
@@ -178,11 +166,6 @@ Widget _buildCard(context, item, _showAttribute) {
       child: InkWell(
           onTap: () {
             _showAttribute(item);
-            // Navigator.of(context).push(MaterialPageRoute(
-            //     builder: (context) => ItemDetail(
-            //         assetPath: imgPath,
-            //         cookieprice: price,
-            //         cookiename: name)));
           },
           child: Container(
               decoration: BoxDecoration(
@@ -194,55 +177,51 @@ Widget _buildCard(context, item, _showAttribute) {
                         blurRadius: 5.0)
                   ],
                   color: Colors.white),
-              child: Column(children: [
-                Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [Icon(Icons.add, color: Color(0xFFC88D67))])),
-                Hero(
-                    tag: '',
-                    child: Container(
-                      height: 75.0,
-                      // width: 175.0,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('images/favicon.png'),
-                            // NetworkImage(item.images),
-                            // image: AssetImage('images/favicon.png'),
-                            // fit: BoxFit.cover,
-                            onError: (err, stackTrace) =>
-                                AssetImage('images/favicon.png')),
-                        // image: DecorationImage(
-                        //     image: AssetImage(imgPath),
-                        //     fit: BoxFit.contain)
+              child: Stack(children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: FadeInImage(
+                        image: NetworkImage(
+                          item.images.isEmpty ? '' : item.images[0],
+                        ),
+                        fit: BoxFit.fitWidth,
+                        placeholder: AssetImage("images/default.png"),
+                        imageErrorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            "images/default.png",
+                            width: 100,
+                          );
+                        },
                       ),
-                      // child: Hero(
-                      //   tag: name,
-                      //   child: Image.asset(imgPath),
-                      // ),
-                    )),
-                SizedBox(height: 7.0),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: 5.0, bottom: 5.0, left: 55.0, right: 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: Text(item.name,
-                            style: TextStyle(
-                                color: Color(0xFF575E67), fontSize: 12.0)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(item.name,
+                                style: const TextStyle(
+                                    color: Color(0xFF575E67), fontSize: 12.0)),
+                          ),
+                          // const Spacer(),
+                          Expanded(
+                            child: Text("\$${(item.pricing / 100).toString()}",
+                                style: const TextStyle(
+                                    color: Color(0xFFCC8053), fontSize: 12.0)),
+                          ),
+                        ],
                       ),
-                      Spacer(),
-                      Expanded(
-                        child: Text("\$${(item.pricing / 100).toString()}",
-                            style: TextStyle(
-                                color: Color(0xFFCC8053), fontSize: 12.0)),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 )
+                // Padding(
+                //     padding: EdgeInsets.all(15.0),
+                //     child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.end,
+                //         children: [Icon(Icons.add, color: Color(0xFFC88D67))])),
               ]))));
 }

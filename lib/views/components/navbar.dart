@@ -4,10 +4,13 @@ import 'navbar_item.dart';
 import '../../main.dart';
 import '../../api/utils.dart';
 import '../restaurantPage.dart';
-import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/views/ordering/orderingPage.dart';
-import 'selection_button.dart';
+
+// providers
 import 'package:provider/provider.dart';
+import 'package:order_admin/provider/restaurant_provider.dart';
+import 'package:order_admin/provider/selected_table_provider.dart';
+import 'package:order_admin/provider/shopping_cart_provider.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -96,16 +99,23 @@ class NavBar extends StatelessWidget {
 
     switch (index) {
       case 0:
+        context.read<RestaurantProvider>().resetRestaurant();
+        context.read<CartProvider>().resetShoppingCart();
+        context.read<SelectedTableProvider>().resetSelectTable();
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const RestaurantsPage()));
         break;
       case 1:
+        context.read<CartProvider>().resetShoppingCart();
+        context.read<SelectedTableProvider>().resetSelectTable();
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => OrderingPage(restaurant.id)));
         break;
       case 2:
+        context.read<CartProvider>().resetShoppingCart();
+        context.read<SelectedTableProvider>().resetSelectTable();
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -113,6 +123,8 @@ class NavBar extends StatelessWidget {
                     RestaurantSettingsPage(restaurantId: restaurant.id)));
         break;
       case 4:
+        context.read<CartProvider>().resetShoppingCart();
+        context.read<SelectedTableProvider>().resetSelectTable();
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -122,6 +134,9 @@ class NavBar extends StatelessWidget {
       case 5:
         (() {
           signout().then((_) {
+            context.read<RestaurantProvider>().resetRestaurant();
+            context.read<CartProvider>().resetShoppingCart();
+            context.read<SelectedTableProvider>().resetSelectTable();
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => const HomePage()));
           });

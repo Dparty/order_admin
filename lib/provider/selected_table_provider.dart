@@ -14,18 +14,8 @@ class SelectedTableProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void resetSelectTable(model.Table table) {
+  void resetSelectTable() {
     _selectedTable = null;
     notifyListeners();
   }
-
-  // void removeSeat(Seat seat) {
-  //   _selectedSeats.remove(seat);
-  //   log("${seat.seatLabel} removed");
-  //   notifyListeners();
-  // }
-  //
-  // bool isSeatSelected(Seat seat) {
-  //   return _selectedSeats.contains(seat);
-  // }
 }

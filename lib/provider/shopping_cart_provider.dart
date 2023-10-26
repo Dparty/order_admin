@@ -16,6 +16,7 @@ class CartProvider with ChangeNotifier {
   List<CartItem> cart = [];
 
   void addToCart(item) {
+    print(item.images.length);
     CartItem cartItem = CartItem(
       id: item.id,
       productId: item.id,
@@ -24,7 +25,7 @@ class CartProvider with ChangeNotifier {
       productPrice: item.pricing,
       quantity: ValueNotifier(1),
       unitTag: '1',
-      image: item.images[0],
+      image: item.images.isEmpty ? '' : item.images[0],
     );
 
     // // todo: 合併 id 一樣而且選擇的 specification 一樣的
@@ -40,13 +41,11 @@ class CartProvider with ChangeNotifier {
     CartItem? target = cart.firstWhereOrNull((i) => i.id == item.id);
 
     if (target == null) {
-      print(cartItem.productName);
       cart.add(cartItem);
-      addTotalPrice(cartItem.productPrice! / 100 ?? 0.0);
     } else {
       addQuantity(item.id);
     }
-
+    addTotalPrice(cartItem.productPrice! / 100 ?? 0.0);
     notifyListeners();
   }
 
@@ -67,6 +66,7 @@ class CartProvider with ChangeNotifier {
   void addQuantity(String id) {
     final index = cart.indexWhere((element) => element.id == id);
     cart[index].quantity!.value = cart[index].quantity!.value + 1;
+    addTotalPrice(cart[index].productPrice! / 100 ?? 0.0);
     notifyListeners();
   }
 
@@ -75,14 +75,19 @@ class CartProvider with ChangeNotifier {
     final currentQuantity = cart[index].quantity!.value;
     if (currentQuantity <= 1) {
       currentQuantity == 1;
+      removeItem(id);
     } else {
       cart[index].quantity!.value = currentQuantity - 1;
     }
+    removeTotalPrice(cart[index].productPrice! / 100 ?? 0.0);
     notifyListeners();
   }
 
   void removeItem(String id) {
     final index = cart.indexWhere((element) => element.id == id);
+    removeTotalPrice(
+        ((cart[index].productPrice! / 100) * cart[index].quantity!.value) ??
+            0.0);
     cart.removeAt(index);
     notifyListeners();
   }
@@ -103,5 +108,14 @@ class CartProvider with ChangeNotifier {
 
   double getTotalPrice() {
     return _totalPrice;
+  }
+
+  void resetShoppingCart() {
+    _counter = 0;
+    _quantity = 1;
+    _totalPrice = 0.0;
+
+    cartMap = {};
+    cart = [];
   }
 }
