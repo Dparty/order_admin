@@ -4,15 +4,12 @@ import 'package:order_admin/models/cart_item.dart';
 import 'package:collection/collection.dart';
 
 class CartProvider with ChangeNotifier {
-  int _counter = 0;
-  int get counter => cart.map((e) => e.quantity).sum;
   int get quantity => cart.map((e) => e.quantity).sum;
-
-  double _totalPrice = 0.0;
-  double get totalPrice => _totalPrice;
-
   Map<String, List<CartItem>> cartMap = {};
   List<CartItem> cart = [];
+  int get total {
+    return cart.map((e) => e.total).sum;
+  }
 
   void addToCart(CartItem item) {
     for (final c in cart) {
@@ -24,20 +21,6 @@ class CartProvider with ChangeNotifier {
     }
     cart.add(item);
     notifyListeners();
-  }
-
-  void addCounter() {
-    _counter++;
-    notifyListeners();
-  }
-
-  void removeCounter() {
-    _counter--;
-    notifyListeners();
-  }
-
-  int getCounter() {
-    return _counter;
   }
 
   void addQuantity(CartItem item) {
@@ -61,6 +44,7 @@ class CartProvider with ChangeNotifier {
   }
 
   getCartListForBill() {
+    // TODO: refacotr
     // var cartList = [];
     // for (int i = 0; i < cart.length; i++) {
     //   CartListForBillItem item =
@@ -68,10 +52,6 @@ class CartProvider with ChangeNotifier {
     //   cartList.add(item);
     // }
     // return cartList;
-  }
-
-  int get total {
-    return cart.map((e) => e.total).sum;
   }
 
   void resetShoppingCart() {

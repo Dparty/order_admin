@@ -73,18 +73,12 @@ class MultiSelect extends StatefulWidget {
 }
 
 class _MultiSelectState extends State<MultiSelect> {
-  // final Map _selectedItems = {};
-  // List<Attribute>? _selectedItems;
   Map<String, String> _selectedItems = Map();
 
   @override
   void initState() {
     super.initState();
     var attrList = widget.item.attributes;
-    // for (int i = 0; i < attrList.length; i++) {
-    //   _selectedItems?.add(attrList[i].options[0]);
-    // }
-    // _selectedItems = widget.item.attributes;
   }
 
   // this function is called when the Cancel button is pressed
@@ -102,10 +96,6 @@ class _MultiSelectState extends State<MultiSelect> {
       unitTag: '1',
       selectedItems: _selectedItems,
     );
-    // _selectedItems!.forEach((element) => print(element));
-    // print(_selectedItems);
-    // // 加入屬性
-    // _selectedItems.forEach((key, value) {});
     context.read<CartProvider>().addToCart(cartItem);
     Navigator.pop(context);
   }

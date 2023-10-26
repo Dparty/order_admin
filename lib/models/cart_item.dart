@@ -11,7 +11,6 @@ class CartItem {
   final double? initialPrice;
   final double? productPrice;
   int quantity;
-  // int get amount => quantity != null ? quantity!.value : 0;
   final String? unitTag;
   String get image {
     if (item.images.isEmpty) {
