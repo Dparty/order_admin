@@ -5,9 +5,8 @@ import 'package:collection/collection.dart';
 
 class CartProvider with ChangeNotifier {
   int _counter = 0;
-  int _quantity = 1;
-  int get counter => _counter;
-  int get quantity => _quantity;
+  int get counter => cart.map((e) => e.quantity).sum;
+  int get quantity => cart.map((e) => e.quantity).sum;
 
   double _totalPrice = 0.0;
   double get totalPrice => _totalPrice;
@@ -15,43 +14,15 @@ class CartProvider with ChangeNotifier {
   Map<String, List<CartItem>> cartMap = {};
   List<CartItem> cart = [];
 
-  void addToCart(item) {
-    // CartItem cartItem = CartItem(
-    //   id: item.id,
-    //   productId: item.id,
-    //   productName: item.name,
-    //   initialPrice: item.pricing,
-    //   productPrice: item.pricing,
-    //   quantity: ValueNotifier(1),
-    //   unitTag: '1',
-    //   image: item.images.isEmpty ? '' : item.images[0],
-    //   attributes: item.attributes,
-    // );
-
-    // // todo: 合併 id 一樣而且選擇的 specification 一樣的
-    // if (!cartMap.containsKey(item.id)) {
-    //   cartMap[item.id] = [cartItem];
-    // } else {
-    //   if (cartMap[item.id]?[0].unitTag == item.unitTag) {
-    //   } else {
-    //     cartMap[item.id]!.add(cartItem);
-    //   }
-    // }
-
-    CartItem? target = cart.firstWhereOrNull((i) => i.id == item.id);
-
-    // if (target == null) {
-    //   cart.add(cartItem);
-    // } else {
-    //   addQuantity(item.id);
-    // }
-    // addTotalPrice(cartItem.productPrice! / 100 ?? 0.0);
-    if (target == null) {
-      cart.add(item);
-    } else {
-      addQuantity(item.id);
+  void addToCart(CartItem item) {
+    for (final c in cart) {
+      if (c.equal(item)) {
+        c.quantity++;
+        notifyListeners();
+        return;
+      }
     }
-    addTotalPrice(item.productPrice! / 100 ?? 0.0);
+    cart.add(item);
     notifyListeners();
   }
 
@@ -69,69 +40,41 @@ class CartProvider with ChangeNotifier {
     return _counter;
   }
 
-  void addQuantity(String id) {
-    final index = cart.indexWhere((element) => element.id == id);
-    cart[index].quantity!.value = cart[index].quantity!.value + 1;
-    addTotalPrice(cart[index].productPrice! / 100 ?? 0.0);
+  void addQuantity(CartItem item) {
+    addToCart(item);
     notifyListeners();
   }
 
-  void deleteQuantity(String id) {
-    final index = cart.indexWhere((element) => element.id == id);
-    final currentQuantity = cart[index].quantity!.value;
-    if (currentQuantity <= 1) {
-      currentQuantity == 1;
-      removeItem(id);
-    } else {
-      cart[index].quantity!.value = currentQuantity - 1;
+  void deleteQuantity(CartItem item) {
+    cart = cart.where((i) => !i.equal(item)).toList();
+    notifyListeners();
+  }
+
+  void removeItem(CartItem item) {
+    for (var i = 0; i < cart.length; i++) {
+      if (cart[i].equal(item)) {
+        cart[i].quantity--;
+      }
     }
-    removeTotalPrice(cart[index].productPrice! / 100 ?? 0.0);
-    notifyListeners();
-  }
-
-  void removeItem(String id) {
-    final index = cart.indexWhere((element) => element.id == id);
-    removeTotalPrice(
-        ((cart[index].productPrice! / 100) * cart[index].quantity!.value) ??
-            0.0);
-    cart.removeAt(index);
-    notifyListeners();
-  }
-
-  int getQuantity(int quantity) {
-    return _quantity;
-  }
-
-  void addTotalPrice(double productPrice) {
-    _totalPrice = _totalPrice + productPrice;
-    notifyListeners();
-  }
-
-  void removeTotalPrice(double productPrice) {
-    _totalPrice = _totalPrice - productPrice;
+    cart = cart.where((i) => i.quantity > 0).toList();
     notifyListeners();
   }
 
   getCartListForBill() {
-    var cartList = [];
-    for (int i = 0; i < cart.length; i++) {
-      CartListForBillItem item =
-          CartListForBillItem(ItemId: cart[i].id, Options: cart[i].attributes);
-      cartList.add(item);
-    }
-    return cartList;
+    // var cartList = [];
+    // for (int i = 0; i < cart.length; i++) {
+    //   CartListForBillItem item =
+    //       CartListForBillItem(ItemId: cart[i].id, Options: cart[i].attributes);
+    //   cartList.add(item);
+    // }
+    // return cartList;
   }
 
-  double getTotalPrice() {
-    return _totalPrice;
+  int get total {
+    return cart.map((e) => e.total).sum;
   }
 
   void resetShoppingCart() {
-    _counter = 0;
-    _quantity = 1;
-    _totalPrice = 0.0;
-
-    cartMap = {};
     cart = [];
   }
 }

@@ -67,7 +67,7 @@ class ShoppingCart extends StatelessWidget {
           child: SizedBox(
               height: 100,
               child: CheckoutCard(
-                  totalPrice: cartProvider.getTotalPrice().toString(),
+                  totalPrice: (cartProvider.total / 100).toString(),
                   onPressed: () {
                     String tableId = selectedTable?.id ?? '';
                     List CartListForBill =

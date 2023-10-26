@@ -33,7 +33,7 @@ class CartCard extends StatelessWidget {
               ),
               child: FadeInImage(
                 image: NetworkImage(item.image!),
-                placeholder: AssetImage("images/default.png"),
+                placeholder: const AssetImage("images/default.png"),
                 imageErrorBuilder: (context, error, stackTrace) {
                   return Image.asset("images/default.png",
                       fit: BoxFit.fitWidth);
@@ -42,23 +42,23 @@ class CartCard extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               item.productName!,
-              style: TextStyle(color: Colors.black, fontSize: 16),
+              style: const TextStyle(color: Colors.black, fontSize: 16),
               maxLines: 2,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text.rich(
                   TextSpan(
-                    text: "\$${(item.productPrice! / 100).toString()}",
-                    style: TextStyle(
+                    text: "\$${(item.price! / 100).toString()}",
+                    style: const TextStyle(
                         fontWeight: FontWeight.w600, color: kPrimaryColor),
                     children: [
                       // TextSpan(
@@ -80,10 +80,10 @@ class CartCard extends StatelessWidget {
                         // size: 50,
                       ),
                       onPressed: () {
-                        provider.deleteQuantity(item.id ?? '');
+                        provider.removeItem(item);
                       },
                     ),
-                    Text(item.quantity!.value.toString()),
+                    Text(item.quantity.toString()),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
@@ -92,14 +92,14 @@ class CartCard extends StatelessWidget {
                         Icons.add,
                       ),
                       onPressed: () {
-                        provider.addQuantity(item.id ?? '');
+                        provider.addQuantity(item);
                       },
                     ),
                   ],
                 ),
                 IconButton(
                     onPressed: () {
-                      provider.removeItem(item.id ?? '');
+                      provider.deleteQuantity(item);
                     },
                     icon: Icon(
                       Icons.delete,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
+import 'package:order_admin/models/model.dart';
 import 'package:order_admin/models/restaurant.dart';
 import '../item_detail.dart';
 import 'package:order_admin/models/cart_item.dart';
@@ -64,7 +65,7 @@ class _ItemListViewState extends State<ItemListView> {
 // Multi Select widget
 // This widget is reusable
 class MultiSelect extends StatefulWidget {
-  final item;
+  final Item item;
   MultiSelect({Key? key, required this.item}) : super(key: key);
 
   @override
@@ -74,15 +75,15 @@ class MultiSelect extends StatefulWidget {
 class _MultiSelectState extends State<MultiSelect> {
   // final Map _selectedItems = {};
   // List<Attribute>? _selectedItems;
-  List? _selectedItems = [];
+  Map<String, String> _selectedItems = Map();
 
   @override
   void initState() {
     super.initState();
     var attrList = widget.item.attributes;
-    for (int i = 0; i < attrList.length; i++) {
-      _selectedItems?.add(attrList[i].options[0]);
-    }
+    // for (int i = 0; i < attrList.length; i++) {
+    //   _selectedItems?.add(attrList[i].options[0]);
+    // }
     // _selectedItems = widget.item.attributes;
   }
 
@@ -94,20 +95,19 @@ class _MultiSelectState extends State<MultiSelect> {
 // this function is called when the Submit button is tapped
   void _submit() {
     CartItem cartItem = CartItem(
-      id: widget.item.id,
-      productId: widget.item.id,
-      productName: widget.item.name,
-      initialPrice: widget.item.pricing,
-      productPrice: widget.item.pricing,
-      quantity: ValueNotifier(1),
+      item: widget.item,
+      initialPrice: widget.item.pricing.toDouble(),
+      productPrice: widget.item.pricing.toDouble(),
+      quantity: 1,
       unitTag: '1',
-      image: widget.item.images.isEmpty ? '' : widget.item.images[0],
-      attributes: _selectedItems,
+      selectedItems: _selectedItems,
     );
+    // _selectedItems!.forEach((element) => print(element));
+    // print(_selectedItems);
     // // 加入屬性
     // _selectedItems.forEach((key, value) {});
     context.read<CartProvider>().addToCart(cartItem);
-    Navigator.pop(context, _selectedItems);
+    Navigator.pop(context);
   }
 
   @override
@@ -148,13 +148,20 @@ class _MultiSelectState extends State<MultiSelect> {
                                           selectedShadowColor:
                                               Colors.orangeAccent,
                                           elevation: 3,
-                                          selected: _selectedItems?[entry.key]
-                                                  ?.label ==
+                                          selected: _selectedItems[
+                                                  entry.value.label] ==
                                               option.label,
                                           onSelected: (bool selected) {
                                             setState(() {
-                                              _selectedItems?[entry.key] =
-                                                  selected ? option : null;
+                                              if (_selectedItems[
+                                                      entry.value.label] ==
+                                                  option.label) {
+                                                _selectedItems
+                                                    .remove(entry.value.label);
+                                              } else {
+                                                _selectedItems[entry.value
+                                                    .label] = option.label;
+                                              }
                                             });
                                           },
                                         ),
@@ -170,7 +177,8 @@ class _MultiSelectState extends State<MultiSelect> {
                   ElevatedButton(
                     onPressed: _cancel,
                     style: ElevatedButton.styleFrom(
-                        shape: StadiumBorder(), backgroundColor: Colors.grey),
+                        shape: const StadiumBorder(),
+                        backgroundColor: Colors.grey),
                     child: const Text(
                       "取消",
                       style: TextStyle(color: Colors.white),
@@ -180,7 +188,8 @@ class _MultiSelectState extends State<MultiSelect> {
                   ElevatedButton(
                     onPressed: _submit,
                     style: ElevatedButton.styleFrom(
-                        shape: StadiumBorder(), backgroundColor: kPrimaryColor),
+                        shape: const StadiumBorder(),
+                        backgroundColor: kPrimaryColor),
                     child: const Text(
                       "+ 加入購物車",
                       style: TextStyle(color: Colors.white),
@@ -222,7 +231,7 @@ Widget _buildCard(context, item, _showAttribute) {
                           item.images.isEmpty ? '' : item.images[0],
                         ),
                         fit: BoxFit.fitWidth,
-                        placeholder: AssetImage("images/default.png"),
+                        placeholder: const AssetImage("images/default.png"),
                         imageErrorBuilder: (context, error, stackTrace) {
                           return Image.asset(
                             "images/default.png",
