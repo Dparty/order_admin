@@ -9,7 +9,7 @@ import 'provider/restaurant_provider.dart';
 import 'provider/selected_table_provider.dart';
 import 'provider/shopping_cart_provider.dart';
 
-import 'configs/app_theme.dart';
+import 'configs/theme.dart';
 
 void main() {
   // runApp(const App());
@@ -46,8 +46,9 @@ class MyApp extends StatelessWidget {
 
         // ChangeNotifierProvider(create: (_) => FavouriteProvider()),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         title: "和食云",
+        theme: AppTheme.lightTheme(context),
         home: HomePage(),
       ),
     );

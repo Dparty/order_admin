@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/models/restaurant.dart';
 import '../item_detail.dart';
-
+import 'package:order_admin/models/cart_item.dart';
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/shopping_cart_provider.dart';
 
@@ -16,10 +17,11 @@ class ItemListView extends StatefulWidget {
 }
 
 class _ItemListViewState extends State<ItemListView> {
-  Map _selectedItems = {};
+  // Map _selectedItems = {};
+  List _selectedItems = [];
 
   void _showAttribute(item) async {
-    final Map? results = await showDialog(
+    final List? results = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return MultiSelect(item: item);
@@ -36,12 +38,12 @@ class _ItemListViewState extends State<ItemListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFCFAF8),
+      backgroundColor: const Color(0xFFFCFAF8),
       body: ListView(
         children: <Widget>[
-          SizedBox(height: 15.0),
+          const SizedBox(height: 15.0),
           Container(
-              padding: EdgeInsets.only(right: 15.0),
+              padding: const EdgeInsets.only(right: 15.0),
               width: MediaQuery.of(context).size.width - 30.0,
               height: MediaQuery.of(context).size.height - 50.0,
               child:
@@ -63,14 +65,26 @@ class _ItemListViewState extends State<ItemListView> {
 // This widget is reusable
 class MultiSelect extends StatefulWidget {
   final item;
-  const MultiSelect({Key? key, required this.item}) : super(key: key);
+  MultiSelect({Key? key, required this.item}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MultiSelectState();
 }
 
 class _MultiSelectState extends State<MultiSelect> {
-  final Map _selectedItems = {};
+  // final Map _selectedItems = {};
+  // List<Attribute>? _selectedItems;
+  List? _selectedItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    var attrList = widget.item.attributes;
+    for (int i = 0; i < attrList.length; i++) {
+      _selectedItems?.add(attrList[i].options[0]);
+    }
+    // _selectedItems = widget.item.attributes;
+  }
 
   // this function is called when the Cancel button is pressed
   void _cancel() {
@@ -79,8 +93,20 @@ class _MultiSelectState extends State<MultiSelect> {
 
 // this function is called when the Submit button is tapped
   void _submit() {
-    print(_selectedItems);
-    context.read<CartProvider>().addToCart(widget.item);
+    CartItem cartItem = CartItem(
+      id: widget.item.id,
+      productId: widget.item.id,
+      productName: widget.item.name,
+      initialPrice: widget.item.pricing,
+      productPrice: widget.item.pricing,
+      quantity: ValueNotifier(1),
+      unitTag: '1',
+      image: widget.item.images.isEmpty ? '' : widget.item.images[0],
+      attributes: _selectedItems,
+    );
+    // // 加入屬性
+    // _selectedItems.forEach((key, value) {});
+    context.read<CartProvider>().addToCart(cartItem);
     Navigator.pop(context, _selectedItems);
   }
 
@@ -89,7 +115,6 @@ class _MultiSelectState extends State<MultiSelect> {
     return AlertDialog(
       title: Text(widget.item.name),
       content: Builder(builder: (context) {
-        // Get available height and width of the build area of this widget. Make a choice depending on the size.
         var height = MediaQuery.of(context).size.height;
         var width = MediaQuery.of(context).size.width;
         return Container(
@@ -97,15 +122,17 @@ class _MultiSelectState extends State<MultiSelect> {
             width: width - 400,
             child: Column(children: [
               ...widget.item.attributes
-                  .map((item) => Column(
+                  .asMap()
+                  .entries
+                  .map((entry) => Column(
                         children: [
                           Text(
-                            item.label,
+                            entry.value.label,
                             textAlign: TextAlign.left,
                           ),
                           Row(
                             children: [
-                              ...item.options
+                              ...entry.value.options
                                   .map((option) => Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ChoiceChip(
@@ -121,15 +148,13 @@ class _MultiSelectState extends State<MultiSelect> {
                                           selectedShadowColor:
                                               Colors.orangeAccent,
                                           elevation: 3,
-                                          selected:
-                                              _selectedItems[item.label] ==
-                                                  option.label,
+                                          selected: _selectedItems?[entry.key]
+                                                  ?.label ==
+                                              option.label,
                                           onSelected: (bool selected) {
                                             setState(() {
-                                              _selectedItems[item.label] =
-                                                  selected
-                                                      ? option.label
-                                                      : null;
+                                              _selectedItems?[entry.key] =
+                                                  selected ? option : null;
                                             });
                                           },
                                         ),
@@ -140,18 +165,27 @@ class _MultiSelectState extends State<MultiSelect> {
                         ],
                       ))
                   .toList(),
-              Column(
+              Row(
                 children: [
+                  ElevatedButton(
+                    onPressed: _cancel,
+                    style: ElevatedButton.styleFrom(
+                        shape: StadiumBorder(), backgroundColor: Colors.grey),
+                    child: const Text(
+                      "取消",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: _submit,
                     style: ElevatedButton.styleFrom(
-                        shape: StadiumBorder(),
-                        backgroundColor: Color(0xFFC88D67)),
-                    child: Text(
+                        shape: StadiumBorder(), backgroundColor: kPrimaryColor),
+                    child: const Text(
                       "+ 加入購物車",
                       style: TextStyle(color: Colors.white),
                     ),
-                  )
+                  ),
                 ],
               )
             ]));
@@ -162,7 +196,8 @@ class _MultiSelectState extends State<MultiSelect> {
 
 Widget _buildCard(context, item, _showAttribute) {
   return Padding(
-      padding: EdgeInsets.only(top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
+      padding:
+          const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
       child: InkWell(
           onTap: () {
             _showAttribute(item);
@@ -218,10 +253,5 @@ Widget _buildCard(context, item, _showAttribute) {
                     ),
                   ],
                 )
-                // Padding(
-                //     padding: EdgeInsets.all(15.0),
-                //     child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.end,
-                //         children: [Icon(Icons.add, color: Color(0xFFC88D67))])),
               ]))));
 }

@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
-import 'orderItem_page.dart';
-import 'package:order_admin/provider/selected_table_provider.dart';
-import 'package:provider/provider.dart';
-import 'cart_card.dart';
+import 'package:order_admin/configs/constants.dart';
 
-import 'package:order_admin/provider/restaurant_provider.dart';
+// apis
+import 'package:order_admin/api/restaurant.dart';
+
+// providers
 import 'package:provider/provider.dart';
+import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/shopping_cart_provider.dart';
+import 'package:order_admin/provider/selected_table_provider.dart';
+
+// components
+import './cart_card.dart';
+import './checkout_card.dart';
+import 'package:order_admin/views/components/default_button.dart';
 
 class ShoppingCart extends StatelessWidget {
   ShoppingCart({Key? key}) : super(key: key);
@@ -20,6 +27,7 @@ class ShoppingCart extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0.0,
         centerTitle: true,
@@ -48,34 +56,25 @@ class ShoppingCart extends StatelessWidget {
                     .values
                     .toList())),
         const SizedBox(height: 20.0),
+        // Center(
+        //   child: Text(cartProvider.getTotalPrice().toString(),
+        //       style: const TextStyle(
+        //           fontSize: 22.0,
+        //           fontWeight: FontWeight.bold,
+        //           color: Color(0xFFF17532))),
+        // ),
         Center(
-          child: Text(cartProvider.getTotalPrice().toString(),
-              style: const TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFF17532))),
+          child: SizedBox(
+              height: 100,
+              child: CheckoutCard(
+                  totalPrice: cartProvider.getTotalPrice().toString(),
+                  onPressed: () {
+                    String tableId = selectedTable?.id ?? '';
+                    List CartListForBill =
+                        context.read<CartProvider>().getCartListForBill();
+                    createBill(tableId, CartListForBill);
+                  })),
         ),
-        Center(
-            child: Container(
-                width: MediaQuery.of(context).size.width - 1000.0,
-                height: 50.0,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25.0),
-                    color: Color(0xFFC88D67)),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => OrderItem()));
-                  },
-                  child: const Center(
-                      child: Text(
-                    '下單',
-                    style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  )),
-                )))
       ]),
     );
   }

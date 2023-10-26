@@ -176,13 +176,14 @@ Future<UploadImage> uploadItemImage(String itemId, File file) async {
   }
 }
 
-Future<void> createBill(String tableId, Iterable<Specification> orders) async {
+// todo：Iterable<Specification> orders
+Future<void> createBill(String tableId, List orders) async {
   final response = await http.post(
     Uri.parse("$baseUrl/tables/$tableId/orders"),
     body: jsonEncode({'orders': orders}),
   );
   if (response.statusCode == 201) {
   } else {
-    throw Exception('Failed to create restaurant');
+    throw Exception('Failed to create bill');
   }
 }

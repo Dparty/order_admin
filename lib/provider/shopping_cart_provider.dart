@@ -16,17 +16,17 @@ class CartProvider with ChangeNotifier {
   List<CartItem> cart = [];
 
   void addToCart(item) {
-    print(item.images.length);
-    CartItem cartItem = CartItem(
-      id: item.id,
-      productId: item.id,
-      productName: item.name,
-      initialPrice: item.pricing,
-      productPrice: item.pricing,
-      quantity: ValueNotifier(1),
-      unitTag: '1',
-      image: item.images.isEmpty ? '' : item.images[0],
-    );
+    // CartItem cartItem = CartItem(
+    //   id: item.id,
+    //   productId: item.id,
+    //   productName: item.name,
+    //   initialPrice: item.pricing,
+    //   productPrice: item.pricing,
+    //   quantity: ValueNotifier(1),
+    //   unitTag: '1',
+    //   image: item.images.isEmpty ? '' : item.images[0],
+    //   attributes: item.attributes,
+    // );
 
     // // todo: 合併 id 一樣而且選擇的 specification 一樣的
     // if (!cartMap.containsKey(item.id)) {
@@ -40,12 +40,18 @@ class CartProvider with ChangeNotifier {
 
     CartItem? target = cart.firstWhereOrNull((i) => i.id == item.id);
 
+    // if (target == null) {
+    //   cart.add(cartItem);
+    // } else {
+    //   addQuantity(item.id);
+    // }
+    // addTotalPrice(cartItem.productPrice! / 100 ?? 0.0);
     if (target == null) {
-      cart.add(cartItem);
+      cart.add(item);
     } else {
       addQuantity(item.id);
     }
-    addTotalPrice(cartItem.productPrice! / 100 ?? 0.0);
+    addTotalPrice(item.productPrice! / 100 ?? 0.0);
     notifyListeners();
   }
 
@@ -104,6 +110,16 @@ class CartProvider with ChangeNotifier {
   void removeTotalPrice(double productPrice) {
     _totalPrice = _totalPrice - productPrice;
     notifyListeners();
+  }
+
+  getCartListForBill() {
+    var cartList = [];
+    for (int i = 0; i < cart.length; i++) {
+      CartListForBillItem item =
+          CartListForBillItem(ItemId: cart[i].id, Options: cart[i].attributes);
+      cartList.add(item);
+    }
+    return cartList;
   }
 
   double getTotalPrice() {

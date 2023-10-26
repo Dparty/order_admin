@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/models/cart_item.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/provider/shopping_cart_provider.dart';
@@ -25,9 +26,9 @@ class CartCard extends StatelessWidget {
           child: AspectRatio(
             aspectRatio: 0.88,
             child: Container(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Color(0xFFF5F6F9),
+                color: kPrimaryLightColor,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: FadeInImage(
@@ -58,7 +59,7 @@ class CartCard extends StatelessWidget {
                   TextSpan(
                     text: "\$${(item.productPrice! / 100).toString()}",
                     style: TextStyle(
-                        fontWeight: FontWeight.w600, color: Color(0xFFFF7643)),
+                        fontWeight: FontWeight.w600, color: kPrimaryColor),
                     children: [
                       // TextSpan(
                       //     text: " x${cart.numOfItem}",
@@ -68,21 +69,32 @@ class CartCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    IconButton(
-                        onPressed: () => {
-                              [
-                                provider.deleteQuantity(item.id ?? ''),
-                              ]
-                            },
-                        icon: const Icon(Icons.remove)),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          backgroundColor: kPrimaryColor
+                          // padding: const EdgeInsets.all(30)
+                          ),
+                      child: const Icon(
+                        Icons.remove,
+                        // size: 50,
+                      ),
+                      onPressed: () {
+                        provider.deleteQuantity(item.id ?? '');
+                      },
+                    ),
                     Text(item.quantity!.value.toString()),
-                    IconButton(
-                        onPressed: () => {
-                              [
-                                provider.addQuantity(item.id ?? ''),
-                              ]
-                            },
-                        icon: const Icon(Icons.add)),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          backgroundColor: kPrimaryColor),
+                      child: const Icon(
+                        Icons.add,
+                      ),
+                      onPressed: () {
+                        provider.addQuantity(item.id ?? '');
+                      },
+                    ),
                   ],
                 ),
                 IconButton(

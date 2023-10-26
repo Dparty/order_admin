@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/configs/constants.dart';
 
 // providers
 import 'package:order_admin/provider/selected_table_provider.dart';
@@ -42,6 +43,7 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
         Expanded(
             child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.white,
             elevation: 0.0,
             centerTitle: true,
@@ -67,7 +69,7 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
                       child: TabBar(
                           controller: _tabController,
                           indicatorColor: Colors.transparent,
-                          labelColor: Color(0xFFC88D67),
+                          labelColor: kPrimaryColor,
                           isScrollable: true,
                           labelPadding: EdgeInsets.only(right: 45.0),
                           unselectedLabelColor: Color(0xFFCDCDCD),

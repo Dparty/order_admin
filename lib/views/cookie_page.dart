@@ -115,44 +115,11 @@ class CookiePage extends StatelessWidget {
                         Expanded(
                           child: Text(price,
                               style: TextStyle(
-                                  color: Color(0xFFCC8053),
-                                  fontFamily: 'Varela',
-                                  fontSize: 12.0)),
+                                  color: Color(0xFFCC8053), fontSize: 12.0)),
                         ),
                       ],
                     ),
                   )
-
-                  // Padding(
-                  //     padding: EdgeInsets.all(8.0),
-                  //     child: Container(color: Color(0xFFEBEBEB), height: 1.0)),
-                  // Padding(
-                  //     padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                  //     child: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //         children: [
-                  //           if (!added) ...[
-                  //             Icon(Icons.shopping_basket,
-                  //                 color: Color(0xFFD17E50), size: 12.0),
-                  //             Text('Add to cart',
-                  //                 style: TextStyle(
-                  //                     fontFamily: 'Varela',
-                  //                     color: Color(0xFFD17E50),
-                  //                     fontSize: 12.0))
-                  //           ],
-                  //           if (added) ...[
-                  //             Icon(Icons.remove_circle_outline,
-                  //                 color: Color(0xFFD17E50), size: 12.0),
-                  //             Text('3',
-                  //                 style: TextStyle(
-                  //                     fontFamily: 'Varela',
-                  //                     color: Color(0xFFD17E50),
-                  //                     fontWeight: FontWeight.bold,
-                  //                     fontSize: 12.0)),
-                  //             Icon(Icons.add_circle_outline,
-                  //                 color: Color(0xFFD17E50), size: 12.0),
-                  //           ]
-                  //         ]))
                 ]))));
   }
 }
