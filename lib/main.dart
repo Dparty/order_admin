@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/api/utils.dart';
-import 'package:order_admin/restaurantPage.dart';
+import 'package:order_admin/views/restaurantPage.dart';
 import 'package:path/path.dart';
-import 'signinPage.dart';
+import 'package:order_admin/views/signin/signinPage.dart';
+import 'package:provider/provider.dart';
+import 'provider/selection_button_provider.dart';
+import 'provider/restaurant_provider.dart';
+import 'provider/selected_table_provider.dart';
+import 'provider/shopping_cart_provider.dart';
+
+import 'configs/theme.dart';
 
 void main() {
-  runApp(const App());
+  // runApp(const App());
+  runApp(MyApp());
 }
 
 class App extends StatefulWidget {
@@ -20,6 +28,29 @@ class _AppState extends State<App> {
     return const MaterialApp(
       title: "和食云",
       home: HomePage(),
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SelectionButtonProvider()),
+        ChangeNotifierProvider(create: (_) => RestaurantProvider()),
+        ChangeNotifierProvider(create: (_) => SelectedTableProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+
+        // ChangeNotifierProvider(create: (_) => FavouriteProvider()),
+      ],
+      child: MaterialApp(
+        title: "和食云",
+        theme: AppTheme.lightTheme(context),
+        home: HomePage(),
+      ),
     );
   }
 }

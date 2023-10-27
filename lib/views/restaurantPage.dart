@@ -3,11 +3,14 @@ import 'package:order_admin/createRestaurantPage.dart';
 import 'package:order_admin/main.dart';
 import 'package:order_admin/models/model.dart';
 import 'package:order_admin/models/restaurant.dart';
-import 'package:order_admin/ordering/orderingPage.dart';
-import 'package:order_admin/restaurantSettingsPage.dart';
+import 'package:order_admin/views/ordering/orderingPage.dart';
+import 'package:order_admin/views/restaurantSettingsPage.dart';
 
-import 'api/restaurant.dart';
-import 'api/utils.dart';
+import 'package:order_admin/provider/restaurant_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../api/restaurant.dart';
+import '../api/utils.dart';
 
 class RestaurantsPage extends StatefulWidget {
   const RestaurantsPage({super.key});
@@ -18,8 +21,10 @@ class RestaurantsPage extends StatefulWidget {
 
 class _RestaurantState extends State<RestaurantsPage> {
   late List<Restaurant> restaurants;
-  RestaurantList restaurantList = const RestaurantList(
-      pagination: Pagination(index: 0, limit: 0, total: 0), data: []);
+
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+
+  RestaurantList restaurantList = const RestaurantList(data: []);
   @override
   void initState() {
     super.initState();
@@ -45,6 +50,7 @@ class _RestaurantState extends State<RestaurantsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('餐廳列表'),
         actions: [
           IconButton(
