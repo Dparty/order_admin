@@ -44,13 +44,18 @@ class CartProvider with ChangeNotifier {
   }
 
   getCartListForBill() {
-    // TODO: selectedItems List<Map<String, String>>?
-
     var cartList = [];
     for (var i = 0; i < cart.length; i++) {
       for (var j = 0; j < cart[i].quantity; j++) {
-        CartListForBillItem item = CartListForBillItem(
-            ItemId: cart[i].id, Options: [cart[i].selectedItems]);
+        List<Pair> optionList = [];
+
+        for (String key in cart[i].selectedItems.keys) {
+          Pair pair = Pair(left: key, right: cart[i].selectedItems[key] ?? '');
+          optionList.add(pair);
+        }
+
+        CartListForBillItem item =
+            CartListForBillItem(itemId: cart[i].id, options: optionList);
         cartList.add(item);
       }
     }

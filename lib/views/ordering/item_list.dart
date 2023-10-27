@@ -74,10 +74,12 @@ class MultiSelect extends StatefulWidget {
 
 class _MultiSelectState extends State<MultiSelect> {
   Map<String, String> selectedItems = {};
+  double tmpPrice = 0;
 
   @override
   void initState() {
     super.initState();
+    tmpPrice = widget.item.pricing.toDouble() / 100;
   }
 
   // this function is called when the Cancel button is pressed
@@ -160,6 +162,11 @@ class _MultiSelectState extends State<MultiSelect> {
                                                     selectedItems[entry.value
                                                         .label] = option.label;
                                                   }
+                                                  tmpPrice =
+                                                      (widget.item.pricing! /
+                                                              100) +
+                                                          (option.extra / 100)
+                                                              .toDouble();
                                                 });
                                               },
                                             ),
@@ -172,7 +179,8 @@ class _MultiSelectState extends State<MultiSelect> {
                       .toList(),
                   Row(
                     children: [
-                      Expanded(child: Text("價格：${widget.item.pricing! / 100}")),
+                      // Expanded(child: Text("價格：${widget.item.pricing! / 100}")),
+                      Expanded(child: Text("價格：${tmpPrice}")),
                       Row(
                         children: [
                           ElevatedButton(
