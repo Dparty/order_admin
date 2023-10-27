@@ -24,8 +24,7 @@ class _RestaurantState extends State<RestaurantsPage> {
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
 
-  RestaurantList restaurantList = const RestaurantList(
-      pagination: Pagination(index: 0, limit: 0, total: 0), data: []);
+  RestaurantList restaurantList = const RestaurantList(data: []);
   @override
   void initState() {
     super.initState();

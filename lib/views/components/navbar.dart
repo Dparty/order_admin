@@ -13,7 +13,10 @@ import 'package:order_admin/provider/selected_table_provider.dart';
 import 'package:order_admin/provider/shopping_cart_provider.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({Key? key}) : super(key: key);
+  const NavBar({Key? key, this.navIndex, this.onTap}) : super(key: key);
+
+  final int? navIndex;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -55,21 +58,24 @@ class NavBar extends StatelessWidget {
               DrawerItem(
                   name: '品項設置',
                   icon: Icons.settings,
-                  onPressed: () => onItemPressed(context, index: 2)),
+                  onPressed: () =>
+                      onItemPressed(context, index: 2, onTap: onTap)),
               const SizedBox(
                 height: 30,
               ),
               DrawerItem(
                   name: '餐廳設置',
                   icon: Icons.restaurant,
-                  onPressed: () => onItemPressed(context, index: 4)),
+                  onPressed: () =>
+                      onItemPressed(context, index: 3, onTap: onTap)),
               const SizedBox(
                 height: 30,
               ),
               DrawerItem(
                   name: '打印機設置',
                   icon: Icons.print,
-                  onPressed: () => onItemPressed(context, index: 4)),
+                  onPressed: () =>
+                      onItemPressed(context, index: 4, onTap: onTap)),
               const SizedBox(
                 height: 30,
               ),
@@ -92,7 +98,8 @@ class NavBar extends StatelessWidget {
     );
   }
 
-  void onItemPressed(BuildContext context, {required int index}) {
+  void onItemPressed(BuildContext context,
+      {required int index, Function? onTap}) {
     final restaurant = context.read<RestaurantProvider>();
 
     Navigator.pop(context);
@@ -128,8 +135,8 @@ class NavBar extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    RestaurantSettingsPage(restaurantId: restaurant.id)));
+                builder: (context) => RestaurantSettingsPage(
+                    restaurantId: restaurant.id, selectedNavIndex: 1)));
         break;
       case 5:
         (() {

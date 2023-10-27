@@ -39,12 +39,14 @@ class RestaurantProvider with ChangeNotifier {
     String name,
     String description,
     List<model.Item> items,
+    List<model.Table> tables,
   ) {
     _id = id;
     _name = name;
     _description = description;
     _items = items;
     _itemsMap = classification(items);
+    _tables = tables;
     notifyListeners();
   }
 
@@ -53,15 +55,15 @@ class RestaurantProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setRestaurantTables(List<model.Table> tables) {
-    _tables = tables;
-    notifyListeners();
-  }
+  // void setRestaurantTables(List<model.Table> tables) {
+  //   _tables = tables;
+  //   notifyListeners();
+  // }
 
   void resetRestaurant() {
-    setRestaurant('', '', '', []);
+    setRestaurant('', '', '', [], []);
     _itemsMap = {};
     setRestaurantPrinter([]);
-    setRestaurantTables([]);
+    // setRestaurantTables([]);
   }
 }

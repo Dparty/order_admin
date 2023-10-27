@@ -5,6 +5,7 @@ import 'package:order_admin/createPrinterPage.dart';
 import 'package:order_admin/createTablePage.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/orderingQrcodePage.dart';
+import 'package:order_admin/views/configPrinterPage.dart';
 import '../api/restaurant.dart';
 
 import '../restaurant-settings/TableViewWidget.dart';
@@ -38,7 +39,10 @@ class TestTable {
 
 class RestaurantSettingsPage extends StatefulWidget {
   final String restaurantId;
-  const RestaurantSettingsPage({super.key, required this.restaurantId});
+  final int? selectedNavIndex;
+
+  const RestaurantSettingsPage(
+      {super.key, required this.restaurantId, this.selectedNavIndex});
 
   @override
   State<StatefulWidget> createState() =>
@@ -49,12 +53,13 @@ class RestaurantSettingsPage extends StatefulWidget {
 class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
     with TickerProviderStateMixin {
   final String restaurantId;
-  model.Restaurant restaurant =
-      const model.Restaurant(id: '', name: '', description: '', items: []);
+  model.Restaurant restaurant = const model.Restaurant(
+      id: '', name: '', description: '', items: [], tables: []);
   List<model.Item> items = [];
   List<model.Printer> printers = [];
-  List<model.Table> tables = [];
+  // List<model.Table> tables = [];
   int _selectedIndex = 0;
+  int _selectedNavIndex = 0;
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -67,17 +72,21 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
         items = restaurant.items;
       });
 
-      context.read<RestaurantProvider>().setRestaurant(restaurant.id,
-          restaurant.name, restaurant.description, restaurant.items);
+      context.read<RestaurantProvider>().setRestaurant(
+          restaurant.id,
+          restaurant.name,
+          restaurant.description,
+          restaurant.items,
+          restaurant.tables);
     });
     listPrinters(restaurantId).then((list) => setState(() {
           printers = list.data;
           context.read<RestaurantProvider>().setRestaurantPrinter(list.data);
         }));
-    listTable(restaurantId).then((list) => setState(() {
-          tables = list;
-          context.read<RestaurantProvider>().setRestaurantTables(list);
-        }));
+    // listTable(restaurantId).then((list) => setState(() {
+    //       tables = list;
+    //       context.read<RestaurantProvider>().setRestaurantTables(list);
+    //     }));
   }
 
   @override
@@ -89,6 +98,12 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void _onNavTapped(int index) {
+    setState(() {
+      _selectedNavIndex = index;
     });
   }
 
@@ -127,6 +142,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
 
   @override
   Widget build(BuildContext context) {
+    print(widget.selectedNavIndex);
     return Responsive(
       mobile: Scaffold(
         appBar: AppBar(
@@ -141,7 +157,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
               icon: Icon(Icons.menu_rounded)),
         ),
         key: scaffoldKey,
-        drawer: const NavBar(), //drawer(context)
+        drawer: NavBar(), //drawer(context)
         body: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -168,20 +184,20 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
               ],
             ),
           ),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: TableViewWidget(
-                restaurantId,
-                tables: tables,
-                delete: removeTable,
-                constrainX: 5,
-                constrainY: 10,
-                testTables: [
-                  TestTable(seatIndex: 1, seatLabel: "桌號E", x: 1, y: 1),
-                  TestTable(seatIndex: 2, seatLabel: "桌號B", x: 2, y: 1),
-                  TestTable(seatIndex: 3, seatLabel: "桌號C", x: 3, y: 2)
-                ],
-              )),
+          // Padding(
+          //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          //     child: TableViewWidget(
+          //       restaurantId,
+          //       tables: tables,
+          //       delete: removeTable,
+          //       constrainX: 5,
+          //       constrainY: 10,
+          //       testTables: [
+          //         TestTable(seatIndex: 1, seatLabel: "桌號E", x: 1, y: 1),
+          //         TestTable(seatIndex: 2, seatLabel: "桌號B", x: 2, y: 1),
+          //         TestTable(seatIndex: 3, seatLabel: "桌號C", x: 3, y: 2)
+          //       ],
+          //     )),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: PrinterListWidget(printers, deletePrinter: removePrinter),
@@ -215,50 +231,17 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
       ),
       desktop: Row(
         children: [
-          const SizedBox(
+          SizedBox(
             width: 200,
             child: NavBar(),
           ),
           Expanded(
             child: Material(
               // child: ConfigItem(itemList: items, restaurantId: restaurantId),
-              child: ConfigItem(),
-              // color: Colors.white,
-              // child: Column(
-              //   children: [
-              //     Expanded(
-              //         child: const SizedBox(
-              //       height: 50,
-              //     )),
-              //     Expanded(
-              //       child: ListView(
-              //         scrollDirection: Axis.vertical,
-              //         shrinkWrap: true,
-              //         // shrinkWrap: true,
-              //         children: [
-              //           ...restaurant.items
-              //               .map(
-              //                 (i) => Padding(
-              //                     padding: const EdgeInsets.all(12.0),
-              //                     child: Row(children: [
-              //                       Expanded(child: Text(i.name)),
-              //                       Expanded(
-              //                           child: Text(
-              //                               "\$${(i.pricing / 100).toString()}")),
-              //                       ElevatedButton(
-              //                         onPressed: () {
-              //                           removeItem(i.id);
-              //                         },
-              //                         child: const Text('刪除'),
-              //                       )
-              //                     ])),
-              //               )
-              //               .toList()
-              //         ],
-              //       ),
-              //     )
-              //   ],
-              // ),
+              child: [
+                ConfigItem(),
+                ConfigPrinter(),
+              ][widget.selectedNavIndex ?? 0],
             ),
           )
         ],
@@ -351,118 +334,3 @@ class PrinterCard extends StatelessWidget {
     );
   }
 }
-
-// return Scaffold(
-//   floatingActionButton: FloatingActionButton(
-//     onPressed: () {
-//       add(context);
-//     },
-//     child: const Icon(Icons.add),
-//   ),
-//   appBar: AppBar(
-//     title: Text(restaurant.name),
-//   ),
-//   body: <Widget>[
-//     Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//       child: ListView(
-//         children: [
-//           ...restaurant.items
-//               .map(
-//                 (i) => Padding(
-//                     padding: const EdgeInsets.all(12.0),
-//                     child: Row(children: [
-//                       Expanded(child: Text(i.name)),
-//                       Expanded(
-//                           child: Text("\$${(i.pricing / 100).toString()}")),
-//                       ElevatedButton(
-//                         onPressed: () {
-//                           removeItem(i.id);
-//                         },
-//                         child: const Text('刪除'),
-//                       )
-//                     ])),
-//               )
-//               .toList()
-//         ],
-//       ),
-//     ),
-//     Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//         child: TableViewWidget(
-//           restaurantId,
-//           tables: tables,
-//           delete: removeTable,
-//           constrainX: 5,
-//           constrainY: 10,
-//           testTables: [
-//             TestTable(seatIndex: 1, seatLabel: "桌號E", x: 1, y: 1),
-//             TestTable(seatIndex: 2, seatLabel: "桌號B", x: 2, y: 1),
-//             TestTable(seatIndex: 3, seatLabel: "桌號C", x: 3, y: 2)
-//           ],
-//         )),
-//     Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//       child: PrinterListWidget(printers, deletePrinter: removePrinter),
-//     ),
-//   ][_selectedIndex],
-//   bottomNavigationBar: BottomNavigationBar(
-//     onTap: _onItemTapped,
-//     selectedItemColor: const Color.fromARGB(255, 118, 148, 255),
-//     currentIndex: _selectedIndex,
-//     items: const <BottomNavigationBarItem>[
-//       BottomNavigationBarItem(
-//         icon: Icon(Icons.restaurant_menu),
-//         label: '品項',
-//       ),
-//       BottomNavigationBarItem(
-//         icon: Icon(Icons.table_bar),
-//         label: '餐桌',
-//       ),
-//       BottomNavigationBarItem(
-//         icon: Icon(Icons.print),
-//         label: '打印機',
-//       ),
-//     ],
-//   ),
-// );
-
-// // 菜品
-// child: DefaultTextStyle.merge(
-// style: const TextStyle(
-// fontSize: 24,
-// fontWeight: FontWeight.bold,
-// ),
-// child: Center(
-// child: Container(
-// child: Padding(
-// padding: const EdgeInsets.symmetric(horizontal: 16.0),
-// child: ListView(
-// children: [
-// ...restaurant.items
-//     .map(
-// (i) => Padding(
-// padding: const EdgeInsets.all(12.0),
-// child: Row(children: [
-// Expanded(child: Text(i.name)),
-// Expanded(
-// child: Text(
-// "\$${(i.pricing / 100).toString()}")),
-// ElevatedButton(
-// onPressed: () {
-// removeItem(i.id);
-// },
-// child: const Text('刪除'),
-// )
-// ])),
-// )
-//     .toList()
-// ],
-// ),
-// ),
-// // margin: const EdgeInsets.all(150.0),
-// // child: const SigninForm(),
-// ),
-// )
-// ),
-//

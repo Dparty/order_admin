@@ -34,12 +34,10 @@ class ShoppingCart extends StatelessWidget {
         title: Text('${selectedTable?.label}的購物車',
             style: const TextStyle(fontSize: 20.0, color: Color(0xFF545D68))),
       ),
-      body: ListView(children: [
-        const SizedBox(height: 30.0),
-        const SizedBox(height: 10.0),
-        SizedBox(
-            // child: Text('暫無點餐信息',
-            //     style: TextStyle(color: Color(0xFF575E67), fontSize: 12.0)),
+      body: Column(children: [
+        Expanded(
+          child: SizedBox(
+            height: 400,
             child: ListView(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -54,15 +52,10 @@ class ShoppingCart extends StatelessWidget {
                           child: CartCard(item: element, index: i),
                         )))
                     .values
-                    .toList())),
+                    .toList()),
+          ),
+        ),
         const SizedBox(height: 20.0),
-        // Center(
-        //   child: Text(cartProvider.getTotalPrice().toString(),
-        //       style: const TextStyle(
-        //           fontSize: 22.0,
-        //           fontWeight: FontWeight.bold,
-        //           color: Color(0xFFF17532))),
-        // ),
         Center(
           child: SizedBox(
               height: 100,
@@ -72,7 +65,7 @@ class ShoppingCart extends StatelessWidget {
                     String tableId = selectedTable?.id ?? '';
                     List CartListForBill =
                         context.read<CartProvider>().getCartListForBill();
-                    createBill(tableId, CartListForBill);
+                    createBill(tableId, CartListForBill).then((value) => {});
                   })),
         ),
       ]),

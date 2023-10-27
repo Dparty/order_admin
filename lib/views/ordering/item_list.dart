@@ -110,84 +110,98 @@ class _MultiSelectState extends State<MultiSelect> {
         return Container(
             height: height - 400,
             width: width - 400,
-            child: Column(children: [
-              ...widget.item.attributes
-                  .asMap()
-                  .entries
-                  .map((entry) => Column(
-                        children: [
-                          Text(
-                            entry.value.label,
-                            textAlign: TextAlign.left,
-                          ),
-                          Row(
-                            children: [
-                              ...entry.value.options
-                                  .map((option) => Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ChoiceChip(
-                                          avatar: CircleAvatar(
-                                            backgroundColor:
-                                                Colors.grey.shade800,
-                                            child: Text(option.label),
-                                          ),
-                                          label: Text(
-                                              "\$${(option.extra / 100).toString()}"),
-                                          selectedColor:
-                                              Colors.orangeAccent.withAlpha(39),
-                                          selectedShadowColor:
-                                              Colors.orangeAccent,
-                                          elevation: 3,
-                                          selected: _selectedItems[
-                                                  entry.value.label] ==
-                                              option.label,
-                                          onSelected: (bool selected) {
-                                            setState(() {
-                                              if (_selectedItems[
-                                                      entry.value.label] ==
-                                                  option.label) {
-                                                _selectedItems
-                                                    .remove(entry.value.label);
-                                              } else {
-                                                _selectedItems[entry.value
-                                                    .label] = option.label;
-                                              }
-                                            });
-                                          },
-                                        ),
-                                      ))
-                                  .toList()
-                            ],
-                          )
-                        ],
-                      ))
-                  .toList(),
-              Row(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
-                    onPressed: _cancel,
-                    style: ElevatedButton.styleFrom(
-                        shape: const StadiumBorder(),
-                        backgroundColor: Colors.grey),
-                    child: const Text(
-                      "取消",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  ElevatedButton(
-                    onPressed: _submit,
-                    style: ElevatedButton.styleFrom(
-                        shape: const StadiumBorder(),
-                        backgroundColor: kPrimaryColor),
-                    child: const Text(
-                      "+ 加入購物車",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              )
-            ]));
+                  ...widget.item.attributes
+                      .asMap()
+                      .entries
+                      .map((entry) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                entry.value.label,
+                                textAlign: TextAlign.left,
+                              ),
+                              Row(
+                                children: [
+                                  ...entry.value.options
+                                      .map((option) => Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ChoiceChip(
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10))),
+                                              // avatar: CircleAvatar(
+                                              //   backgroundColor:
+                                              //       Colors.grey.shade800,
+                                              //   child: Text(option.label),
+                                              // ),
+                                              label: Text(
+                                                  "${option.label}  +\$${(option.extra / 100).toString()}"),
+                                              selectedColor: Colors.orangeAccent
+                                                  .withAlpha(39),
+                                              selectedShadowColor:
+                                                  Colors.orangeAccent,
+                                              elevation: 3,
+                                              selected: _selectedItems[
+                                                      entry.value.label] ==
+                                                  option.label,
+                                              onSelected: (bool selected) {
+                                                setState(() {
+                                                  if (_selectedItems[
+                                                          entry.value.label] ==
+                                                      option.label) {
+                                                    _selectedItems.remove(
+                                                        entry.value.label);
+                                                  } else {
+                                                    _selectedItems[entry.value
+                                                        .label] = option.label;
+                                                  }
+                                                });
+                                              },
+                                            ),
+                                          ))
+                                      .toList()
+                                ],
+                              )
+                            ],
+                          ))
+                      .toList(),
+                  Row(
+                    children: [
+                      Expanded(child: Text("價格：${widget.item.pricing! / 100}")),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: _cancel,
+                            style: ElevatedButton.styleFrom(
+                                shape: const StadiumBorder(),
+                                backgroundColor: Colors.grey),
+                            child: const Text(
+                              "取消",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          ElevatedButton(
+                            onPressed: _submit,
+                            style: ElevatedButton.styleFrom(
+                                shape: const StadiumBorder(),
+                                backgroundColor: kPrimaryColor),
+                            child: const Text(
+                              "+ 加入購物車",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+                ]));
       }),
     );
   }

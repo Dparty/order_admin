@@ -44,14 +44,17 @@ class CartProvider with ChangeNotifier {
   }
 
   getCartListForBill() {
-    // TODO: refacotr
-    // var cartList = [];
-    // for (int i = 0; i < cart.length; i++) {
-    //   CartListForBillItem item =
-    //       CartListForBillItem(ItemId: cart[i].id, Options: cart[i].attributes);
-    //   cartList.add(item);
-    // }
-    // return cartList;
+    // TODO: selectedItems List<Map<String, String>>?
+
+    var cartList = [];
+    for (var i = 0; i < cart.length; i++) {
+      for (var j = 0; j < cart[i].quantity; j++) {
+        CartListForBillItem item = CartListForBillItem(
+            ItemId: cart[i].id, Options: [cart[i].selectedItems]);
+        cartList.add(item);
+      }
+    }
+    return cartList;
   }
 
   void resetShoppingCart() {

@@ -36,7 +36,7 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
 
     return Row(
       children: [
-        const SizedBox(
+        SizedBox(
           width: 200,
           child: NavBar(),
         ),

@@ -7,7 +7,7 @@ class Restaurant {
   final List<Item> items;
 
   final List<Printer>? printers;
-  final List<Table>? tables;
+  final List<Table> tables;
 
   const Restaurant(
       {required this.id,
@@ -15,27 +15,27 @@ class Restaurant {
       required this.description,
       required this.items,
       this.printers,
-      this.tables});
+      required this.tables});
 
   factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
       id: json["id"],
       name: json["name"],
       description: json["description"],
-      items: (json['items'] as Iterable).map((i) => Item.fromJson(i)).toList());
+      items: (json['items'] as Iterable).map((i) => Item.fromJson(i)).toList(),
+      tables:
+          (json['tables'] as Iterable).map((i) => Table.fromJson(i)).toList());
 }
 
 class RestaurantList {
-  final Pagination pagination;
   final List<Restaurant> data;
   const RestaurantList({
-    required this.pagination,
     required this.data,
   });
 
   factory RestaurantList.fromJson(Map<String, dynamic> json) => RestaurantList(
-      data: List<Restaurant>.from((json["data"] as Iterable)
-          .map((restaurant) => Restaurant.fromJson(restaurant))),
-      pagination: Pagination.fromJson(json["pagination"]));
+        data: List<Restaurant>.from((json["data"] as Iterable)
+            .map((restaurant) => Restaurant.fromJson(restaurant))),
+      );
 }
 
 class Option {
@@ -140,15 +140,14 @@ class ItemList {
       pagination: Pagination.fromJson(json['pagination']));
 }
 
+// todo: List<dynamic> refactor
 class PrinterList {
   final List<Printer> data;
-  final Pagination pagination;
 
-  PrinterList({required this.data, required this.pagination});
-  factory PrinterList.fromJson(Map<String, dynamic> json) => PrinterList(
-      pagination: Pagination.fromJson(json['pagination']),
-      data: List<Printer>.from((json['data'] as Iterable)
-          .map((printer) => Printer.fromJson(printer))));
+  PrinterList({required this.data});
+  factory PrinterList.fromJson(List<dynamic> json) => PrinterList(
+      data: List<Printer>.from(
+          (json as Iterable).map((printer) => Printer.fromJson(printer))));
 }
 
 class Printer {

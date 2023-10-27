@@ -44,14 +44,18 @@ class _OrderingPageState extends State<OrderingPage> {
     super.initState();
     // restaurant = context.read<RestaurantProvider>();
     getRestaurant(restaurantId).then((restaurant) {
-      context.read<RestaurantProvider>().setRestaurant(restaurant.id,
-          restaurant.name, restaurant.description, restaurant.items);
+      context.read<RestaurantProvider>().setRestaurant(
+          restaurant.id,
+          restaurant.name,
+          restaurant.description,
+          restaurant.items,
+          restaurant.tables);
     });
 
-    listTable(restaurantId).then((list) => setState(() {
-          context.read<RestaurantProvider>().setRestaurantTables(list);
-          // tables = list;
-        }));
+    // listTable(restaurantId).then((list) => setState(() {
+    //       context.read<RestaurantProvider>().setRestaurantTables(list);
+    //       // tables = list;
+    //     }));
     // listItem(restaurantId).then((list) => setState(() {
     //       items = list.data;
     //     }));
@@ -108,7 +112,7 @@ class _OrderingPageState extends State<OrderingPage> {
         ),
         desktop: Row(
           children: [
-            const SizedBox(
+            SizedBox(
               width: 200,
               child: NavBar(),
             ),
@@ -140,6 +144,8 @@ class _OrderingPageState extends State<OrderingPage> {
                                         context
                                             .read<SelectedTableProvider>()
                                             .selectTable(table);
+                                        // getBill
+                                        getBill(table.id);
                                         // toCreateBillPage(table);
                                       },
                                       child: Text(
