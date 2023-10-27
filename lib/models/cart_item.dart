@@ -54,23 +54,44 @@ class CartItem {
   });
 }
 
-class CartListForBillItem {
-  late final String? ItemId;
-  List? Options = [];
+class Pair {
+  String left;
+  String right;
 
-  CartListForBillItem({
-    required this.ItemId,
-    this.Options,
+  Pair({
+    required this.left,
+    required this.right,
   });
 
-  CartListForBillItem.fromJson(Map<String, dynamic> json)
-      : ItemId = json['ItemId'],
-        Options = json['Options'];
+  Pair.fromJson(Map<String, dynamic> json)
+      : left = json['left'],
+        right = json['right'];
 
   Map<String, dynamic> toJson() {
     return {
-      'ItemId': ItemId,
-      'Options': Options,
+      'left': left,
+      'right': right,
+    };
+  }
+}
+
+class CartListForBillItem {
+  late final String? itemId;
+  List<Pair>? options = [];
+
+  CartListForBillItem({
+    required this.itemId,
+    this.options,
+  });
+
+  CartListForBillItem.fromJson(Map<String, dynamic> json)
+      : itemId = json['itemId'],
+        options = json['options'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ItemId': itemId,
+      'Options': options,
     };
   }
 }
