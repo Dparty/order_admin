@@ -18,8 +18,8 @@ class ItemListView extends StatefulWidget {
 }
 
 class _ItemListViewState extends State<ItemListView> {
-  // Map _selectedItems = {};
-  List _selectedItems = [];
+  // Map selectedItems = {};
+  List selectedItems = [];
 
   void _showAttribute(item) async {
     final List? results = await showDialog(
@@ -31,7 +31,7 @@ class _ItemListViewState extends State<ItemListView> {
 
     if (results != null) {
       setState(() {
-        _selectedItems = results;
+        selectedItems = results;
       });
     }
   }
@@ -66,19 +66,18 @@ class _ItemListViewState extends State<ItemListView> {
 // This widget is reusable
 class MultiSelect extends StatefulWidget {
   final Item item;
-  MultiSelect({Key? key, required this.item}) : super(key: key);
+  const MultiSelect({Key? key, required this.item}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MultiSelectState();
 }
 
 class _MultiSelectState extends State<MultiSelect> {
-  Map<String, String> _selectedItems = Map();
+  Map<String, String> selectedItems = {};
 
   @override
   void initState() {
     super.initState();
-    var attrList = widget.item.attributes;
   }
 
   // this function is called when the Cancel button is pressed
@@ -94,7 +93,7 @@ class _MultiSelectState extends State<MultiSelect> {
       productPrice: widget.item.pricing.toDouble(),
       quantity: 1,
       unitTag: '1',
-      selectedItems: _selectedItems,
+      selectedItems: selectedItems,
     );
     context.read<CartProvider>().addToCart(cartItem);
     Navigator.pop(context);
@@ -147,18 +146,18 @@ class _MultiSelectState extends State<MultiSelect> {
                                               selectedShadowColor:
                                                   Colors.orangeAccent,
                                               elevation: 3,
-                                              selected: _selectedItems[
+                                              selected: selectedItems[
                                                       entry.value.label] ==
                                                   option.label,
                                               onSelected: (bool selected) {
                                                 setState(() {
-                                                  if (_selectedItems[
+                                                  if (selectedItems[
                                                           entry.value.label] ==
                                                       option.label) {
-                                                    _selectedItems.remove(
+                                                    selectedItems.remove(
                                                         entry.value.label);
                                                   } else {
-                                                    _selectedItems[entry.value
+                                                    selectedItems[entry.value
                                                         .label] = option.label;
                                                   }
                                                 });
