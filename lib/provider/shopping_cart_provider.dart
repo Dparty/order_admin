@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/models/cart_item.dart';
 import 'package:collection/collection.dart';
+import 'package:order_admin/models/restaurant.dart';
 
 class CartProvider with ChangeNotifier {
   int get quantity => cart.map((e) => e.quantity).sum;
@@ -43,23 +44,9 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  getCartListForBill() {
-    var cartList = [];
-    for (var i = 0; i < cart.length; i++) {
-      for (var j = 0; j < cart[i].quantity; j++) {
-        List<Pair> optionList = [];
 
-        for (String key in cart[i].selectedItems.keys) {
-          Pair pair = Pair(left: key, right: cart[i].selectedItems[key] ?? '');
-          optionList.add(pair);
-        }
-
-        CartListForBillItem item =
-            CartListForBillItem(itemId: cart[i].id, options: optionList);
-        cartList.add(item);
-      }
-    }
-    return cartList;
+  Iterable<Specification> getCartListForBill() {
+    return cart.map((e) => e.toSpecification()).expand((e) => e.toList());
   }
 
   void resetShoppingCart() {

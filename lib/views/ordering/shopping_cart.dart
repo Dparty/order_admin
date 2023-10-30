@@ -63,9 +63,9 @@ class ShoppingCart extends StatelessWidget {
                   totalPrice: (cartProvider.total / 100).toString(),
                   onPressed: () {
                     String tableId = selectedTable?.id ?? '';
-                    List CartListForBill =
-                        context.read<CartProvider>().getCartListForBill();
-                    createBill(tableId, CartListForBill).then((value) => {});
+                    createBill(tableId,
+                            context.read<CartProvider>().getCartListForBill())
+                        .then((value) => {});
                   })),
         ),
       ]),
