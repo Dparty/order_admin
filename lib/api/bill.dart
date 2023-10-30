@@ -25,3 +25,33 @@ Future<List<Bill>> listBills(String restaurantId,
     throw Exception('Failed to getBill');
   }
 }
+
+Future<void> printBills(List<String> billIdList, int offset) async {
+  final token = await getToken();
+  final response = await http.post(
+    Uri.parse("$baseUrl/bills/print"),
+    body: jsonEncode({'billIdList': billIdList, 'offset': offset}),
+    headers: {'Authorization': "bearer $token"},
+  );
+  if (response.statusCode == 200) {
+    return;
+  } else {
+    throw Exception('Failed to printBills');
+  }
+}
+
+Future<void> setBills(
+    List<String> billIdList, int offset, String status) async {
+  final token = await getToken();
+  final response = await http.post(
+    Uri.parse("$baseUrl/bills/set"),
+    body: jsonEncode(
+        {'billIdList': billIdList, 'offset': offset, 'status': status}),
+    headers: {'Authorization': "bearer $token"},
+  );
+  if (response.statusCode == 200) {
+    return;
+  } else {
+    throw Exception('Failed to setBills');
+  }
+}

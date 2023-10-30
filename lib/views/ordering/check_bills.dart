@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/configs/constants.dart';
+
 import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/models/bill.dart';
 import 'package:collection/collection.dart';
+import 'orderItem_page.dart';
+import 'package:order_admin/components/dialog.dart';
+
+import 'package:order_admin/api/bill.dart';
 
 // providers
 import 'package:provider/provider.dart';
@@ -75,28 +81,182 @@ class _CheckBillsViewState extends State<CheckBillsView> {
     List<Bill>? bills = context.watch<SelectedTableProvider>().tableOrders;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('訂單列表')),
-      body: Center(
-          child: SingleChildScrollView(
-        child: _isSelected.length != 0
-            ? Column(
+        appBar: AppBar(title: const Text('訂單列表')),
+        body: _isSelected.length == 0
+            ? Center(
+                child: Column(
                 children: [
-                  ...?bills?.mapIndexed(
-                    (index, order) => BillCheckbox(
-                      label: order.pickUpCode.toString(),
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      value: _isSelected[index],
-                      onChanged: (bool newValue) {
-                        setState(() {
-                          _isSelected?[index] = newValue;
-                        });
-                      },
+                  Text("暫無訂單"),
+                  Container(
+                      width: MediaQuery.of(context).size.width - 1000.0,
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25.0),
+                          color: kPrimaryColor),
+                      child: InkWell(
+                        onTap: () {
+                          if (widget.table == null) {
+                            showAlertDialog(context, "請選擇桌號");
+                            return;
+                          }
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderItem()));
+                        },
+                        child: const Center(
+                            child: Text(
+                          '前往點單',
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        )),
+                      ))
+                ],
+              ))
+            : Column(
+                children: [
+                  Expanded(
+                      child: SingleChildScrollView(
+                          child: Column(
+                    children: [
+                      ...?bills?.mapIndexed(
+                        (index, order) => BillCheckbox(
+                          label: "取餐號：${order.pickUpCode.toString()}",
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          value: _isSelected[index],
+                          onChanged: (bool newValue) {
+                            setState(() {
+                              _isSelected?[index] = newValue;
+                            });
+                          },
+                        ),
+                      )
+                    ],
+                  ))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 150,
+                          height: 35.0,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: kPrimaryColor),
+                          child: InkWell(
+                            onTap: () async {
+                              if (_isSelected
+                                  .every((element) => element == false)) {
+                                showAlertDialog(context, "請勾選需要打印的訂單");
+                                return;
+                              }
+
+                              List<String> billIdList = [];
+                              for (int i = 0; i < _isSelected.length; i++) {
+                                if (_isSelected[i] == true) {
+                                  billIdList.add(bills![i].id);
+                                }
+                              }
+                              await printBills(billIdList, 0).then((e) => {});
+                            },
+                            child: const Center(
+                                child: Text(
+                              '打印訂單',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            )),
+                          ),
+                        ),
+                        Container(
+                          width: 150,
+                          height: 35.0,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: kPrimaryColor),
+                          child: InkWell(
+                            onTap: () async {
+                              if (_isSelected
+                                  .every((element) => element == false)) {
+                                showAlertDialog(context, "請勾選需要打印的訂單");
+                                return;
+                              }
+
+                              List<String> billIdList = [];
+                              for (int i = 0; i < _isSelected.length; i++) {
+                                if (_isSelected[i] == true) {
+                                  billIdList.add(bills![i].id);
+                                }
+                              }
+                              await setBills(billIdList, 0, 'PAIED')
+                                  .then((e) => {});
+                            },
+                            child: const Center(
+                                child: Text(
+                              '完成訂單',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            )),
+                          ),
+                        )
+                      ],
                     ),
                   )
                 ],
-              )
-            : Container(),
-      )),
-    );
+              ));
   }
 }
+
+// class SubmitButton extends StatelessWidget {
+//   const SubmitButton({
+//     Key? key,
+//     this.text,
+//     this.press,
+//   }) : super(key: key);
+//   final String? text;
+//   final Function? press;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return  Container(
+//       width: 150,
+//       height: 35.0,
+//       decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(10.0),
+//           color: kPrimaryColor),
+//       child: InkWell(
+//         onTap: () async {
+//           if (_isSelected
+//               .every((element) => element == false)) {
+//             showAlertDialog(context, "請勾選需要打印的訂單");
+//             return;
+//           }
+//
+//           List<String> billIdList = [];
+//           for (int i = 0; i < _isSelected.length; i++) {
+//             if (_isSelected[i] == true) {
+//               billIdList.add(bills![i].id);
+//             }
+//           }
+//           await setBills(billIdList, 0, 'PAIED')
+//               .then((e) => {});
+//         },
+//         child: const Center(
+//             child: Text(
+//               '完成訂單',
+//               style: TextStyle(
+//                   fontSize: 14.0,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.white),
+//             )),
+//       ),
+//     );
+//   }
+// }

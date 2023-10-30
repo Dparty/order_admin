@@ -174,8 +174,8 @@ class Printer {
 class Table {
   final String id;
   final String label;
-  int? x;
-  int? y;
+  final int? x;
+  final int? y;
 
   Table({required this.id, required this.label, this.x, this.y});
 
@@ -227,52 +227,3 @@ class UploadImage {
   factory UploadImage.fromJson(Map<String, dynamic> json) =>
       UploadImage(url: json['url']);
 }
-
-// class OrderItem {
-//   final String id;
-//   final int pickUpCode;
-//   final String status;
-//   final List<Order> orders;
-//
-//   const OrderItem({
-//     required this.id,
-//     required this.pickUpCode,
-//     required this.status,
-//     required this.orders,
-//   });
-//
-//   factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
-//         id: json["id"],
-//         pickUpCode: json["pickUpCode"],
-//         status: json["status"],
-//         orders:
-//             (json['orders'] as Iterable).map((i) => Order.fromJson(i)).toList(),
-//       );
-// }
-//
-// class Order {
-//   final Item item;
-//   final List<Pair> specification;
-//
-//   Order({
-//     required this.item,
-//     required this.specification,
-//   });
-//
-//   factory Order.fromJson(Map<String, dynamic> json) {
-//     return Order(
-//       item: Item.fromJson(json['item']),
-//       specification: (json['specification'] as Iterable)
-//           .map((i) => Pair.fromJson(i))
-//           .toList(),
-//     );
-//   }
-// }
-
-// class OrderList {
-//   final List<OrderItem> data;
-//
-//   OrderList({required this.data});
-//   factory OrderList.fromJson(List<dynamic> json) => OrderList(
-//       data: List<OrderItem>.from(json.map((i) => OrderItem.fromJson(i))));
-// }
