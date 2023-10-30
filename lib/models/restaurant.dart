@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:order_admin/models/model.dart';
 
 class Restaurant {
@@ -182,30 +184,27 @@ class Table {
 }
 
 class CreateBillRequest {
-  final Iterable<Specification> orders;
-
+  final List<Specification> specifications;
+  const CreateBillRequest({required this.specifications});
   Map<String, dynamic> toJson() {
-    return {'orders': orders.map((e) => toJson())};
+    return {'specifications': specifications};
   }
 
-  const CreateBillRequest({required this.orders});
+  factory CreateBillRequest.fromJson(Map<String, dynamic> json) =>
+      CreateBillRequest(specifications: json['specifications']);
 }
 
 class Specification {
   final String itemId;
-  final Iterable<Pair> options;
+  final List<Pair> options;
   Specification({required this.itemId, required this.options});
 
   Map<String, dynamic> toJson() {
-    return {
-      'itemId': itemId,
-      'options': options,
-    };
+    return {'itemId': itemId, 'options': options};
   }
 
-  factory Specification.fromJson(Map<String, dynamic> json) => Specification(
-      itemId: json['itemId'],
-      options: (json['options'] as Iterable).map((o) => Pair.fromJson(o)));
+  factory Specification.fromJson(Map<String, dynamic> json) =>
+      Specification(itemId: json['itemId'], options: []);
 }
 
 class TableList {
