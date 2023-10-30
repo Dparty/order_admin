@@ -2,6 +2,7 @@ import "dart:convert";
 import "dart:io";
 import 'package:http/http.dart' as http;
 import "package:order_admin/api/utils.dart";
+import "package:order_admin/models/bill.dart";
 import 'package:order_admin/models/restaurant.dart';
 import "config.dart";
 
@@ -177,7 +178,7 @@ Future<UploadImage> uploadItemImage(String itemId, File file) async {
 }
 
 // todo：Iterable<Specification> orders
-Future<void> createBill(
+Future<Bill> createBill(
     String tableId, List<Specification> specifications) async {
   final createBillRequest = CreateBillRequest(specifications: specifications);
   final response = await http.post(
@@ -185,6 +186,7 @@ Future<void> createBill(
     body: jsonEncode(createBillRequest),
   );
   if (response.statusCode == 201) {
+    return Bill.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to create bill');
   }
