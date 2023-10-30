@@ -13,6 +13,7 @@ import 'package:order_admin/models/bill.dart';
 // providers
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
+import 'package:order_admin/provider/restaurant_provider.dart';
 
 class BillCheckbox extends StatelessWidget {
   const BillCheckbox({
@@ -63,6 +64,7 @@ class CheckBillsView extends StatefulWidget {
 
 class _CheckBillsViewState extends State<CheckBillsView> {
   List<bool> _isSelected = [];
+  bool checkedAll = true;
 
   @override
   void didChangeDependencies() {
@@ -74,14 +76,24 @@ class _CheckBillsViewState extends State<CheckBillsView> {
   @override
   Widget build(BuildContext context) {
     List<Bill>? bills = context.watch<SelectedTableProvider>().tableOrders;
+    final restaurant = context.watch<RestaurantProvider>();
+    final table = context.watch<SelectedTableProvider>().selectedTable;
+
+    void setCheckAll(bool select) {
+      _isSelected = List.filled(_isSelected.length, select);
+    }
 
     return Scaffold(
-        appBar: AppBar(title: const Text('訂單列表')),
-        body: _isSelected.length == 0
+        appBar:
+            AppBar(automaticallyImplyLeading: false, title: const Text('訂單列表')),
+        body: _isSelected.isEmpty
             ? Center(
                 child: Column(
                 children: [
-                  Text("暫無訂單"),
+                  const Text("暫無訂單"),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Container(
                       width: MediaQuery.of(context).size.width - 1000.0,
                       height: 50.0,
@@ -112,6 +124,23 @@ class _CheckBillsViewState extends State<CheckBillsView> {
               ))
             : Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Text("全部選擇/取消"),
+                        Checkbox(
+                            value: checkedAll,
+                            onChanged: (val) {
+                              setState(() {
+                                checkedAll = val!;
+                                setCheckAll(val!);
+                              });
+                            }),
+                      ],
+                    ),
+                  ),
                   Expanded(
                       child: SingleChildScrollView(
                           child: Column(
@@ -131,80 +160,174 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                     ],
                   ))),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 150,
-                          height: 35.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: kPrimaryColor),
-                          child: InkWell(
-                            onTap: () async {
-                              if (_isSelected
-                                  .every((element) => element == false)) {
-                                showAlertDialog(context, "請勾選需要打印的訂單");
-                                return;
-                              }
-
-                              List<String> billIdList = [];
-                              for (int i = 0; i < _isSelected.length; i++) {
-                                if (_isSelected[i] == true) {
-                                  billIdList.add(bills![i].id);
-                                }
-                              }
-                              await printBills(billIdList, 0).then((e) => {});
-                            },
-                            child: const Center(
-                                child: Text(
-                              '打印訂單',
-                              style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            )),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 40),
+                      child: Column(
+                        children: [
+                          Container(
+                              width: 150,
+                              height: 35.0,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  color: kPrimaryColor),
+                              child: InkWell(
+                                onTap: () {
+                                  if (widget.table == null) {
+                                    showAlertDialog(context, "請選擇桌號");
+                                    return;
+                                  }
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => OrderItem()));
+                                },
+                                child: const Center(
+                                    child: Text(
+                                  '前往點單',
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                )),
+                              )),
+                          SizedBox(
+                            height: 20,
                           ),
-                        ),
-                        Container(
-                          width: 150,
-                          height: 35.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: kPrimaryColor),
-                          child: InkWell(
-                            onTap: () async {
-                              if (_isSelected
-                                  .every((element) => element == false)) {
-                                showAlertDialog(context, "請勾選需要打印的訂單");
-                                return;
-                              }
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: 150,
+                                height: 35.0,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: kPrimaryColor),
+                                child: InkWell(
+                                  onTap: () async {
+                                    if (_isSelected
+                                        .every((element) => element == false)) {
+                                      showAlertDialog(context, "請勾選需要打印的訂單");
+                                      return;
+                                    }
 
-                              List<String> billIdList = [];
-                              for (int i = 0; i < _isSelected.length; i++) {
-                                if (_isSelected[i] == true) {
-                                  billIdList.add(bills![i].id);
-                                }
-                              }
-                              await setBills(billIdList, 0, 'PAIED')
-                                  .then((e) => {});
-                            },
-                            child: const Center(
-                                child: Text(
-                              '完成訂單',
-                              style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            )),
+                                    List<String> billIdList = [];
+                                    for (int i = 0;
+                                        i < _isSelected.length;
+                                        i++) {
+                                      if (_isSelected[i] == true) {
+                                        billIdList.add(bills![i].id);
+                                      }
+                                    }
+                                    await printBills(billIdList, 0).then((e) =>
+                                        {showAlertDialog(context, "訂單已打印")});
+                                  },
+                                  child: const Center(
+                                      child: Text(
+                                    '打印訂單',
+                                    style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  )),
+                                ),
+                              ),
+                              Container(
+                                width: 150,
+                                height: 35.0,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: kPrimaryColor),
+                                child: InkWell(
+                                  onTap: () async {
+                                    if (_isSelected
+                                        .every((element) => element == false)) {
+                                      showAlertDialog(context, "請勾選需要更改狀態的訂單");
+                                      return;
+                                    }
+                                    List<String> billIdList = [];
+
+                                    for (int i = 0;
+                                        i < _isSelected.length;
+                                        i++) {
+                                      if (_isSelected[i] == true) {
+                                        billIdList.add(bills![i].id);
+                                      }
+                                    }
+                                    await setBills(billIdList, 0, 'PAIED')
+                                        .then((e) {
+                                      showAlertDialog(context, "訂單已完成");
+                                      listBills(restaurant.id,
+                                              status: 'SUBMITTED',
+                                              tableId: table?.id)
+                                          .then((orders) {
+                                        context
+                                            .read<SelectedTableProvider>()
+                                            .setTableOrders(orders);
+                                      });
+                                    });
+                                  },
+                                  child: const Center(
+                                      child: Text(
+                                    '完成訂單',
+                                    style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  )),
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
-                    ),
-                  )
+                        ],
+                      ))
                 ],
               ));
   }
 }
+
+// 感覺提出來更麻煩
+// class CommonButton extends StatelessWidget {
+//   const CommonButton({
+//     Key? key,
+//     required this.isSelected,
+//     required this.onPressed,
+//   }) : super(key: key);
+//
+//   final List? isSelected;
+//   final VoidCallback? onPressed;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     List<Bill>? bills = context.watch<SelectedTableProvider>().tableOrders;
+//
+//     return Container(
+//       width: 150,
+//       height: 35.0,
+//       decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(10.0), color: kPrimaryColor),
+//       child: InkWell(
+//         onTap: () async {
+//           if (isSelected!.every((element) => element == false)) {
+//             showAlertDialog(context, "請勾選需要更改狀態的訂單");
+//             return;
+//           }
+//           List<String> billIdList = [];
+//
+//           for (int i = 0; i < isSelected!.length; i++) {
+//             if (isSelected?[i] == true) {
+//               billIdList.add(bills![i].id);
+//             }
+//           }
+//           await setBills(billIdList, 0, 'PAIED')
+//               .then((e) => {showAlertDialog(context, "訂單已完成")});
+//         },
+//         child: const Center(
+//             child: Text(
+//           '完成訂單',
+//           style: TextStyle(
+//               fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.white),
+//         )),
+//       ),
+//     );
+//   }
+// }

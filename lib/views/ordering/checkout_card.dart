@@ -16,7 +16,7 @@ class CheckoutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         vertical: 5, //getProportionateScreenWidth(15),
         horizontal: 15,
       ),
@@ -40,7 +40,7 @@ class CheckoutCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 10), //getProportionateScreenHeight(20)),
+            const SizedBox(height: 10), //getProportionateScreenHeight(20)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

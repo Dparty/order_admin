@@ -65,5 +65,6 @@ class RestaurantProvider with ChangeNotifier {
     _itemsMap = {};
     setRestaurantPrinter([]);
     // setRestaurantTables([]);
+    notifyListeners();
   }
 }

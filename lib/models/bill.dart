@@ -1,7 +1,5 @@
 import 'package:order_admin/models/order.dart';
 
-import 'package:order_admin/models/order.dart';
-
 class Bill {
   final String id;
   final String status;

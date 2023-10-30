@@ -36,9 +36,6 @@ class OrderingPage extends StatefulWidget {
 
 class _OrderingPageState extends State<OrderingPage> {
   final String restaurantId;
-  // List<model.Table> tables = [];
-  // List<model.Item> items = [];
-  // var restaurant;
 
   _OrderingPageState(this.restaurantId);
 
@@ -156,17 +153,12 @@ class _OrderingPageState extends State<OrderingPage> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          print(table.label);
-                                          print(table.x);
-                                          // print(table.y);
-
                                           context
                                               .read<SelectedTableProvider>()
                                               .selectTable(table);
 
                                           listBills(restaurant.id,
-                                                  // todo
-                                                  // status: 'SUBMITTED',
+                                                  status: 'SUBMITTED',
                                                   tableId: table.id)
                                               .then((orders) {
                                             context
@@ -190,10 +182,10 @@ class _OrderingPageState extends State<OrderingPage> {
                                                           FontWeight.bold,
                                                       fontSize: 24),
                                                 ),
-                                                Row(children: [
-                                                  Text(table.x.toString()),
-                                                  Text(table.y.toString())
-                                                ])
+                                                Center(
+                                                  child: Text(
+                                                      "(${table.x.toString()},${table.y.toString()})"),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -220,29 +212,3 @@ class _OrderingPageState extends State<OrderingPage> {
         ));
   }
 }
-
-// return Scaffold(
-//   appBar: AppBar(
-//     title: const Text("點餐"),
-//   ),
-//   body: Wrap(
-//       children: tables
-//           .map((table) => Padding(
-//                 padding: const EdgeInsets.all(5),
-//                 child: SizedBox(
-//                   width: 100,
-//                   height: 100,
-//                   child: OutlinedButton(
-//                     onPressed: () {
-//                       toCreateBillPage(table);
-//                     },
-//                     child: Text(
-//                       table.label,
-//                       style: const TextStyle(
-//                           fontWeight: FontWeight.bold, fontSize: 24),
-//                     ),
-//                   ),
-//                 ),
-//               ))
-//           .toList()),
-// );
