@@ -193,7 +193,7 @@ class CreateBillRequest {
 
 class Specification {
   final String itemId;
-  final Iterable<Pair> options;
+  final List<Pair> options;
   Specification({required this.itemId, required this.options});
 
   Map<String, dynamic> toJson() {
@@ -203,9 +203,8 @@ class Specification {
     };
   }
 
-  factory Specification.fromJson(Map<String, dynamic> json) => Specification(
-      itemId: json['itemId'],
-      options: (json['options'] as Iterable).map((o) => Pair.fromJson(o)));
+  factory Specification.fromJson(Map<String, dynamic> json) =>
+      Specification(itemId: json['itemId'], options: []);
 }
 
 class TableList {

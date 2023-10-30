@@ -49,8 +49,8 @@ class CartItem {
     selectedItems.forEach((key, value) {
       pairs.add(Pair(left: key, right: value));
     });
-    return List<int>.generate(quantity, (i) => i)
-        .map((e) => Specification(itemId: id, options: pairs));
+    return List.generate(
+        quantity, (_) => Specification(itemId: id, options: pairs));
   }
 
   CartItem({
@@ -61,27 +61,6 @@ class CartItem {
     required this.unitTag,
     required this.selectedItems,
   });
-}
-
-class Pair {
-  String left;
-  String right;
-
-  Pair({
-    required this.left,
-    required this.right,
-  });
-
-  Pair.fromJson(Map<String, dynamic> json)
-      : left = json['left'],
-        right = json['right'];
-
-  Map<String, dynamic> toJson() {
-    return {
-      'left': left,
-      'right': right,
-    };
-  }
 }
 
 class CartListForBillItem {
