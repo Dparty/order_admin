@@ -4,9 +4,9 @@ import 'orderItem_page.dart';
 import 'package:order_admin/components/dialog.dart';
 
 class OrderDetail extends StatelessWidget {
-  final assetPath, label, table;
+  final assetPath, label, table, orders;
 
-  OrderDetail({Key? key, this.assetPath, this.label, this.table})
+  OrderDetail({Key? key, this.assetPath, this.label, this.table, this.orders})
       : super(key: key);
 
   @override
@@ -31,10 +31,14 @@ class OrderDetail extends StatelessWidget {
                   color: kPrimaryColor)),
         ),
         const SizedBox(height: 10.0),
-        const Center(
-          child: Text('暫無點餐信息',
-              style: TextStyle(color: Color(0xFF575E67), fontSize: 12.0)),
-        ),
+        (orders == null)
+            ? const Center(
+                child: Text('暫無點餐信息',
+                    style: TextStyle(color: Color(0xFF575E67), fontSize: 12.0)),
+              )
+            : Column(
+                children: [...orders?.map((item) => Text(item.id))],
+              ),
         const SizedBox(height: 20.0),
         Center(
             child: Container(

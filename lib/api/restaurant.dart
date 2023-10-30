@@ -123,7 +123,6 @@ Future<void> deleteTable(String id) async {
 }
 
 Future<Item> createItem(String restaurantId, PutItem item) async {
-  print("createItem");
   final token = await getToken();
   final response = await http.post(
       Uri.parse("$baseUrl/restaurants/$restaurantId/items"),
@@ -188,12 +187,14 @@ Future<void> createBill(String tableId, List orders) async {
   }
 }
 
-Future<void> getBill(String tableId) async {
+Future<List<OrderItem>> getBill(String restaurantId, String tableId) async {
+  final token = await getToken();
   final response = await http.get(
-    Uri.parse("$baseUrl/bills/$tableId"),
-  );
+      Uri.parse("$baseUrl/bills?restaurantId=$restaurantId&tableId=$tableId"),
+      headers: {'Authorization': "bearer $token"});
   if (response.statusCode == 200) {
-    // return RestaurantList.fromJson(jsonDecode(response.body));
+    Iterable l = jsonDecode(response.body);
+    return List<OrderItem>.from(l.map((model) => OrderItem.fromJson(model)));
   } else {
     throw Exception('Failed to getBill');
   }

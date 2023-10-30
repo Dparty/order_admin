@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/views/ordering/createBillPage.dart';
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
@@ -139,22 +140,59 @@ class _OrderingPageState extends State<OrderingPage> {
                                     width: 100,
                                     height: 100,
                                     child: OutlinedButton(
-                                      onPressed: () {
-                                        print(table.label);
-                                        context
-                                            .read<SelectedTableProvider>()
-                                            .selectTable(table);
-                                        // getBill
-                                        getBill(table.id);
-                                        // toCreateBillPage(table);
-                                      },
-                                      child: Text(
-                                        table.label,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 24),
-                                      ),
-                                    ),
+                                        style: OutlinedButton.styleFrom(
+                                          side: BorderSide(
+                                            width: 1.0,
+                                            color: context
+                                                        .read<
+                                                            SelectedTableProvider>()
+                                                        .selectedTable
+                                                        ?.label ==
+                                                    table.label
+                                                ? kPrimaryColor
+                                                : kPrimaryLightColor,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          print(table.label);
+                                          print(table.x);
+                                          // print(table.y);
+
+                                          context
+                                              .read<SelectedTableProvider>()
+                                              .selectTable(table);
+
+                                          getBill(restaurant.id, table.id)
+                                              .then((orders) {
+                                            context
+                                                .read<SelectedTableProvider>()
+                                                .setTableOrders(orders);
+                                          });
+                                          // toCreateBillPage(table);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  table.label,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 24),
+                                                ),
+                                                Row(children: [
+                                                  Text(table.x.toString()),
+                                                  Text(table.y.toString())
+                                                ])
+                                              ],
+                                            ),
+                                          ),
+                                        )),
                                   ),
                                 ))
                             .toList()),
@@ -172,6 +210,7 @@ class _OrderingPageState extends State<OrderingPage> {
               child: OrderDetail(
                 label:
                     '${context.watch<SelectedTableProvider>().selectedTable?.label}',
+                orders: context.watch<SelectedTableProvider>().tableOrders,
               ),
             ),
           ],
