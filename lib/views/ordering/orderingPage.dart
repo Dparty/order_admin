@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/views/ordering/createBillPage.dart';
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/components/responsive.dart';
 import 'package:order_admin/views/components/navbar.dart';
 
+import '../../api/bill.dart';
+import 'check_bills.dart';
 import 'order_detail.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:provider/provider.dart';
@@ -33,9 +36,6 @@ class OrderingPage extends StatefulWidget {
 
 class _OrderingPageState extends State<OrderingPage> {
   final String restaurantId;
-  // List<model.Table> tables = [];
-  // List<model.Item> items = [];
-  // var restaurant;
 
   _OrderingPageState(this.restaurantId);
 
@@ -139,22 +139,57 @@ class _OrderingPageState extends State<OrderingPage> {
                                     width: 100,
                                     height: 100,
                                     child: OutlinedButton(
-                                      onPressed: () {
-                                        print(table.label);
-                                        context
-                                            .read<SelectedTableProvider>()
-                                            .selectTable(table);
-                                        // getBill
-                                        getBill(table.id);
-                                        // toCreateBillPage(table);
-                                      },
-                                      child: Text(
-                                        table.label,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 24),
-                                      ),
-                                    ),
+                                        style: OutlinedButton.styleFrom(
+                                          side: BorderSide(
+                                            width: 1.0,
+                                            color: context
+                                                        .read<
+                                                            SelectedTableProvider>()
+                                                        .selectedTable
+                                                        ?.label ==
+                                                    table.label
+                                                ? kPrimaryColor
+                                                : kPrimaryLightColor,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          context
+                                              .read<SelectedTableProvider>()
+                                              .selectTable(table);
+
+                                          listBills(restaurant.id,
+                                                  status: 'SUBMITTED',
+                                                  tableId: table.id)
+                                              .then((orders) {
+                                            context
+                                                .read<SelectedTableProvider>()
+                                                .setTableOrders(orders);
+                                          });
+                                          // toCreateBillPage(table);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  table.label,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 24),
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                      "(${table.x.toString()},${table.y.toString()})"),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        )),
                                   ),
                                 ))
                             .toList()),
@@ -169,39 +204,11 @@ class _OrderingPageState extends State<OrderingPage> {
             ),
             SizedBox(
               width: 420,
-              child: OrderDetail(
+              child: CheckBillsView(
                 table: context.watch<SelectedTableProvider>().selectedTable,
-                label:
-                    '${context.watch<SelectedTableProvider>().selectedTable?.label}',
               ),
             ),
           ],
         ));
   }
 }
-
-// return Scaffold(
-//   appBar: AppBar(
-//     title: const Text("點餐"),
-//   ),
-//   body: Wrap(
-//       children: tables
-//           .map((table) => Padding(
-//                 padding: const EdgeInsets.all(5),
-//                 child: SizedBox(
-//                   width: 100,
-//                   height: 100,
-//                   child: OutlinedButton(
-//                     onPressed: () {
-//                       toCreateBillPage(table);
-//                     },
-//                     child: Text(
-//                       table.label,
-//                       style: const TextStyle(
-//                           fontWeight: FontWeight.bold, fontSize: 24),
-//                     ),
-//                   ),
-//                 ),
-//               ))
-//           .toList()),
-// );

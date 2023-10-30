@@ -176,11 +176,13 @@ class Printer {
 class Table {
   final String id;
   final String label;
+  final int? x;
+  final int? y;
 
-  Table({required this.id, required this.label});
+  Table({required this.id, required this.label, this.x, this.y});
 
   factory Table.fromJson(Map<String, dynamic> json) =>
-      Table(id: json['id'], label: json['label']);
+      Table(id: json['id'], label: json['label'], x: json['x'], y: json['y']);
 }
 
 class CreateBillRequest {

@@ -104,16 +104,6 @@ Future<Table> createTable(String restaurantId, String label) async {
   }
 }
 
-// Future<List<Table>> listTable(String restaurantId) async {
-//   final response =
-//       await http.get(Uri.parse("$baseUrl/restaurants/$restaurantId/tables"));
-//   if (response.statusCode == 200) {
-//     return TableList.fromJson(jsonDecode(response.body)).data;
-//   } else {
-//     throw Exception('Failed to create restaurant');
-//   }
-// }
-
 Future<void> deleteTable(String id) async {
   final token = await getToken();
   final response = await http.delete(Uri.parse("$baseUrl/tables/$id"),
@@ -124,7 +114,6 @@ Future<void> deleteTable(String id) async {
 }
 
 Future<Item> createItem(String restaurantId, PutItem item) async {
-  print("createItem");
   final token = await getToken();
   final response = await http.post(
       Uri.parse("$baseUrl/restaurants/$restaurantId/items"),
@@ -177,7 +166,6 @@ Future<UploadImage> uploadItemImage(String itemId, File file) async {
   }
 }
 
-// todo：Iterable<Specification> orders
 Future<Bill> createBill(
     String tableId, List<Specification> specifications) async {
   final createBillRequest = CreateBillRequest(specifications: specifications);
@@ -189,16 +177,5 @@ Future<Bill> createBill(
     return Bill.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to create bill');
-  }
-}
-
-Future<void> getBill(String tableId) async {
-  final response = await http.get(
-    Uri.parse("$baseUrl/bills/$tableId"),
-  );
-  if (response.statusCode == 200) {
-    // return RestaurantList.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to getBill');
   }
 }

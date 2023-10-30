@@ -7,6 +7,9 @@ import 'package:order_admin/addAttribute.dart';
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/components/dialog.dart';
 import 'package:order_admin/models/restaurant.dart';
+import 'package:order_admin/views/restaurantSettingsPage.dart';
+
+import 'package:order_admin/configs/constants.dart';
 
 class CreateItemPage extends StatefulWidget {
   final String restaurantId;
@@ -199,7 +202,34 @@ class _CreateItemPageState extends State<CreateItemPage> {
                         ),
                       )
                     ]))
-                : const Text('請新增打印機'),
+                : Center(
+                    child: Container(
+                    width: MediaQuery.of(context).size.width - 1000.0,
+                    height: 50.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25.0),
+                        color: kPrimaryColor),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RestaurantSettingsPage(
+                                    restaurantId: restaurantId,
+                                    selectedNavIndex: 1)));
+                      },
+                      child: const Center(
+                          child: Text(
+                        '新增打印機',
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      )),
+                    ),
+                  )),
+
+            // const Text('請新增打印機'),
             showImage
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

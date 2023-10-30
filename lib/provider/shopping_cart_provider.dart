@@ -53,5 +53,6 @@ class CartProvider with ChangeNotifier {
 
   void resetShoppingCart() {
     cart = [];
+    notifyListeners();
   }
 }
