@@ -170,6 +170,7 @@ class _OrderingPageState extends State<OrderingPage> {
             SizedBox(
               width: 420,
               child: OrderDetail(
+                table: context.watch<SelectedTableProvider>().selectedTable,
                 label:
                     '${context.watch<SelectedTableProvider>().selectedTable?.label}',
               ),
