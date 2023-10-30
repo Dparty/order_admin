@@ -13,7 +13,7 @@ class SpecificationPage extends StatefulWidget {
 
 class _SpecificationPageState extends State<SpecificationPage> {
   final Item item;
-  Iterable<Pair> specification = [];
+  List<Pair> specification = [];
   _SpecificationPageState(this.item);
 
   int number = 1;

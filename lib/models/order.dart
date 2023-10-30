@@ -11,6 +11,7 @@ class Order {
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
         item: Item.fromJson(json['item']),
-        options: (json['options'] as Iterable).map((e) => Pair.fromJson(e)));
+        options:
+            (json['specification'] as Iterable).map((e) => Pair.fromJson(e)));
   }
 }

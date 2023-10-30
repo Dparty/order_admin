@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:order_admin/configs/constants.dart';
+import 'package:collection/collection.dart';
 
+import 'package:order_admin/configs/constants.dart';
+import 'package:order_admin/api/bill.dart';
+import 'package:order_admin/components/dialog.dart';
+import 'orderItem_page.dart';
+
+// models
 import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/models/bill.dart';
-import 'package:collection/collection.dart';
-import 'orderItem_page.dart';
-import 'package:order_admin/components/dialog.dart';
-
-import 'package:order_admin/api/bill.dart';
 
 // providers
 import 'package:provider/provider.dart';
@@ -54,20 +55,14 @@ class BillCheckbox extends StatelessWidget {
 class CheckBillsView extends StatefulWidget {
   final model.Table? table;
 
-  CheckBillsView({Key? key, this.table}) : super(key: key);
+  const CheckBillsView({Key? key, this.table}) : super(key: key);
 
   @override
   State<CheckBillsView> createState() => _CheckBillsViewState();
 }
 
 class _CheckBillsViewState extends State<CheckBillsView> {
-  // bool _isSelected = false;
   List<bool> _isSelected = [];
-
-  // void initState() {
-  //   super.initState();
-  //   _isSelected = List.filled(widget.orders?.length ?? 0, true);
-  // }
 
   @override
   void didChangeDependencies() {
@@ -213,50 +208,3 @@ class _CheckBillsViewState extends State<CheckBillsView> {
               ));
   }
 }
-
-// class SubmitButton extends StatelessWidget {
-//   const SubmitButton({
-//     Key? key,
-//     this.text,
-//     this.press,
-//   }) : super(key: key);
-//   final String? text;
-//   final Function? press;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return  Container(
-//       width: 150,
-//       height: 35.0,
-//       decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(10.0),
-//           color: kPrimaryColor),
-//       child: InkWell(
-//         onTap: () async {
-//           if (_isSelected
-//               .every((element) => element == false)) {
-//             showAlertDialog(context, "請勾選需要打印的訂單");
-//             return;
-//           }
-//
-//           List<String> billIdList = [];
-//           for (int i = 0; i < _isSelected.length; i++) {
-//             if (_isSelected[i] == true) {
-//               billIdList.add(bills![i].id);
-//             }
-//           }
-//           await setBills(billIdList, 0, 'PAIED')
-//               .then((e) => {});
-//         },
-//         child: const Center(
-//             child: Text(
-//               '完成訂單',
-//               style: TextStyle(
-//                   fontSize: 14.0,
-//                   fontWeight: FontWeight.bold,
-//                   color: Colors.white),
-//             )),
-//       ),
-//     );
-//   }
-// }

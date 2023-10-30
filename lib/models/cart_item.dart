@@ -45,12 +45,12 @@ class CartItem {
   }
 
   Iterable<Specification> toSpecification() {
-    Iterable<Pair> pairs = [];
+    List<Pair> pairs = [];
     selectedItems.forEach((key, value) {
-      pairs.toList().add(Pair(left: key, right: value));
+      pairs.add(Pair(left: key, right: value));
     });
-    return List<int>.generate(quantity, (i) => i)
-        .map((e) => Specification(itemId: id, options: pairs));
+    return List.generate(
+        quantity, (_) => Specification(itemId: id, options: pairs));
   }
 
   CartItem({

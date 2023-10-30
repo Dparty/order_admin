@@ -2,6 +2,7 @@ import "dart:convert";
 import "dart:io";
 import 'package:http/http.dart' as http;
 import "package:order_admin/api/utils.dart";
+import "package:order_admin/models/bill.dart";
 import 'package:order_admin/models/restaurant.dart';
 import "config.dart";
 
@@ -103,16 +104,6 @@ Future<Table> createTable(String restaurantId, String label) async {
   }
 }
 
-// Future<List<Table>> listTable(String restaurantId) async {
-//   final response =
-//       await http.get(Uri.parse("$baseUrl/restaurants/$restaurantId/tables"));
-//   if (response.statusCode == 200) {
-//     return TableList.fromJson(jsonDecode(response.body)).data;
-//   } else {
-//     throw Exception('Failed to create restaurant');
-//   }
-// }
-
 Future<void> deleteTable(String id) async {
   final token = await getToken();
   final response = await http.delete(Uri.parse("$baseUrl/tables/$id"),
@@ -175,14 +166,15 @@ Future<UploadImage> uploadItemImage(String itemId, File file) async {
   }
 }
 
-// todo：Iterable<Specification> orders
-Future<void> createBill(String tableId, Iterable<Specification> orders) async {
-  final createBillRequest = CreateBillRequest(orders: orders);
+Future<Bill> createBill(
+    String tableId, List<Specification> specifications) async {
+  final createBillRequest = CreateBillRequest(specifications: specifications);
   final response = await http.post(
     Uri.parse("$baseUrl/tables/$tableId/orders"),
-    body: jsonEncode(createBillRequest.toJson()),
+    body: jsonEncode(createBillRequest),
   );
   if (response.statusCode == 201) {
+    return Bill.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to create bill');
   }
