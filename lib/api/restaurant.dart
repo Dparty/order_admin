@@ -177,11 +177,12 @@ Future<UploadImage> uploadItemImage(String itemId, File file) async {
 }
 
 // todo：Iterable<Specification> orders
-Future<void> createBill(String tableId, Iterable<Specification> orders) async {
-  final createBillRequest = CreateBillRequest(orders: orders);
+Future<void> createBill(
+    String tableId, List<Specification> specifications) async {
+  final createBillRequest = CreateBillRequest(specifications: specifications);
   final response = await http.post(
     Uri.parse("$baseUrl/tables/$tableId/orders"),
-    body: jsonEncode(createBillRequest.toJson()),
+    body: jsonEncode(createBillRequest),
   );
   if (response.statusCode == 201) {
   } else {

@@ -44,9 +44,11 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-  Iterable<Specification> getCartListForBill() {
-    return cart.map((e) => e.toSpecification()).expand((e) => e.toList());
+  List<Specification> getCartListForBill() {
+    return cart
+        .map((e) => e.toSpecification())
+        .expand((e) => e.toList())
+        .toList();
   }
 
   void resetShoppingCart() {
