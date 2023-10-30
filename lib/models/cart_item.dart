@@ -44,6 +44,15 @@ class CartItem {
     return price * quantity;
   }
 
+  Iterable<Specification> toSpecification() {
+    List<Pair> pairs = [];
+    selectedItems.forEach((key, value) {
+      pairs.add(Pair(left: key, right: value));
+    });
+    return List<int>.generate(quantity, (i) => i)
+        .map((e) => Specification(itemId: id, options: pairs));
+  }
+
   CartItem({
     required this.item,
     required this.initialPrice,

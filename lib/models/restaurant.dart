@@ -181,6 +181,16 @@ class Table {
       Table(id: json['id'], label: json['label']);
 }
 
+class CreateBillRequest {
+  final Iterable<Specification> orders;
+
+  Map<String, dynamic> toJson() {
+    return {'orders': orders.map((e) => toJson())};
+  }
+
+  const CreateBillRequest({required this.orders});
+}
+
 class Specification {
   final String itemId;
   final Iterable<Pair> options;
