@@ -46,7 +46,7 @@ class CheckoutCard extends StatelessWidget {
               children: [
                 Text.rich(
                   TextSpan(
-                    text: "Total:\n",
+                    text: "合計:\n",
                     children: [
                       TextSpan(
                         text: totalPrice,

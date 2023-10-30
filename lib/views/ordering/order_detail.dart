@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
 import 'orderItem_page.dart';
 import 'package:order_admin/components/dialog.dart';
+import 'package:order_admin/models/restaurant.dart' as model;
+import 'package:order_admin/models/order.dart';
+import 'package:order_admin/models/bill.dart';
+import 'check_bills.dart';
 
 class OrderDetail extends StatelessWidget {
-  final assetPath, label, table, orders;
+  final String? label;
+  final model.Table? table;
+  final List<Bill>? orders;
 
-  OrderDetail({Key? key, this.assetPath, this.label, this.table, this.orders})
+  OrderDetail({Key? key, this.label, this.table, this.orders})
       : super(key: key);
 
   @override
@@ -24,7 +30,7 @@ class OrderDetail extends StatelessWidget {
       body: ListView(children: [
         const SizedBox(height: 30.0),
         Center(
-          child: Text(label,
+          child: Text(table != null ? table!.label : "請選擇桌號",
               style: const TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
@@ -37,7 +43,7 @@ class OrderDetail extends StatelessWidget {
                     style: TextStyle(color: Color(0xFF575E67), fontSize: 12.0)),
               )
             : Column(
-                children: [...orders?.map((item) => Text(item.id))],
+                children: [...?orders?.map((item) => Text(item.id))],
               ),
         const SizedBox(height: 20.0),
         Center(
@@ -49,7 +55,7 @@ class OrderDetail extends StatelessWidget {
                     color: kPrimaryColor),
                 child: InkWell(
                   onTap: () {
-                    if (label == 'null') {
+                    if (table == null) {
                       showAlertDialog(context, "請選擇桌號");
                       return;
                     }

@@ -187,15 +187,15 @@ Future<void> createBill(String tableId, List orders) async {
   }
 }
 
-Future<List<OrderItem>> getBill(String restaurantId, String tableId) async {
-  final token = await getToken();
-  final response = await http.get(
-      Uri.parse("$baseUrl/bills?restaurantId=$restaurantId&tableId=$tableId"),
-      headers: {'Authorization': "bearer $token"});
-  if (response.statusCode == 200) {
-    Iterable l = jsonDecode(response.body);
-    return List<OrderItem>.from(l.map((model) => OrderItem.fromJson(model)));
-  } else {
-    throw Exception('Failed to getBill');
-  }
-}
+// Future<List<OrderItem>> getBill(String restaurantId, String tableId) async {
+//   final token = await getToken();
+//   final response = await http.get(
+//       Uri.parse("$baseUrl/bills?restaurantId=$restaurantId&tableId=$tableId"),
+//       headers: {'Authorization': "bearer $token"});
+//   if (response.statusCode == 200) {
+//     Iterable l = jsonDecode(response.body);
+//     return List<OrderItem>.from(l.map((model) => OrderItem.fromJson(model)));
+//   } else {
+//     throw Exception('Failed to getBill');
+//   }
+// }

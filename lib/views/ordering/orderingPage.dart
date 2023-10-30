@@ -6,6 +6,8 @@ import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/components/responsive.dart';
 import 'package:order_admin/views/components/navbar.dart';
 
+import '../../api/bill.dart';
+import 'check_bills.dart';
 import 'order_detail.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:provider/provider.dart';
@@ -162,7 +164,10 @@ class _OrderingPageState extends State<OrderingPage> {
                                               .read<SelectedTableProvider>()
                                               .selectTable(table);
 
-                                          getBill(restaurant.id, table.id)
+                                          listBills(restaurant.id,
+                                                  // todo
+                                                  // status: 'SUBMITTED',
+                                                  tableId: table.id)
                                               .then((orders) {
                                             context
                                                 .read<SelectedTableProvider>()
@@ -171,7 +176,7 @@ class _OrderingPageState extends State<OrderingPage> {
                                           // toCreateBillPage(table);
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Center(
                                             child: Column(
                                               mainAxisAlignment:
@@ -207,10 +212,8 @@ class _OrderingPageState extends State<OrderingPage> {
             ),
             SizedBox(
               width: 420,
-              child: OrderDetail(
-                label:
-                    '${context.watch<SelectedTableProvider>().selectedTable?.label}',
-                orders: context.watch<SelectedTableProvider>().tableOrders,
+              child: CheckBillsView(
+                table: context.watch<SelectedTableProvider>().selectedTable,
               ),
             ),
           ],
