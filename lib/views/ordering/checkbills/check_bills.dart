@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/api/bill.dart';
 import 'package:order_admin/components/dialog.dart';
-import 'orderItem_page.dart';
+import '../orderItem_view.dart';
 
 // models
 import 'package:order_admin/models/restaurant.dart' as model;
@@ -64,7 +64,6 @@ class CheckBillsView extends StatefulWidget {
 
 class _CheckBillsViewState extends State<CheckBillsView> {
   List<bool> _isSelected = [];
-  bool checkedAll = true;
 
   @override
   void didChangeDependencies() {
@@ -84,8 +83,9 @@ class _CheckBillsViewState extends State<CheckBillsView> {
     }
 
     return Scaffold(
-        appBar:
-            AppBar(automaticallyImplyLeading: false, title: const Text('訂單列表')),
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: Text('${table?.label ?? ''}訂單列表')),
         body: _isSelected.isEmpty
             ? Center(
                 child: Column(
@@ -131,10 +131,9 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                       children: [
                         const Text("全部選擇/取消"),
                         Checkbox(
-                            value: checkedAll,
+                            value: !_isSelected.contains(false),
                             onChanged: (val) {
                               setState(() {
-                                checkedAll = val!;
                                 setCheckAll(val!);
                               });
                             }),
@@ -190,7 +189,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                       color: Colors.white),
                                 )),
                               )),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(
@@ -218,8 +217,9 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                         billIdList.add(bills![i].id);
                                       }
                                     }
-                                    await printBills(billIdList, 0).then((e) =>
-                                        {showAlertDialog(context, "訂單已打印")});
+                                    await printBills(billIdList, 0).then((e) {
+                                      showAlertDialog(context, "訂單已打印");
+                                    });
                                   },
                                   child: const Center(
                                       child: Text(
@@ -284,50 +284,3 @@ class _CheckBillsViewState extends State<CheckBillsView> {
               ));
   }
 }
-
-// 感覺提出來更麻煩
-// class CommonButton extends StatelessWidget {
-//   const CommonButton({
-//     Key? key,
-//     required this.isSelected,
-//     required this.onPressed,
-//   }) : super(key: key);
-//
-//   final List? isSelected;
-//   final VoidCallback? onPressed;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     List<Bill>? bills = context.watch<SelectedTableProvider>().tableOrders;
-//
-//     return Container(
-//       width: 150,
-//       height: 35.0,
-//       decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(10.0), color: kPrimaryColor),
-//       child: InkWell(
-//         onTap: () async {
-//           if (isSelected!.every((element) => element == false)) {
-//             showAlertDialog(context, "請勾選需要更改狀態的訂單");
-//             return;
-//           }
-//           List<String> billIdList = [];
-//
-//           for (int i = 0; i < isSelected!.length; i++) {
-//             if (isSelected?[i] == true) {
-//               billIdList.add(bills![i].id);
-//             }
-//           }
-//           await setBills(billIdList, 0, 'PAIED')
-//               .then((e) => {showAlertDialog(context, "訂單已完成")});
-//         },
-//         child: const Center(
-//             child: Text(
-//           '完成訂單',
-//           style: TextStyle(
-//               fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.white),
-//         )),
-//       ),
-//     );
-//   }
-// }

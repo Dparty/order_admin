@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
-import 'package:order_admin/views/ordering/createBillPage.dart';
-import 'package:order_admin/api/restaurant.dart';
-import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/components/responsive.dart';
-import 'package:order_admin/views/components/navbar.dart';
 
-import '../../api/bill.dart';
-import 'check_bills.dart';
-import 'order_detail.dart';
-import 'package:order_admin/provider/restaurant_provider.dart';
+import 'package:order_admin/api/restaurant.dart';
+import 'package:order_admin/api/bill.dart';
+
+import 'package:order_admin/models/restaurant.dart' as model;
+
+import 'package:order_admin/views/ordering/mobile/createBillPage.dart';
+import 'package:order_admin/views/ordering/checkbills/check_bills.dart';
+
 import 'package:provider/provider.dart';
-import 'package:order_admin/provider/selection_button_provider.dart';
+import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
+
+import 'package:order_admin/components/responsive.dart';
+import 'package:order_admin/views/components/default_layout.dart';
 
 class RestaurantDetail {
   String id = '';
@@ -26,12 +28,10 @@ class RestaurantDetail {
 class OrderingPage extends StatefulWidget {
   final String restaurantId;
   const OrderingPage(this.restaurantId, {super.key});
-  // const OrderingPage({super.key});
 
   @override
   // ignore: no_logic_in_create_state
   State<StatefulWidget> createState() => _OrderingPageState(restaurantId);
-  // State<StatefulWidget> createState() => _OrderingPageState();
 }
 
 class _OrderingPageState extends State<OrderingPage> {
@@ -42,7 +42,6 @@ class _OrderingPageState extends State<OrderingPage> {
   @override
   void initState() {
     super.initState();
-    // restaurant = context.read<RestaurantProvider>();
     getRestaurant(restaurantId).then((restaurant) {
       context.read<RestaurantProvider>().setRestaurant(
           restaurant.id,
@@ -51,14 +50,6 @@ class _OrderingPageState extends State<OrderingPage> {
           restaurant.items,
           restaurant.tables);
     });
-
-    // listTable(restaurantId).then((list) => setState(() {
-    //       context.read<RestaurantProvider>().setRestaurantTables(list);
-    //       // tables = list;
-    //     }));
-    // listItem(restaurantId).then((list) => setState(() {
-    //       items = list.data;
-    //     }));
   }
 
   void toCreateBillPage(model.Table table) {
@@ -110,105 +101,75 @@ class _OrderingPageState extends State<OrderingPage> {
             ),
           ),
         ),
-        desktop: Row(
-          children: [
-            SizedBox(
-              width: 200,
-              child: NavBar(),
-            ),
-            Expanded(
-              child: Scaffold(
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.white,
-                  elevation: 0.0,
-                  centerTitle: true,
-                  title: const Text('選擇餐桌',
-                      style:
-                          TextStyle(fontSize: 20.0, color: Color(0xFF545D68))),
-                ),
-                body: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Wrap(
-                        children: restaurant.tables
-                            .map<Widget>((table) => Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: SizedBox(
-                                    width: 100,
-                                    height: 100,
-                                    child: OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          side: BorderSide(
-                                            width: 1.0,
-                                            color: context
-                                                        .read<
-                                                            SelectedTableProvider>()
-                                                        .selectedTable
-                                                        ?.label ==
-                                                    table.label
-                                                ? kPrimaryColor
-                                                : kPrimaryLightColor,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          context
-                                              .read<SelectedTableProvider>()
-                                              .selectTable(table);
-
-                                          listBills(restaurant.id,
-                                                  status: 'SUBMITTED',
-                                                  tableId: table.id)
-                                              .then((orders) {
-                                            context
-                                                .read<SelectedTableProvider>()
-                                                .setTableOrders(orders);
-                                          });
-                                          // toCreateBillPage(table);
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Center(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  table.label,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 24),
-                                                ),
-                                                Center(
-                                                  child: Text(
-                                                      "(${table.x.toString()},${table.y.toString()})"),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        )),
+        desktop: DefaultLayout(
+          centerTitle: "選擇餐桌",
+          center: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Wrap(
+                  children: restaurant.tables
+                      .map<Widget>((table) => Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                      width: 1.0,
+                                      color: context
+                                                  .read<SelectedTableProvider>()
+                                                  .selectedTable
+                                                  ?.label ==
+                                              table.label
+                                          ? kPrimaryColor
+                                          : kPrimaryLightColor,
+                                    ),
                                   ),
-                                ))
-                            .toList()),
-                  ),
-                ),
-                // child: ConfigItem(itemList: items, restaurantId: restaurantId),
-              ),
+                                  onPressed: () {
+                                    context
+                                        .read<SelectedTableProvider>()
+                                        .selectTable(table);
+
+                                    listBills(restaurant.id,
+                                            status: 'SUBMITTED',
+                                            tableId: table.id)
+                                        .then((orders) {
+                                      context
+                                          .read<SelectedTableProvider>()
+                                          .setTableOrders(orders);
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            table.label,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 24),
+                                          ),
+                                          Center(
+                                            child: Text(
+                                                "(${table.x.toString()},${table.y.toString()})"),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                            ),
+                          ))
+                      .toList()),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: const VerticalDivider(),
-            ),
-            SizedBox(
-              width: 420,
-              child: CheckBillsView(
-                table: context.watch<SelectedTableProvider>().selectedTable,
-              ),
-            ),
-          ],
+          ),
+          right: CheckBillsView(
+            table: context.watch<SelectedTableProvider>().selectedTable,
+          ),
         ));
   }
 }

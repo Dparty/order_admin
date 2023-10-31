@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
+
 import 'package:order_admin/models/cart_item.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/models/model.dart' as model;
-import 'package:order_admin/provider/shopping_cart_provider.dart';
+import 'package:order_admin/models/model.dart';
+
 import 'package:provider/provider.dart';
+import 'package:order_admin/provider/shopping_cart_provider.dart';
 
 // components
 import 'package:order_admin/components/plusMinus_buttons.dart';
 
-import '../../models/model.dart';
-
+// CartCard in shopping cart
 class CartCard extends StatelessWidget {
   const CartCard({
     Key? key,
@@ -92,6 +93,7 @@ class CartCard extends StatelessWidget {
   }
 }
 
+// CartCard for current bill review
 class CartCardForBill extends StatelessWidget {
   const CartCardForBill({
     Key? key,
@@ -109,7 +111,7 @@ class CartCardForBill extends StatelessWidget {
         SizedBox(
           width: 88,
           child: AspectRatio(
-            aspectRatio: 0.88,
+            aspectRatio: 0.98,
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/components/dialog.dart';
 import 'package:order_admin/models/bill.dart';
-import 'package:order_admin/models/restaurant.dart' as model;
 
 // apis
 import 'package:order_admin/api/restaurant.dart';
@@ -10,32 +9,28 @@ import 'package:order_admin/api/bill.dart';
 
 // providers
 import 'package:provider/provider.dart';
-import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/shopping_cart_provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
 
 // components
-import './cart_card.dart';
-import './checkout_card.dart';
-import 'package:order_admin/views/components/default_button.dart';
+import 'package:order_admin/views/ordering/checkbills/cart_card.dart';
+import 'package:order_admin/views/ordering/checkbills/checkout_card.dart';
 
 class ShoppingCart extends StatelessWidget {
-  ShoppingCart({Key? key}) : super(key: key);
+  const ShoppingCart({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final selectedTable = context.watch<SelectedTableProvider>().selectedTable;
     final cartProvider = context.watch<CartProvider>();
 
-    void _showBill(orders) async {
-      final List? results = await showDialog(
+    void showBill(orders) async {
+      await showDialog(
         context: context,
         builder: (BuildContext context) {
           return ShowCurrentBill(orders: orders);
         },
       );
-
-      if (results != null) {}
     }
 
     return Scaffold(
@@ -83,7 +78,7 @@ class ShoppingCart extends StatelessWidget {
                       context.read<CartProvider>().resetShoppingCart();
                       // showAlertDialog(context, "訂單已提交");
                       // todo
-                      _showBill(value);
+                      showBill(value);
                     });
                   })),
         ),
@@ -106,16 +101,10 @@ class _ShowCurrentBillState extends State<ShowCurrentBill> {
     super.initState();
   }
 
-  void _cancel() {
-    Navigator.pop(context);
-  }
-
-  void _submit() {}
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("當前帳單"),
+      title: Text("取餐號：${widget.orders?.pickUpCode}"),
       content: Builder(builder: (context) {
         var height = MediaQuery.of(context).size.height - 200;
         var width = MediaQuery.of(context).size.width - 800;
@@ -129,8 +118,10 @@ class _ShowCurrentBillState extends State<ShowCurrentBill> {
                   color: kPrimaryColor),
               child: InkWell(
                 onTap: () async {
-                  await printBills([widget.orders.id], 0)
-                      .then((e) => {showAlertDialog(context, "訂單已打印")});
+                  await printBills([widget.orders.id], 0).then((e) {
+                    Navigator.of(context).pop();
+                    showAlertDialog(context, "訂單已打印");
+                  });
                 },
                 child: const Center(
                     child: Text(

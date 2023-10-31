@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:order_admin/models/model.dart';
 
 class Restaurant {

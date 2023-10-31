@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/createRestaurantPage.dart';
 import 'package:order_admin/main.dart';
-import 'package:order_admin/models/model.dart';
 import 'package:order_admin/models/restaurant.dart';
 import 'package:order_admin/views/ordering/orderingPage.dart';
 import 'package:order_admin/views/restaurantSettingsPage.dart';
-
-import 'package:order_admin/provider/restaurant_provider.dart';
-import 'package:provider/provider.dart';
 
 import '../api/restaurant.dart';
 import '../api/utils.dart';
@@ -66,7 +63,9 @@ class _RestaurantState extends State<RestaurantsPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: createRestaurant, child: const Icon(Icons.add)),
+          backgroundColor: kPrimaryColor,
+          onPressed: createRestaurant,
+          child: const Icon(Icons.add)),
       body: Center(
           child: ListView.builder(
               itemCount: restaurantList.data.length,

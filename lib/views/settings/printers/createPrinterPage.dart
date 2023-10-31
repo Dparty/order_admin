@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'api/restaurant.dart';
+import '../../../api/restaurant.dart';
 
 class CreatePrinterPage extends StatefulWidget {
   final String restaurantId;
+  final Function()? reload;
 
   const CreatePrinterPage(
     this.restaurantId, {
+    this.reload,
     super.key,
   });
 
@@ -27,6 +29,7 @@ class _CreatePrinterPageState extends State<CreatePrinterPage> {
 
   void create() {
     createPrinter(restaurantId, name.text, sn.text, printerType).then((value) {
+      widget.reload!();
       Navigator.pop(context);
     });
   }

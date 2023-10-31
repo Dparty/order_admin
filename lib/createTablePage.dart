@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:order_admin/models/restaurant.dart';
-
 import 'api/restaurant.dart';
 
 class CreateTablePage extends StatefulWidget {
@@ -13,13 +11,13 @@ class CreateTablePage extends StatefulWidget {
 }
 
 class _CreateTablePageState extends State<CreateTablePage> {
-  final String restaruantId;
+  final String restaurantId;
   final label = TextEditingController();
 
-  _CreateTablePageState(this.restaruantId);
+  _CreateTablePageState(this.restaurantId);
 
   void create() {
-    createTable(restaruantId, label.text).then((table) {
+    createTable(restaurantId, label.text).then((table) {
       Navigator.pop(context, table);
     });
   }
