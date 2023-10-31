@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/views/ordering/cart_card.dart';
-import 'package:order_admin/views/ordering/specificationPage.dart';
+import 'package:order_admin/views/ordering/checkbills/cart_card.dart';
+import 'package:order_admin/views/ordering/mobile/specificationPage.dart';
 
 class CreateBillPage extends StatefulWidget {
   final model.Table table;

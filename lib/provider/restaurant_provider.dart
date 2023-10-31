@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/models/model.dart';
 
 class RestaurantProvider with ChangeNotifier {
   String _id = '';
@@ -55,16 +52,10 @@ class RestaurantProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // void setRestaurantTables(List<model.Table> tables) {
-  //   _tables = tables;
-  //   notifyListeners();
-  // }
-
   void resetRestaurant() {
     setRestaurant('', '', '', [], []);
     _itemsMap = {};
     setRestaurantPrinter([]);
-    // setRestaurantTables([]);
     notifyListeners();
   }
 }

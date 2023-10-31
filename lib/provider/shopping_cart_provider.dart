@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/models/cart_item.dart';
 import 'package:collection/collection.dart';
 import 'package:order_admin/models/restaurant.dart';

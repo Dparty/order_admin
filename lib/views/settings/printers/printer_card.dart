@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:order_admin/configs/constants.dart';
-import 'package:order_admin/models/cart_item.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/provider/shopping_cart_provider.dart';
-import 'package:provider/provider.dart';
 
-// components
+import 'package:provider/provider.dart';
+import 'package:order_admin/provider/shopping_cart_provider.dart';
+
+import '../../../components/dialog.dart';
 
 class PrinterCard extends StatelessWidget {
   const PrinterCard({
     Key? key,
     required this.printer,
+    required this.deletePrinter,
   }) : super(key: key);
 
   final model.Printer printer;
+  final Function() deletePrinter;
 
   @override
   Widget build(BuildContext context) {
-    var provider = context.watch<CartProvider>();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          //set border radius more than 50% of height and width to make circle
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const SizedBox(width: 20),
             Expanded(
-                flex: 1,
+                flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -46,6 +46,15 @@ class PrinterCard extends StatelessWidget {
                     const SizedBox(height: 10),
                   ],
                 )),
+            Expanded(
+                child: IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                showAlertDialog(context, "確認刪除打印機${printer.name}?",
+                    onConfirmed: deletePrinter);
+                // deletePrinter();
+              },
+            ))
           ],
         ),
       ),

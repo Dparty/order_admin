@@ -5,7 +5,7 @@ import '../restaurant-settings/Seat.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 
 class SelectionButtonProvider with ChangeNotifier {
-  List<Seat> _selectedSeats = [];
+  final List<Seat> _selectedSeats = [];
 
   List<Seat> get selectedSeats => _selectedSeats;
 

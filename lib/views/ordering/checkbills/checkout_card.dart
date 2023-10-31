@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:order_admin/configs/constants.dart';
-import 'package:order_admin/configs/size_config.dart';
 import 'package:order_admin/views/components/default_button.dart';
 
 class CheckoutCard extends StatelessWidget {
