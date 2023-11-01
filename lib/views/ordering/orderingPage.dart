@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:order_admin/configs/constants.dart';
 
 import 'package:order_admin/api/restaurant.dart';
@@ -36,6 +37,8 @@ class OrderingPage extends StatefulWidget {
 
 class _OrderingPageState extends State<OrderingPage> {
   final String restaurantId;
+  Timer? _timeDilationTimer;
+  List<String?> hasOrdersList = [];
 
   _OrderingPageState(this.restaurantId);
 
@@ -50,6 +53,28 @@ class _OrderingPageState extends State<OrderingPage> {
           restaurant.items,
           restaurant.tables);
     });
+
+    if (mounted) {
+      _timeDilationTimer =
+          Timer.periodic(const Duration(milliseconds: 3000), pollingBills);
+
+      pollingBills(_timeDilationTimer!);
+    }
+  }
+
+  pollingBills(Timer timer) {
+    listBills(restaurantId, status: 'SUBMITTED').then((orders) {
+      final idList = {...orders.map((e) => e.tableLabel).toList()}.toList();
+      setState(() {
+        hasOrdersList = idList;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timeDilationTimer?.cancel();
+    super.dispose();
   }
 
   void toCreateBillPage(model.Table table) {
@@ -126,6 +151,10 @@ class _OrderingPageState extends State<OrderingPage> {
                                           ? kPrimaryColor
                                           : kPrimaryLightColor,
                                     ),
+                                    backgroundColor:
+                                        hasOrdersList.contains(table.label)
+                                            ? kPrimaryLightColor
+                                            : Colors.white,
                                   ),
                                   onPressed: () {
                                     context
@@ -154,10 +183,10 @@ class _OrderingPageState extends State<OrderingPage> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 24),
                                           ),
-                                          Center(
-                                            child: Text(
-                                                "(${table.x.toString()},${table.y.toString()})"),
-                                          )
+                                          // Center(
+                                          //   child: Text(
+                                          //       "(${table.x.toString()},${table.y.toString()})"),
+                                          // )
                                         ],
                                       ),
                                     ),
