@@ -64,7 +64,7 @@ class _OrderingPageState extends State<OrderingPage> {
 
   pollingBills(Timer timer) {
     listBills(restaurantId, status: 'SUBMITTED').then((orders) {
-      final idList = {...orders.map((e) => e.TableLabel).toList()}.toList();
+      final idList = {...orders.map((e) => e.tableLabel).toList()}.toList();
       setState(() {
         hasOrdersList = idList;
       });
