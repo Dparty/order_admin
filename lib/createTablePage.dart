@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'api/restaurant.dart';
 
+// todo: mobile create table refactor
 class CreateTablePage extends StatefulWidget {
   final String restaurantId;
   const CreateTablePage(this.restaurantId, {super.key});
@@ -16,42 +17,44 @@ class _CreateTablePageState extends State<CreateTablePage> {
 
   _CreateTablePageState(this.restaurantId);
 
-  void create() {
-    createTable(restaurantId, label.text).then((table) {
-      Navigator.pop(context, table);
-    });
-  }
+  // void create() {
+  //   createTable(restaurantId, label.text).then((table) {
+  //     Navigator.pop(context, table);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: const Text('新增餐桌'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: ListView(
-          children: <Widget>[
-            TextFormField(
-              controller: label,
-              autofocus: true,
-              decoration: const InputDecoration(
-                hintText: '輸入餐桌標籤',
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return '請輸入餐桌標籤';
-                }
-                return null;
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                onPressed: create,
-                child: const Text('創建'),
-              ),
-            ),
-          ],
-        ),
-      ));
+      body: Container()
+      // Padding(
+      //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      //   child: ListView(
+      //     children: <Widget>[
+      //       TextFormField(
+      //         controller: label,
+      //         autofocus: true,
+      //         decoration: const InputDecoration(
+      //           hintText: '輸入餐桌標籤',
+      //         ),
+      //         validator: (String? value) {
+      //           if (value == null || value.isEmpty) {
+      //             return '請輸入餐桌標籤';
+      //           }
+      //           return null;
+      //         },
+      //       ),
+      //       Padding(
+      //         padding: const EdgeInsets.symmetric(vertical: 16.0),
+      //         child: ElevatedButton(
+      //           onPressed: create,
+      //           child: const Text('創建'),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // )
+      );
 }

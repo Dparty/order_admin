@@ -6,6 +6,7 @@ import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/api/bill.dart';
 
 import 'package:order_admin/models/restaurant.dart' as model;
+import 'package:order_admin/views/components/main_layout.dart';
 
 import 'package:order_admin/views/ordering/mobile/createBillPage.dart';
 import 'package:order_admin/views/ordering/checkbills/check_bills.dart';
@@ -13,9 +14,6 @@ import 'package:order_admin/views/ordering/checkbills/check_bills.dart';
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
-
-import 'package:order_admin/components/responsive.dart';
-import 'package:order_admin/views/components/default_layout.dart';
 
 class RestaurantDetail {
   String id = '';
@@ -45,6 +43,7 @@ class _OrderingPageState extends State<OrderingPage> {
   @override
   void initState() {
     super.initState();
+
     getRestaurant(restaurantId).then((restaurant) {
       context.read<RestaurantProvider>().setRestaurant(
           restaurant.id,
@@ -55,6 +54,7 @@ class _OrderingPageState extends State<OrderingPage> {
     });
 
     if (mounted) {
+      _timeDilationTimer?.cancel();
       _timeDilationTimer =
           Timer.periodic(const Duration(milliseconds: 3000), pollingBills);
 
@@ -74,6 +74,7 @@ class _OrderingPageState extends State<OrderingPage> {
   @override
   void dispose() {
     _timeDilationTimer?.cancel();
+    _timeDilationTimer = null;
     super.dispose();
   }
 
@@ -91,114 +92,94 @@ class _OrderingPageState extends State<OrderingPage> {
   Widget build(BuildContext context) {
     final restaurant = context.watch<RestaurantProvider>();
 
-    return Responsive(
-        mobile: Scaffold(
-          appBar: AppBar(
-            title: const Text("點餐"),
-          ),
-          body: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Wrap(
-                  children: context
-                      .watch<RestaurantProvider>()
-                      .tables
-                      .map<Widget>((table) => Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: OutlinedButton(
-                                onPressed: () {
-                                  toCreateBillPage(table);
-                                },
-                                child: Text(
-                                  table.label,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 24),
-                                ),
-                              ),
-                            ),
-                          ))
-                      .toList()),
+    return MainLayout(
+      centerTitle: "選擇餐桌",
+      center: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('餐廳名稱：${context.read<RestaurantProvider>().name}'),
+              ],
             ),
-          ),
-        ),
-        desktop: DefaultLayout(
-          centerTitle: "選擇餐桌",
-          center: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Wrap(
-                  children: restaurant.tables
-                      .map<Widget>((table) => Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    side: BorderSide(
-                                      width: 1.0,
-                                      color: context
-                                                  .read<SelectedTableProvider>()
-                                                  .selectedTable
-                                                  ?.label ==
-                                              table.label
-                                          ? kPrimaryColor
-                                          : kPrimaryLightColor,
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 200,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Wrap(
+                    children: restaurant.tables
+                        .map<Widget>((table) => Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: BorderSide(
+                                        width: 1.0,
+                                        color: context
+                                                    .read<
+                                                        SelectedTableProvider>()
+                                                    .selectedTable
+                                                    ?.label ==
+                                                table.label
+                                            ? kPrimaryColor
+                                            : kPrimaryLightColor,
+                                      ),
+                                      backgroundColor:
+                                          hasOrdersList.contains(table.label)
+                                              ? kPrimaryLightColor
+                                              : Colors.white,
                                     ),
-                                    backgroundColor:
-                                        hasOrdersList.contains(table.label)
-                                            ? kPrimaryLightColor
-                                            : Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    context
-                                        .read<SelectedTableProvider>()
-                                        .selectTable(table);
-
-                                    listBills(restaurant.id,
-                                            status: 'SUBMITTED',
-                                            tableId: table.id)
-                                        .then((orders) {
+                                    onPressed: () {
                                       context
                                           .read<SelectedTableProvider>()
-                                          .setTableOrders(orders);
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            table.label,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 24),
-                                          ),
-                                          // Center(
-                                          //   child: Text(
-                                          //       "(${table.x.toString()},${table.y.toString()})"),
-                                          // )
-                                        ],
+                                          .selectTable(table);
+
+                                      listBills(restaurant.id,
+                                              status: 'SUBMITTED',
+                                              tableId: table.id)
+                                          .then((orders) {
+                                        context
+                                            .read<SelectedTableProvider>()
+                                            .setTableOrders(orders);
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              table.label,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 24),
+                                            ),
+                                            // Center(
+                                            //   child: Text(
+                                            //       "(${table.x.toString()},${table.y.toString()})"),
+                                            // )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  )),
-                            ),
-                          ))
-                      .toList()),
+                                    )),
+                              ),
+                            ))
+                        .toList()),
+              ),
             ),
-          ),
-          right: CheckBillsView(
-            table: context.watch<SelectedTableProvider>().selectedTable,
-          ),
-        ));
+          ]),
+      right: CheckBillsView(
+          table: context.watch<SelectedTableProvider>().selectedTable,
+          toOrderCallback: () {
+            _timeDilationTimer?.cancel();
+            _timeDilationTimer = null;
+          }),
+    );
   }
 }

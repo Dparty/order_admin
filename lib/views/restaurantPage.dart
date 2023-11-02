@@ -93,7 +93,10 @@ class RestaurantCard extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => OrderingPage(restaurant.id)));
+                      builder: (context) => RestaurantSettingsPage(
+                            restaurantId: restaurant.id,
+                            selectedNavIndex: 3,
+                          )));
             },
             icon: const Icon(Icons.restaurant)),
         IconButton(

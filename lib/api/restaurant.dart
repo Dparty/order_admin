@@ -82,6 +82,20 @@ Future<Printer> createPrinter(
   }
 }
 
+Future<void> updatePrinter(
+    String restaurant, String name, String sn, String type) async {
+  final token = await getToken();
+  final response = await http.put(
+      Uri.parse("$baseUrl/restaurants/$restaurant/printers"),
+      body:
+          jsonEncode({'name': name, 'sn': sn, 'type': type, 'description': ''}),
+      headers: {'Authorization': "bearer $token"});
+  if (response.statusCode == 204) {
+  } else {
+    throw Exception('Failed to create restaurant');
+  }
+}
+
 Future<void> deletePrinter(String id) async {
   final token = await getToken();
   final response = await http.delete(Uri.parse("$baseUrl/printers/$id"),
@@ -91,11 +105,12 @@ Future<void> deletePrinter(String id) async {
   }
 }
 
-Future<Table> createTable(String restaurantId, String label) async {
+Future<Table> createTable(
+    String restaurantId, String label, int x, int y) async {
   final token = await getToken();
   final response = await http.post(
       Uri.parse("$baseUrl/restaurants/$restaurantId/tables"),
-      body: jsonEncode({'label': label}),
+      body: jsonEncode({'label': label, 'x': x, 'y': y}),
       headers: {'Authorization': "bearer $token"});
   if (response.statusCode == 201) {
     return Table.fromJson(jsonDecode(response.body));
@@ -104,12 +119,24 @@ Future<Table> createTable(String restaurantId, String label) async {
   }
 }
 
+Future<Table> updateTable(String tableId, String label, int x, int y) async {
+  final token = await getToken();
+  final response = await http.put(Uri.parse("$baseUrl/tables/$tableId"),
+      body: jsonEncode({'label': label, 'x': x, 'y': y}),
+      headers: {'Authorization': "bearer $token"});
+  if (response.statusCode == 200) {
+    return Table.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to update restaurant');
+  }
+}
+
 Future<void> deleteTable(String id) async {
   final token = await getToken();
   final response = await http.delete(Uri.parse("$baseUrl/tables/$id"),
       headers: {'Authorization': "bearer $token"});
   if (response.statusCode != 204) {
-    throw Exception('Failed to create restaurant');
+    throw Exception('Failed to delete table');
   }
 }
 
