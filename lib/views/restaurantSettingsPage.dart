@@ -3,7 +3,7 @@ import 'package:order_admin/components/dialog.dart';
 import 'package:order_admin/createItemPage.dart';
 
 import 'package:order_admin/views/components/default_layout.dart';
-import 'package:order_admin/views/settings/configTablePage.dart';
+import 'package:order_admin/views/settings/tables/configTablePage.dart';
 import 'package:order_admin/views/ordering/orderingPage.dart';
 import 'package:order_admin/views/settings/printers/createPrinterPage.dart';
 import 'package:order_admin/views/settings/printers/configPrinterPage.dart';

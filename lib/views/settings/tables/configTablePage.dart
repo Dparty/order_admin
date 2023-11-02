@@ -10,7 +10,7 @@ import 'package:order_admin/orderingQrcodePage.dart';
 
 import 'package:order_admin/views/ordering/mobile/createBillPage.dart';
 import 'package:order_admin/views/ordering/checkbills/check_bills.dart';
-import 'package:order_admin/views/settings/table_info.dart';
+import 'package:order_admin/views/settings/tables/table_info.dart';
 
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';

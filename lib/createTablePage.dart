@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'api/restaurant.dart';
 
+// todo: mobile create table refactor
 class CreateTablePage extends StatefulWidget {
   final String restaurantId;
   const CreateTablePage(this.restaurantId, {super.key});

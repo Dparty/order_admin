@@ -46,15 +46,17 @@ class PrinterCard extends StatelessWidget {
                     const SizedBox(height: 10),
                   ],
                 )),
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                showAlertDialog(context, "確認刪除打印機${printer.name}?",
-                    onConfirmed: deletePrinter);
-                // deletePrinter();
-              },
-            ))
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  showAlertDialog(context, "確認刪除打印機${printer.name}?",
+                      onConfirmed: deletePrinter);
+                  // deletePrinter();
+                },
+              ),
+            )
           ],
         ),
       ),
