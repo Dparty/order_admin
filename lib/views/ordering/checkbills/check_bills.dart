@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 
+import 'offset_options_dialog.dart';
+
 class BillCheckbox extends StatelessWidget {
   const BillCheckbox({
     super.key,
@@ -66,6 +68,7 @@ class CheckBillsView extends StatefulWidget {
 
 class _CheckBillsViewState extends State<CheckBillsView> {
   List<bool> _isSelected = [];
+  int _offset = 0;
 
   @override
   void didChangeDependencies() {
@@ -220,9 +223,22 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                         billIdList.add(bills![i].id);
                                       }
                                     }
-                                    await printBills(billIdList, 0).then((e) {
-                                      showAlertDialog(context, "訂單已打印");
-                                    });
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => offsetOptions(
+                                        onSelected: (offset) {
+                                          setState(() {
+                                            _offset = offset;
+                                          });
+                                        },
+                                        onConfirmed: () async {
+                                          await printBills(billIdList, _offset)
+                                              .then((e) {
+                                            showAlertDialog(context, "訂單已打印");
+                                          });
+                                        },
+                                      ),
+                                    );
                                   },
                                   child: const Center(
                                       child: Text(
@@ -256,18 +272,32 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                         billIdList.add(bills![i].id);
                                       }
                                     }
-                                    await setBills(billIdList, 0, 'PAIED')
-                                        .then((e) {
-                                      showAlertDialog(context, "訂單已完成");
-                                      listBills(restaurant.id,
-                                              status: 'SUBMITTED',
-                                              tableId: table?.id)
-                                          .then((orders) {
-                                        context
-                                            .read<SelectedTableProvider>()
-                                            .setTableOrders(orders);
-                                      });
-                                    });
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => offsetOptions(
+                                        onSelected: (offset) {
+                                          setState(() {
+                                            _offset = offset;
+                                          });
+                                        },
+                                        onConfirmed: () async {
+                                          await setBills(
+                                                  billIdList, _offset, 'PAIED')
+                                              .then((e) {
+                                            showAlertDialog(context, "訂單已完成");
+                                            listBills(restaurant.id,
+                                                    status: 'SUBMITTED',
+                                                    tableId: table?.id)
+                                                .then((orders) {
+                                              context
+                                                  .read<SelectedTableProvider>()
+                                                  .setTableOrders(orders);
+                                            });
+                                          });
+                                        },
+                                      ),
+                                    );
                                   },
                                   child: const Center(
                                       child: Text(

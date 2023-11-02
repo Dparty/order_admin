@@ -15,6 +15,7 @@ import 'package:order_admin/provider/selected_table_provider.dart';
 // components
 import 'package:order_admin/views/ordering/checkbills/cart_card.dart';
 import 'package:order_admin/views/ordering/checkbills/checkout_card.dart';
+import 'package:order_admin/views/ordering/checkbills/offset_options_dialog.dart';
 
 class ShoppingCart extends StatelessWidget {
   const ShoppingCart({Key? key}) : super(key: key);
@@ -96,6 +97,8 @@ class ShowCurrentBill extends StatefulWidget {
 }
 
 class _ShowCurrentBillState extends State<ShowCurrentBill> {
+  int _offset = 0;
+
   @override
   void initState() {
     super.initState();
@@ -118,10 +121,22 @@ class _ShowCurrentBillState extends State<ShowCurrentBill> {
                   color: kPrimaryColor),
               child: InkWell(
                 onTap: () async {
-                  await printBills([widget.orders.id], 0).then((e) {
-                    Navigator.of(context).pop();
-                    showAlertDialog(context, "訂單已打印");
-                  });
+                  showDialog(
+                    context: context,
+                    builder: (context) => offsetOptions(
+                      onSelected: (offset) {
+                        setState(() {
+                          _offset = offset;
+                        });
+                      },
+                      onConfirmed: () async {
+                        await printBills([widget.orders.id], 0).then((e) {
+                          Navigator.of(context).pop();
+                          showAlertDialog(context, "訂單已打印");
+                        });
+                      },
+                    ),
+                  );
                 },
                 child: const Center(
                     child: Text(

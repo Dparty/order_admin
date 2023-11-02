@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:order_admin/configs/constants.dart';
 
 import 'package:order_admin/api/restaurant.dart';
-import 'package:order_admin/api/bill.dart';
 
 import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/orderingQrcodePage.dart';
 
 import 'package:order_admin/views/ordering/mobile/createBillPage.dart';
-import 'package:order_admin/views/ordering/checkbills/check_bills.dart';
 import 'package:order_admin/views/settings/tables/table_info.dart';
 
 import 'package:provider/provider.dart';
@@ -17,7 +13,6 @@ import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
 
 import 'package:order_admin/components/responsive.dart';
-import 'package:order_admin/views/components/default_layout.dart';
 import 'package:order_admin/views/components/main_layout.dart';
 
 class RestaurantDetail {
@@ -40,7 +35,6 @@ class ConfigTablePage extends StatefulWidget {
 
 class _ConfigTablePageState extends State<ConfigTablePage> {
   final String restaurantId;
-  // Timer? _timeDilationTimer;
   List<String?> hasOrdersList = [];
 
   _ConfigTablePageState(this.restaurantId);
@@ -48,7 +42,6 @@ class _ConfigTablePageState extends State<ConfigTablePage> {
   @override
   void initState() {
     super.initState();
-    print("_ConfigTablePageState");
     getRestaurant(restaurantId).then((restaurant) {
       context.read<RestaurantProvider>().setRestaurant(
           restaurant.id,
@@ -57,29 +50,7 @@ class _ConfigTablePageState extends State<ConfigTablePage> {
           restaurant.items,
           restaurant.tables);
     });
-
-    // if (mounted) {
-    //   _timeDilationTimer =
-    //       Timer.periodic(const Duration(milliseconds: 3000), pollingBills);
-    //
-    //   pollingBills(_timeDilationTimer!);
-    // }
   }
-
-  // pollingBills(Timer timer) {
-  //   listBills(restaurantId, status: 'SUBMITTED').then((orders) {
-  //     final idList = {...orders.map((e) => e.tableLabel).toList()}.toList();
-  //     setState(() {
-  //       hasOrdersList = idList;
-  //     });
-  //   });
-  // }
-
-  // @override
-  // void dispose() {
-  //   _timeDilationTimer?.cancel();
-  //   super.dispose();
-  // }
 
   void toCreateBillPage(model.Table table) {
     Navigator.push(
@@ -195,15 +166,6 @@ class _ConfigTablePageState extends State<ConfigTablePage> {
                                         context
                                             .read<SelectedTableProvider>()
                                             .selectTable(table);
-
-                                        // listBills(restaurant.id,
-                                        //         status: 'SUBMITTED',
-                                        //         tableId: table.id)
-                                        //     .then((orders) {
-                                        //   context
-                                        //       .read<SelectedTableProvider>()
-                                        //       .setTableOrders(orders);
-                                        // });
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),

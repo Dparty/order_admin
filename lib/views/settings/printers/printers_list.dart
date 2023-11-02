@@ -6,7 +6,9 @@ import 'printer_card.dart';
 class PrintersListView extends StatelessWidget {
   final List printersList;
   final Function()? reload;
-  const PrintersListView({Key? key, required this.printersList, this.reload})
+  final Function? onTap;
+  const PrintersListView(
+      {Key? key, required this.printersList, this.reload, this.onTap})
       : super(key: key);
 
   @override
@@ -22,6 +24,7 @@ class PrintersListView extends StatelessWidget {
               (item) => PrinterCard(
                 printer: item,
                 deletePrinter: () => removePrinter(item.id),
+                onTap: () => onTap!(item),
               ),
             )
             .toList()

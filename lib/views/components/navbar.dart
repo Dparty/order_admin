@@ -10,6 +10,7 @@ import 'package:order_admin/views/ordering/orderingPage.dart';
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
+import 'package:order_admin/provider/selected_printer_provider.dart';
 import 'package:order_admin/provider/shopping_cart_provider.dart';
 
 class NavBar extends StatelessWidget {
@@ -114,6 +115,7 @@ class NavBar extends StatelessWidget {
     }
     context.read<CartProvider>().resetShoppingCart();
     context.read<SelectedTableProvider>().resetSelectTable();
+    context.read<SelectedPrinterProvider>().resetSelectPrinter();
 
     switch (index) {
       case 3:

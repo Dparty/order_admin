@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart';
+import 'package:order_admin/provider/selected_printer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 
@@ -17,7 +18,7 @@ class ConfigPrinter extends StatefulWidget {
 }
 
 class _ConfigPrinterState extends State<ConfigPrinter> {
-  Printer? _selectedPrinter;
+  // Printer? _selectedPrinter;
 
   @override
   void initState() {
@@ -28,10 +29,8 @@ class _ConfigPrinterState extends State<ConfigPrinter> {
   Widget build(BuildContext context) {
     final restaurant = context.watch<RestaurantProvider>();
 
-    void getPrinters() {
-      listPrinters(restaurant.id).then((list) => setState(() {
-            context.read<RestaurantProvider>().setRestaurantPrinter(list.data);
-          }));
+    void setSelectedPrinter(printer) {
+      context.read<SelectedPrinterProvider>().setPrinter(printer);
     }
 
     return MainLayout(
@@ -56,9 +55,9 @@ class _ConfigPrinterState extends State<ConfigPrinter> {
                       elevation: 0,
                     ),
                     onPressed: () {
-                      setState(() {
-                        _selectedPrinter = null;
-                      });
+                      context
+                          .read<SelectedPrinterProvider>()
+                          .resetSelectPrinter();
                     },
                     child: const Text("新增打印機"),
                   ),
@@ -77,6 +76,7 @@ class _ConfigPrinterState extends State<ConfigPrinter> {
                             .read<RestaurantProvider>()
                             .setRestaurantPrinter(list.data);
                       })),
+              onTap: setSelectedPrinter,
             ),
           )
         ],
@@ -89,7 +89,7 @@ class _ConfigPrinterState extends State<ConfigPrinter> {
                   .setRestaurantPrinter(list.data);
             })),
         automaticallyImplyLeading: false,
-        printer: _selectedPrinter,
+        // printer: context.watch<SelectedPrinterProvider>().selectedPrinter,
       ),
     );
   }

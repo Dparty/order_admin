@@ -46,68 +46,6 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
     _tabController =
         TabController(length: restaurant.itemsMap.keys.length + 1, vsync: this);
 
-    // return MainLayout(
-    //     center: ListView(
-    //       padding: const EdgeInsets.only(left: 20.0),
-    //       children: <Widget>[
-    //         const SizedBox(height: 15.0),
-    //         Row(
-    //           children: [
-    //             Text('餐廳名稱：${context.read<RestaurantProvider>().name}'),
-    //             const SizedBox(width: 10),
-    //             Text(
-    //                 '餐桌號：${context.read<SelectedTableProvider>().selectedTable?.label}')
-    //           ],
-    //         ),
-    //         Row(
-    //           children: [
-    //             Expanded(
-    //                 flex: 8,
-    //                 child: TabBar(
-    //                     controller: _tabController,
-    //                     indicatorColor: Colors.transparent,
-    //                     labelColor: kPrimaryColor,
-    //                     isScrollable: true,
-    //                     labelPadding: const EdgeInsets.only(right: 45.0),
-    //                     unselectedLabelColor: Color(0xFFCDCDCD),
-    //                     tabs: [
-    //                       const Tab(
-    //                         child: Text('所有品項',
-    //                             style: TextStyle(
-    //                               fontSize: 18.0,
-    //                             )),
-    //                       ),
-    //                       ...restaurant.itemsMap.keys.map(
-    //                         (label) => Tab(
-    //                           child: Text(label,
-    //                               style: const TextStyle(
-    //                                 fontSize: 18.0,
-    //                               )),
-    //                         ),
-    //                       )
-    //                     ])),
-    //           ],
-    //         ),
-    //         SizedBox(
-    //             height: MediaQuery.of(context).size.height - 180.0,
-    //             child: TabBarView(controller: _tabController, children: [
-    //               ItemCardListView(
-    //                 itemList: restaurant.items,
-    //                 crossAxisCount: 3,
-    //                 onTap: onTapCallback,
-    //               ),
-    //               ...restaurant.itemsMap.keys.map(
-    //                 (label) => ItemCardListView(
-    //                   itemList: restaurant.itemsMap[label]?.toList(),
-    //                   crossAxisCount: 3,
-    //                   onTap: onTapCallback,
-    //                 ),
-    //               )
-    //             ]))
-    //       ],
-    //     ),
-    //     centerTitle: '點餐',
-    //     right: const ShoppingCart());
     return DefaultLayout(
         left: SizedBox(
           width: 200,

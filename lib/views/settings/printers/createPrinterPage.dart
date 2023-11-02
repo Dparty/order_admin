@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/models/restaurant.dart';
 import 'package:order_admin/api/restaurant.dart';
+import 'package:provider/provider.dart';
+
+import '../../../provider/selected_printer_provider.dart';
 
 class CreatePrinterPage extends StatefulWidget {
   final String restaurantId;
   final Function()? reload;
   final bool? automaticallyImplyLeading;
-  Printer? printer;
 
   CreatePrinterPage(
     this.restaurantId, {
     this.reload,
     this.automaticallyImplyLeading,
-    this.printer,
     super.key,
   });
 
   @override
   // ignore: no_logic_in_create_state
-  State<StatefulWidget> createState() => _CreatePrinterPageState(restaurantId);
+  State<CreatePrinterPage> createState() =>
+      _CreatePrinterPageState(restaurantId);
 }
 
 const List<String> printerTypeEnum = <String>[('BILL'), 'KITCHEN'];
@@ -26,6 +28,7 @@ const List<String> printerTypeEnum = <String>[('BILL'), 'KITCHEN'];
 class _CreatePrinterPageState extends State<CreatePrinterPage> {
   final _formKey = GlobalKey<FormState>();
   final String restaurantId;
+  Printer? printer;
   TextEditingController? name;
   TextEditingController? sn;
   _CreatePrinterPageState(this.restaurantId);
@@ -33,9 +36,16 @@ class _CreatePrinterPageState extends State<CreatePrinterPage> {
   String printerType = printerTypeEnum.first;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
-    name = TextEditingController(text: widget.printer?.name);
-    sn = TextEditingController(text: widget.printer?.sn);
+    printer = context.watch<SelectedPrinterProvider>().selectedPrinter;
+    name = TextEditingController(text: printer?.name);
+    sn = TextEditingController(text: printer?.sn);
+    printerType = printer?.type ?? printerTypeEnum.first;
     super.didChangeDependencies();
   }
 
@@ -47,12 +57,23 @@ class _CreatePrinterPageState extends State<CreatePrinterPage> {
     });
   }
 
+  void update() {
+    updatePrinter(restaurantId, name!.text, sn!.text, printerType)
+        .then((value) {
+      widget.reload!();
+      // Navigator.pop(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // name = TextEditingController(text: widget.printer?.name);
+    // sn = TextEditingController(text: widget.printer?.sn);
+    // printerType = widget.printer?.type ?? printerTypeEnum.first;
+
     return Scaffold(
       appBar: AppBar(
-        title:
-            widget.printer == null ? const Text('新增打印機') : const Text('編輯打印機'),
+        title: printer == null ? const Text('新增打印機') : const Text('編輯打印機'),
         automaticallyImplyLeading: widget.automaticallyImplyLeading ?? true,
       ),
       body: Padding(
@@ -111,17 +132,29 @@ class _CreatePrinterPageState extends State<CreatePrinterPage> {
                     );
                   }).toList(),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        create();
-                      }
-                    },
-                    child: const Text('創建'),
-                  ),
-                ),
+                printer == null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              create();
+                            }
+                          },
+                          child: const Text('創建'),
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              update();
+                            }
+                          },
+                          child: const Text('修改'),
+                        ),
+                      ),
               ]))),
     );
   }
