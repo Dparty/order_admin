@@ -55,8 +55,10 @@ class BillCheckbox extends StatelessWidget {
 
 class CheckBillsView extends StatefulWidget {
   final model.Table? table;
+  final Function? toOrderCallback;
 
-  const CheckBillsView({Key? key, this.table}) : super(key: key);
+  const CheckBillsView({Key? key, this.table, this.toOrderCallback})
+      : super(key: key);
 
   @override
   State<CheckBillsView> createState() => _CheckBillsViewState();
@@ -106,6 +108,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                             showAlertDialog(context, "請選擇桌號");
                             return;
                           }
+                          widget.toOrderCallback!();
                           Navigator.push(
                               context,
                               MaterialPageRoute(

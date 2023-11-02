@@ -19,28 +19,40 @@ class DefaultLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 200,
-          child: left ?? const NavBar(),
-        ),
+        left ??
+            SizedBox(
+              width: 200,
+              child: NavBar(),
+            ),
         Expanded(
             child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.white,
-            elevation: 0.0,
-            centerTitle: true,
-            title: Text(centerTitle,
-                style:
-                    const TextStyle(fontSize: 20.0, color: Color(0xFF545D68))),
-          ),
+          appBar: right != null
+              ? AppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.white,
+                  elevation: 0.0,
+                  centerTitle: true,
+                  title: Text(centerTitle,
+                      style: const TextStyle(
+                          fontSize: 20.0, color: Color(0xFF545D68))))
+              : null,
           body: center,
         )),
-        SizedBox(
-          // height: MediaQuery.of(context).size.height,
-          child: const VerticalDivider(),
-        ),
-        right != null ? SizedBox(width: 420, child: right) : Container(),
+        right != null
+            ? SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: const VerticalDivider(),
+              )
+            : const SizedBox(
+                width: 0,
+                height: 0,
+              ),
+        right != null
+            ? SizedBox(width: 420, child: right)
+            : const SizedBox(
+                width: 0,
+                height: 0,
+              )
       ],
     );
   }
