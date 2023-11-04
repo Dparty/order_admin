@@ -86,16 +86,18 @@ class _CreateItemPageState extends State<CreateItemPage> {
                 pricing: (double.parse(pricing.text) * 100).toInt(),
                 attributes: attributes))
         .then((value) {
-      if (!kIsWeb) {
-        uploadItemImage(value.id, imageFile!)
-            .then((value) => Navigator.pop(context))
-            .catchError((err) {
-          showAlertDialog(context, err.toString());
-        });
-        loading = false;
-      } else {
-        Navigator.pop(context);
-        loading = false;
+      if (showImage) {
+        if (!kIsWeb) {
+          uploadItemImage(value.id, imageFile!)
+              .then((value) => Navigator.pop(context))
+              .catchError((err) {
+            showAlertDialog(context, err.toString());
+          });
+          loading = false;
+        } else {
+          Navigator.pop(context);
+          loading = false;
+        }
       }
     });
   }
