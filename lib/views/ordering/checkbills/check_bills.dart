@@ -226,6 +226,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                     showDialog(
                                       context: context,
                                       builder: (context) => offsetOptions(
+                                        defaultOffset: _offset,
                                         onSelected: (offset) {
                                           setState(() {
                                             _offset = offset;
@@ -276,6 +277,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                     showDialog(
                                       context: context,
                                       builder: (context) => offsetOptions(
+                                        defaultOffset: _offset,
                                         onSelected: (offset) {
                                           setState(() {
                                             _offset = offset;

@@ -124,6 +124,7 @@ class _ShowCurrentBillState extends State<ShowCurrentBill> {
                   showDialog(
                     context: context,
                     builder: (context) => offsetOptions(
+                      defaultOffset: _offset,
                       onSelected: (offset) {
                         setState(() {
                           _offset = offset;

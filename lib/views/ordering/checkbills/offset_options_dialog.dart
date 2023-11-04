@@ -3,10 +3,15 @@ import 'package:order_admin/configs/constants.dart';
 
 class offsetOptions extends StatefulWidget {
   int? selectedIndex = 0;
+  int? defaultOffset = 0;
   final Function? onSelected;
   final Function? onConfirmed;
   offsetOptions(
-      {Key? key, this.selectedIndex, this.onSelected, this.onConfirmed})
+      {Key? key,
+      this.selectedIndex,
+      this.onSelected,
+      this.onConfirmed,
+      this.defaultOffset})
       : super(key: key);
 
   @override
@@ -17,23 +22,34 @@ class _offsetOptionsState extends State<offsetOptions> {
   List checkListItems = [
     {
       "id": 0,
-      "value": true,
+      "value": false,
       "offset": 0,
       "title": "原價",
     },
     {
       "id": 1,
-      "offset": -5,
       "value": false,
+      "offset": -5,
       "title": "95折",
     },
     {
       "id": 2,
-      "offset": 10,
       "value": false,
+      "offset": 10,
       "title": "+10%服務費",
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    var target = checkListItems
+        .firstWhere((item) => item["offset"] == widget.defaultOffset);
+    if (target != null) {
+      target["value"] = true;
+    }
+  }
 
   void _cancel() {
     Navigator.pop(context);
