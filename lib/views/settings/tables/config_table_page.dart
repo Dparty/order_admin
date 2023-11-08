@@ -5,7 +5,7 @@ import 'package:order_admin/api/restaurant.dart';
 
 import 'package:order_admin/models/restaurant.dart' as model;
 
-import 'package:order_admin/views/ordering/mobile/createBillPage.dart';
+import 'package:order_admin/views/ordering/mobile/create_bill_page.dart';
 import 'package:order_admin/views/settings/tables/table_info.dart';
 
 import 'package:provider/provider.dart';

@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import '../restaurant-settings/Seat.dart';
-import 'package:order_admin/models/restaurant.dart' as model;
 
 class SelectionButtonProvider with ChangeNotifier {
   final List<Seat> _selectedSeats = [];
