@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/api/bill.dart';
 import 'package:order_admin/components/dialog.dart';
-import '../orderItem_view.dart';
+import '../order_Item_view.dart';
 
 // models
 import 'package:order_admin/models/restaurant.dart' as model;
