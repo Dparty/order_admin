@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
-import 'package:order_admin/createItemPage.dart';
+import 'package:order_admin/create_item_page.dart';
 import 'package:order_admin/views/components/main_layout.dart';
 
 // providers

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/api/utils.dart';
 import 'package:order_admin/provider/selected_printer_provider.dart';
-import 'package:order_admin/views/restaurantPage.dart';
+import 'package:order_admin/views/restaurant_page.dart';
 import 'package:path/path.dart';
 import 'package:order_admin/views/signin/signinPage.dart';
 import 'package:provider/provider.dart';

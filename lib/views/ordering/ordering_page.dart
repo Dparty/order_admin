@@ -8,21 +8,12 @@ import 'package:order_admin/api/bill.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/views/components/main_layout.dart';
 
-import 'package:order_admin/views/ordering/mobile/createBillPage.dart';
+import 'package:order_admin/views/ordering/mobile/create_bill_page.dart';
 import 'package:order_admin/views/ordering/checkbills/check_bills.dart';
 
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
-
-class RestaurantDetail {
-  String id = '';
-  String name = '';
-  String description = '';
-  List<model.Item> items = [];
-  List<model.Printer> printers = [];
-  List<model.Table> tables = [];
-}
 
 class OrderingPage extends StatefulWidget {
   final String restaurantId;

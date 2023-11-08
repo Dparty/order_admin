@@ -15,15 +15,6 @@ import 'package:order_admin/provider/selected_table_provider.dart';
 import 'package:order_admin/components/responsive.dart';
 import 'package:order_admin/views/components/main_layout.dart';
 
-class RestaurantDetail {
-  String id = '';
-  String name = '';
-  String description = '';
-  List<model.Item> items = [];
-  List<model.Printer> printers = [];
-  List<model.Table> tables = [];
-}
-
 class ConfigTablePage extends StatefulWidget {
   final String restaurantId;
   const ConfigTablePage(this.restaurantId, {super.key});
