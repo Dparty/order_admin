@@ -62,7 +62,7 @@ class CartCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "${item.selectedItems.toString()}",
+                  item.selectedItems.toString(),
                 ),
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
