@@ -92,7 +92,7 @@ Future<void> updatePrinter(
       headers: {'Authorization': "bearer $token"});
   if (response.statusCode == 204) {
   } else {
-    throw Exception('Failed to create restaurant');
+    throw Exception('Failed to update printer');
   }
 }
 
@@ -152,6 +152,20 @@ Future<Item> createItem(String restaurantId, PutItem item) async {
     return Item.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to create restaurant');
+  }
+}
+
+Future<Item> updateItem(String itemId, PutItem item) async {
+  final token = await getToken();
+  final response = await http.put(Uri.parse("$baseUrl/items/$itemId"),
+      body: jsonEncode(item),
+      headers: {
+        'Authorization': "bearer $token",
+      });
+  if (response.statusCode == 201) {
+    return Item.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to update item');
   }
 }
 

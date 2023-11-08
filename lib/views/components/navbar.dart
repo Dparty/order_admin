@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
 import 'package:order_admin/provider/selected_printer_provider.dart';
+import 'package:order_admin/provider/selected_item_provider.dart';
 import 'package:order_admin/provider/shopping_cart_provider.dart';
 
 class NavBar extends StatelessWidget {
@@ -116,6 +117,7 @@ class NavBar extends StatelessWidget {
     context.read<CartProvider>().resetShoppingCart();
     context.read<SelectedTableProvider>().resetSelectTable();
     context.read<SelectedPrinterProvider>().resetSelectPrinter();
+    context.read<SelectedItemProvider>().resetSelectItem();
 
     switch (index) {
       case 3:

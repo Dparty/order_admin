@@ -15,19 +15,7 @@ import 'package:order_admin/models/bill.dart';
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
-
-const qrcodeApi =
-    'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=';
-const orderWebDomain = 'https://ordering-uat.sum-foods.com';
-
-String createQrcodeUrl(String text) {
-  return "$qrcodeApi$text";
-}
-
-String createOrderingUrl(String restaurantId, String tableId) {
-  return createQrcodeUrl(Uri.encodeComponent(
-      "$orderWebDomain/ordering/?restaurantId=$restaurantId&tableId=$tableId"));
-}
+import 'package:order_admin/api/utils.dart';
 
 class TableInfoView extends StatefulWidget {
   final model.Table? table;
@@ -197,12 +185,7 @@ class _TableInfoViewState extends State<TableInfoView> {
                                             context, "確認刪除餐桌${table?.label}?",
                                             onConfirmed: () =>
                                                 delete(table?.id));
-
-                                        // deletePrinter();
                                       },
-                                      // onPressed: () => deleteTable(
-                                      //   table.id,
-                                      // ),
                                       child: const Text("刪除餐桌"),
                                     ),
                                   ),

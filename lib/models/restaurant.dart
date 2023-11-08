@@ -81,6 +81,7 @@ class Item {
   final int pricing;
   final List<String> tags;
   final List<Attribute> attributes;
+  final List<String> printers;
   final List images;
 
   Item({
@@ -90,6 +91,7 @@ class Item {
     required this.tags,
     required this.attributes,
     required this.images,
+    required this.printers,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -102,6 +104,7 @@ class Item {
       tags: (json['tags'] as Iterable).map((a) => a as String).toList(),
       pricing: json['pricing'],
       images: json['images'],
+      printers: (json['printers'] as Iterable).map((a) => a as String).toList(),
     );
   }
 }
