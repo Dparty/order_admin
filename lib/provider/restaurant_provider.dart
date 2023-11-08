@@ -8,12 +8,11 @@ class RestaurantProvider with ChangeNotifier {
   List<model.Item> _items = [];
   List<model.Printer> _printers = [];
   List<model.Table> _tables = [];
-  Map<String, Iterable<model.Item>> _itemsMap = {};
 
   String get id => _id;
   String get name => _name;
   String get description => _description;
-  Map<String, Iterable<model.Item>> get itemsMap => _itemsMap;
+  Map<String, Iterable<model.Item>> get itemsMap => classification(items);
   List<model.Item> get items => _items;
 
   List<model.Printer> get printers => _printers;
@@ -42,7 +41,6 @@ class RestaurantProvider with ChangeNotifier {
     _name = name;
     _description = description;
     _items = items;
-    _itemsMap = classification(items);
     _tables = tables;
     notifyListeners();
   }
@@ -54,7 +52,6 @@ class RestaurantProvider with ChangeNotifier {
 
   void resetRestaurant() {
     setRestaurant('', '', '', [], []);
-    _itemsMap = {};
     setRestaurantPrinter([]);
     notifyListeners();
   }
