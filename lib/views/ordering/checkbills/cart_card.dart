@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:order_admin/provider/shopping_cart_provider.dart';
 
 // components
-import 'package:order_admin/components/plusMinus_buttons.dart';
+import 'package:order_admin/components/plus_minus_buttons.dart';
 
 // CartCard in shopping cart
 class CartCard extends StatelessWidget {

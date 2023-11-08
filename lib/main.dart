@@ -3,7 +3,7 @@ import 'package:order_admin/api/utils.dart';
 import 'package:order_admin/provider/selected_printer_provider.dart';
 import 'package:order_admin/views/restaurant_page.dart';
 import 'package:path/path.dart';
-import 'package:order_admin/views/signin/signinPage.dart';
+import 'package:order_admin/views/signin/signin_page.dart';
 import 'package:provider/provider.dart';
 import 'provider/selection_button_provider.dart';
 import 'provider/restaurant_provider.dart';
