@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/components/dialog.dart';
-import 'package:order_admin/views/settings/createItemPage.dart';
-
+import 'package:order_admin/views/settings/create_item_page.dart';
 import 'package:order_admin/views/components/default_layout.dart';
-import 'package:order_admin/views/settings/tables/configTablePage.dart';
-import 'package:order_admin/views/ordering/orderingPage.dart';
-import 'package:order_admin/views/settings/printers/createPrinterPage.dart';
-import 'package:order_admin/views/settings/printers/configPrinterPage.dart';
+import 'package:order_admin/views/settings/tables/config_table_page.dart';
+import 'package:order_admin/views/ordering/ordering_page.dart';
+import 'package:order_admin/views/settings/printers/create_printer_page.dart';
+import 'package:order_admin/views/settings/printers/config_printer_page.dart';
 
-import 'package:order_admin/createTablePage.dart';
+import 'package:order_admin/create_table_page.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 import '../api/restaurant.dart';
 import 'settings/printers/printers_list.dart';
 
 import '../../components/responsive.dart';
 import 'components/navbar.dart';
-import 'settings/configItemPage.dart';
+import 'settings/config_item_page.dart';
 
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:provider/provider.dart';

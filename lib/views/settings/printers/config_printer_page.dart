@@ -8,7 +8,7 @@ import 'package:order_admin/provider/restaurant_provider.dart';
 
 import 'package:order_admin/views/components/main_layout.dart';
 import 'package:order_admin/views/settings/printers/printers_list.dart';
-import 'package:order_admin/views/settings/printers/createPrinterPage.dart';
+import 'package:order_admin/views/settings/printers/create_printer_page.dart';
 
 class ConfigPrinter extends StatefulWidget {
   const ConfigPrinter({super.key});

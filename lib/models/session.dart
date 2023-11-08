@@ -1,5 +1,3 @@
-import "account.dart";
-
 class Session {
   final String token;
 

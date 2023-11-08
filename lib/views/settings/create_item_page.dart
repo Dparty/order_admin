@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:order_admin/views/settings/addAttribute.dart';
+import 'package:order_admin/views/settings/add_attribute_page.dart';
+
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/components/dialog.dart';
 import 'package:order_admin/models/restaurant.dart';
-import 'package:order_admin/views/restaurantSettingsPage.dart';
+import 'package:order_admin/views/restaurant_settings_page.dart';
 
 import 'package:order_admin/configs/constants.dart';
 

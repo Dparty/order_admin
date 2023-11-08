@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'api/restaurant.dart';
 
 // todo: mobile create table refactor
 class CreateTablePage extends StatefulWidget {

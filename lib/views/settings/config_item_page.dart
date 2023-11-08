@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
-import 'package:order_admin/views/settings/createItemPage.dart';
+import 'package:order_admin/views/settings/create_item_page.dart';
 import 'package:order_admin/views/components/main_layout.dart';
 import 'package:order_admin/views/settings/item_info.dart';
 import 'package:order_admin/api/restaurant.dart';
@@ -122,7 +122,7 @@ class _ConfigItemState extends State<ConfigItem> with TickerProviderStateMixin {
                 ...restaurant.itemsMap.keys.map(
                   (label) => ItemCardListView(
                     itemList: restaurant.itemsMap[label]?.toList(),
-                    crossAxisCount: 5,
+                    crossAxisCount: 3,
                     //todo
                     onTap: onClickItem,
                   ),

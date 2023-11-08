@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:order_admin/views/restaurantPage.dart';
+import 'package:order_admin/views/restaurant_page.dart';
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:order_admin/api/account.dart';
 

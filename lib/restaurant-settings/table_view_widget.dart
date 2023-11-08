@@ -1,13 +1,8 @@
-import 'dart:developer';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:order_admin/components/dialog.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/orderingQrcodePage.dart';
-import '../api/restaurant.dart';
+import 'package:order_admin/ordering_qrcode_page.dart';
 
-import 'SeatWidget.dart';
+import 'seat_widget.dart';
 
 class TableViewWidget extends StatelessWidget {
   final String restaurantId;
