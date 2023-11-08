@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/api/utils.dart';
+import 'package:order_admin/provider/selected_item_provider.dart';
 import 'package:order_admin/provider/selected_printer_provider.dart';
 import 'package:order_admin/views/restaurantPage.dart';
 import 'package:path/path.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RestaurantProvider()),
         ChangeNotifierProvider(create: (_) => SelectedTableProvider()),
         ChangeNotifierProvider(create: (_) => SelectedPrinterProvider()),
+        ChangeNotifierProvider(create: (_) => SelectedItemProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
 
         // ChangeNotifierProvider(create: (_) => FavouriteProvider()),

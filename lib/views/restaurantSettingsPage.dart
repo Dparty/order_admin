@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/components/dialog.dart';
-import 'package:order_admin/createItemPage.dart';
+import 'package:order_admin/views/settings/createItemPage.dart';
 
 import 'package:order_admin/views/components/default_layout.dart';
 import 'package:order_admin/views/settings/tables/configTablePage.dart';
