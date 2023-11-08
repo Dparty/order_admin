@@ -7,10 +7,7 @@ class CartItem {
   String get productId => item.id;
   String get productName => item.name;
   final Map<String, String> selectedItems;
-  final double? initialPrice;
-  final double? productPrice;
   int quantity;
-  final String? unitTag;
   String get image {
     if (item.images.isEmpty) {
       return "";
@@ -54,10 +51,7 @@ class CartItem {
 
   CartItem({
     required this.item,
-    required this.initialPrice,
-    required this.productPrice,
     required this.quantity,
-    required this.unitTag,
     required this.selectedItems,
   });
 }

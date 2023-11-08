@@ -28,14 +28,11 @@ class _OptionSelectState extends State<OptionSelect> {
     Navigator.pop(context);
   }
 
-// this function is called when the Submit button is tapped
+  // this function is called when the Submit button is tapped
   void _submit() {
     CartItem cartItem = CartItem(
       item: widget.item,
-      initialPrice: widget.item.pricing.toDouble(),
-      productPrice: widget.item.pricing.toDouble(),
       quantity: 1,
-      unitTag: '1',
       selectedItems: selectedItems,
     );
     context.read<CartProvider>().addToCart(cartItem);

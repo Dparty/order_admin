@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
-import 'package:order_admin/views/components/main_layout.dart';
 
 // providers
 import 'package:provider/provider.dart';
@@ -15,10 +14,7 @@ import './shopping_cart.dart';
 import './options_select.dart';
 
 class OrderItem extends StatefulWidget {
-  OrderItem({super.key});
-  List shoppingList = [];
-  int tabListLength = 0;
-
+  const OrderItem({super.key});
   @override
   State<OrderItem> createState() => _OrderItemState();
 }
@@ -75,7 +71,7 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
                         labelColor: kPrimaryColor,
                         isScrollable: true,
                         labelPadding: const EdgeInsets.only(right: 45.0),
-                        unselectedLabelColor: Color(0xFFCDCDCD),
+                        unselectedLabelColor: const Color(0xFFCDCDCD),
                         tabs: [
                           const Tab(
                             child: Text('所有品項',
