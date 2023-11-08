@@ -3,7 +3,6 @@ import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/create_restaurant_page.dart';
 import 'package:order_admin/main.dart';
 import 'package:order_admin/models/restaurant.dart';
-import 'package:order_admin/views/ordering/ordering_page.dart';
 import 'package:order_admin/views/restaurant_settings_page.dart';
 
 import '../api/restaurant.dart';

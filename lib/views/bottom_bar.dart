@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatelessWidget {
+  const BottomBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 6.0,
         color: Colors.transparent,
         elevation: 9.0,
         clipBehavior: Clip.antiAlias,
         child: Container(
             height: 50.0,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25.0),
                     topRight: Radius.circular(25.0)),
@@ -19,20 +21,20 @@ class BottomBar extends StatelessWidget {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                       height: 50.0,
                       width: MediaQuery.of(context).size.width / 2 - 40.0,
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Icon(Icons.home, color: Color(0xFFEF7532)),
                           Icon(Icons.person_outline, color: Color(0xFF676E79))
                         ],
                       )),
-                  Container(
+                  SizedBox(
                       height: 50.0,
                       width: MediaQuery.of(context).size.width / 2 - 40.0,
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Icon(Icons.search, color: Color(0xFF676E79)),
