@@ -1,25 +1,21 @@
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:order_admin/api/config.dart';
 import 'package:order_admin/views/settings/add_attribute_page.dart';
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/components/dialog.dart';
 import 'package:order_admin/models/restaurant.dart';
-import 'package:order_admin/provider/restaurant_provider.dart';
-import 'package:order_admin/provider/selected_item_provider.dart';
-import 'package:order_admin/provider/selected_printer_provider.dart';
-import 'package:order_admin/views/restaurant_settings_page.dart';
-import 'package:order_admin/components/dialog.dart';
-import 'package:order_admin/configs/constants.dart';
-import 'package:order_admin/models/restaurant.dart' as model;
 
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
+import 'package:order_admin/provider/selected_item_provider.dart';
+import './printer_row.dart';
 
 class EditItemPage extends StatefulWidget {
-  final model.Item? item;
+  final Item? item;
   final Function()? reload;
 
   const EditItemPage({Key? key, this.item, this.reload}) : super(key: key);
@@ -33,6 +29,7 @@ class _EditItemPageState extends State<EditItemPage> {
   TextEditingController? name;
   TextEditingController? pricing;
   TextEditingController? tag;
+  TextEditingController? status;
   List<Attribute>? attributes = [];
 
   bool loading = false;
@@ -47,9 +44,11 @@ class _EditItemPageState extends State<EditItemPage> {
 
   List<String>? _selectedPrinters = [];
   int _count = 1;
+  List<PlatformFile>? _paths;
+
+  String _status = "";
 
   void _addNewPrinter() {
-    print(_selectedPrinters?.length);
     setState(() {
       _selectedPrinters ??= [context.read<RestaurantProvider>().printers[0].id];
       _count = _count + 1;
@@ -75,15 +74,35 @@ class _EditItemPageState extends State<EditItemPage> {
     pricing = TextEditingController(
         text: ((widget.item?.pricing ?? 0) / 100).toString());
     tag = TextEditingController(text: widget.item?.tags?[0].toString());
+    _status = widget.item?.status ?? Status.ACTIVED.name;
     printers = context.read<RestaurantProvider>().printers;
-    printerIds = widget.item?.printers;
+
     _selectedPrinters = widget.item?.printers ?? [];
-    attributes = widget.item?.attributes;
+    attributes = widget.item?.attributes ?? [];
 
     super.didChangeDependencies();
   }
 
+  bool validate() {
+    if (loading) return false;
+    loading = true;
+    if (_selectedPrinters!.isEmpty) {
+      loading = false;
+      showAlertDialog(context, "請先創建打印機");
+      return false;
+    }
+
+    if (_paths == null) {
+      loading = false;
+      showAlertDialog(context, '請上傳圖片');
+      return false;
+    }
+
+    return true;
+  }
+
   void update() {
+    if (validate() == false) return;
     updateItem(
             context.read<SelectedItemProvider>().selectedItem!.id,
             PutItem(
@@ -91,15 +110,27 @@ class _EditItemPageState extends State<EditItemPage> {
                 tags: [tag!.text],
                 name: name!.text,
                 pricing: (double.parse(pricing!.text) * 100).toInt(),
+                status: _status,
                 attributes: attributes!))
         .then((value) {
       showAlertDialog(context, "更新成功");
-      widget.reload!();
+      // widget.reload!();
+      if (_paths != null) {
+        //passing file bytes and file name for API call
+        ApiClient.uploadFile(
+                widget.item!.id, _paths!.first.bytes!, _paths!.first.name)
+            .then((value) {
+          showAlertDialog(context, "更新图片成功");
+          _paths = null;
+          widget.reload!();
+        });
+      }
+      loading = false;
     });
   }
 
   void delete(itemId) {
-    deleteTable(itemId).then((_) {
+    deleteItem(itemId).then((_) {
       widget.reload!();
       showAlertDialog(context, "刪除品項成功");
     }).onError((error, stackTrace) {
@@ -108,44 +139,27 @@ class _EditItemPageState extends State<EditItemPage> {
   }
 
   void create() {
-    if (loading) return;
-    loading = true;
-    if (printers.isEmpty) {
-      loading = false;
-      showAlertDialog(context, "請先創建打印機");
-      return;
-    }
-
-    if (!showImage) {
-      loading = false;
-      showAlertDialog(context, '請上傳圖片');
-      return;
-    }
+    if (validate() == false) return;
 
     createItem(
             context.read<RestaurantProvider>().id,
             PutItem(
-                printers: printers
-                    .where((p) => p.id == printerId)
-                    .map((p) => p.id)
-                    .toList(),
+                printers: _selectedPrinters!,
                 tags: [tag!.text],
                 name: name!.text,
+                status: _status,
                 pricing: (double.parse(pricing!.text) * 100).toInt(),
-                attributes: attributes!))
+                attributes: attributes ?? []))
         .then((value) {
-      if (showImage) {
-        if (!kIsWeb) {
-          uploadItemImage(value.id, imageFile!)
-              .then((value) => Navigator.pop(context))
-              .catchError((err) {
-            showAlertDialog(context, err.toString());
-          });
-          loading = false;
-        } else {
-          Navigator.pop(context);
-          loading = false;
-        }
+      if (_paths != null) {
+        ApiClient.uploadFile(value.id, _paths!.first.bytes!, _paths!.first.name)
+            .then((value) {
+          showAlertDialog(context, "創建成功");
+          _paths = null;
+          widget.reload!();
+        });
+      } else {
+        showAlertDialog(context, "創建品項成功，可再次上傳圖片");
       }
     });
   }
@@ -159,14 +173,22 @@ class _EditItemPageState extends State<EditItemPage> {
     });
   }
 
-  void _pickImage() async {
-    ImagePicker picker = ImagePicker();
-    image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+  void _pickFiles() async {
+    try {
+      var path = (await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowMultiple: false,
+        onFileLoading: (FilePickerStatus status) => print(status),
+        allowedExtensions: ['png', 'jpg', 'jpeg', 'heic'],
+      ))
+          ?.files;
       setState(() {
-        showImage = true;
-        imageFile = File(image!.path);
+        _paths = path;
       });
+    } on PlatformException catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -241,7 +263,6 @@ class _EditItemPageState extends State<EditItemPage> {
                                   ),
                                 ])
                           : SizedBox(),
-
                       TextFormField(
                         controller: name,
                         decoration: const InputDecoration(
@@ -283,6 +304,41 @@ class _EditItemPageState extends State<EditItemPage> {
                           return null;
                         },
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: SizedBox(
+                          height: 20,
+                          child: Row(
+                            children: [
+                              const Text('品項狀態:  '),
+                              Radio(
+                                value: "ACTIVED",
+                                groupValue: _status,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      _status = value;
+                                    });
+                                  }
+                                },
+                              ),
+                              const Text('ACTIVED '),
+                              Radio(
+                                value: "DEACTIVED",
+                                groupValue: _status,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      _status = value;
+                                    });
+                                  }
+                                },
+                              ),
+                              const Text('DEACTIVED '),
+                            ],
+                          ),
+                        ),
+                      ),
                       ...?attributes?.map((a) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           child: Row(
@@ -302,10 +358,6 @@ class _EditItemPageState extends State<EditItemPage> {
                           ))),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        // child: ElevatedButton(
-                        //   onPressed: addAttribute,
-                        //   child: const Text('增加屬性'),
-                        // ),
                         child: ElevatedButton.icon(
                           icon: const Icon(
                             Icons.add_circle,
@@ -321,7 +373,6 @@ class _EditItemPageState extends State<EditItemPage> {
                           ),
                         ),
                       ),
-
                       Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           child: Column(children: [
@@ -331,11 +382,11 @@ class _EditItemPageState extends State<EditItemPage> {
                                 const Text('打印機：'),
                                 ElevatedButton(
                                   onPressed: _addNewPrinter,
-                                  child: Icon(Icons.add),
+                                  child: const Icon(Icons.add),
                                 ),
                                 ElevatedButton(
                                   onPressed: _deletePrinter,
-                                  child: Icon(Icons.remove),
+                                  child: const Icon(Icons.remove),
                                 ),
                               ],
                             ),
@@ -353,77 +404,46 @@ class _EditItemPageState extends State<EditItemPage> {
                               ),
                             ),
                           ])),
-
-                      // const Text('請新增打印機'),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: ElevatedButton(
-                          onPressed: () => _pickImage(),
+                          onPressed: () => _pickFiles(), //_pickImage()
                           child: const Text('上傳圖片'),
                         ),
                       ),
-                      item == null
-                          ? showImage
-                              ? Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: kIsWeb
-                                      ? const Text("在電腦上無法上傳圖片")
-                                      : Image.file(
-                                          imageFile == null
-                                              ? item?.images[0]
-                                              : imageFile,
-                                          fit: BoxFit.cover))
-                              : const Text(
-                                  '請上傳圖片',
-                                  style: TextStyle(fontSize: 20),
-                                )
-                          : SizedBox(
-                              height: 150,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FadeInImage(
-                                  image: NetworkImage(
-                                    item.images.isEmpty ? '' : item.images[0],
-                                  ),
-                                  fit: BoxFit.fitHeight,
-                                  placeholder:
-                                      const AssetImage("images/default.png"),
-                                  imageErrorBuilder:
-                                      (context, error, stackTrace) {
-                                    return Image.asset(
-                                      "images/default.png",
-                                      width: 100,
-                                    );
-                                  },
+                      _paths != null
+                          ? Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  height: 150.00,
+                                  width: 150.00,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: MemoryImage(
+                                              _paths!.first.bytes!))),
                                 ),
                               ),
-                            ),
-
-                      // item != null
-                      //     ? SizedBox(
-                      //         height: 150,
-                      //         child: Padding(
-                      //           padding: const EdgeInsets.all(8.0),
-                      //           child: FadeInImage(
-                      //             image: NetworkImage(
-                      //               item.images.isEmpty ? '' : item.images[0],
-                      //             ),
-                      //             fit: BoxFit.fitHeight,
-                      //             placeholder:
-                      //                 const AssetImage("images/default.png"),
-                      //             imageErrorBuilder:
-                      //                 (context, error, stackTrace) {
-                      //               return Image.asset(
-                      //                 "images/default.png",
-                      //                 width: 100,
-                      //               );
-                      //             },
-                      //           ),
-                      //         ),
-                      //       )
-                      //     : SizedBox(),
-
+                            )
+                          : item != null
+                              ? SizedBox(
+                                  height: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: FadeInImage(
+                                      image: NetworkImage(
+                                        item!.images.isEmpty
+                                            ? defaultImage
+                                            : item.images[0],
+                                      ),
+                                      fit: BoxFit.fitHeight,
+                                      placeholder: const AssetImage(
+                                          "images/default.png"),
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(),
                       item != null
                           ? Padding(
                               padding:
@@ -454,54 +474,5 @@ class _EditItemPageState extends State<EditItemPage> {
             ],
           )),
     );
-  }
-}
-
-// todo: Add multiple printers
-class PrinterRow extends StatefulWidget {
-  int index;
-  List<String>? selectedPrinters;
-  Function? onSelect;
-
-  PrinterRow(
-      {Key? key,
-      required this.index,
-      required this.selectedPrinters,
-      this.onSelect})
-      : super(key: key);
-  @override
-  State<StatefulWidget> createState() => _PrinterRow();
-}
-
-class _PrinterRow extends State<PrinterRow> {
-  @override
-  Widget build(BuildContext context) {
-    var printers = context.watch<RestaurantProvider>().printers;
-    return Container(
-        width: 100.0,
-        child: Column(children: <Widget>[
-          Expanded(
-            child: DropdownButton<String>(
-              value: widget.selectedPrinters?[widget.index] ?? printers[0].id,
-              // : widget.selectedPrinters?[widget.index],
-              icon: const Icon(Icons.arrow_downward),
-              elevation: 16,
-              style: const TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? value) {
-                widget.onSelect!(widget.index, value);
-              },
-              items: printers.map<DropdownMenuItem<String>>((Printer value) {
-                return DropdownMenuItem<String>(
-                  value: value.id,
-                  child: Text(value.name),
-                );
-              }).toList(),
-            ),
-          ),
-        ]));
   }
 }

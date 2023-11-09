@@ -1,5 +1,9 @@
 import 'package:order_admin/models/model.dart';
 
+enum Status { ACTIVED, DEACTIVED }
+
+enum PageType { SETTING, CONFIG }
+
 class Restaurant {
   final String id;
   final String name;
@@ -83,6 +87,7 @@ class Item {
   final List<Attribute> attributes;
   final List<String> printers;
   final List images;
+  final String status;
 
   Item({
     required this.id,
@@ -92,6 +97,7 @@ class Item {
     required this.attributes,
     required this.images,
     required this.printers,
+    required this.status,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -104,6 +110,7 @@ class Item {
       tags: (json['tags'] as Iterable).map((a) => a as String).toList(),
       pricing: json['pricing'],
       images: json['images'],
+      status: json['status'],
       printers: (json['printers'] as Iterable).map((a) => a as String).toList(),
     );
   }
@@ -115,11 +122,13 @@ class PutItem {
   final List<String> tags;
   final List<String> printers;
   final List<Attribute> attributes;
+  final String status;
   PutItem(
       {required this.printers,
       required this.tags,
       required this.name,
       required this.pricing,
+      required this.status,
       required this.attributes});
   Map<String, dynamic> toJson() {
     return {
@@ -128,6 +137,7 @@ class PutItem {
       'tags': tags,
       'printers': printers,
       'attributes': attributes,
+      'status': status,
     };
   }
 }
