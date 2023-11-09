@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/api/config.dart';
 
 Widget itemCard(BuildContext context, item, {Function()? onTap}) {
   return Padding(
@@ -26,16 +27,12 @@ Widget itemCard(BuildContext context, item, {Function()? onTap}) {
                         padding: const EdgeInsets.all(8.0),
                         child: FadeInImage(
                           image: NetworkImage(
-                            item.images.isEmpty ? '' : item.images[0],
+                            item!.images.isEmpty
+                                ? defaultImage
+                                : item.images[0],
                           ),
-                          fit: BoxFit.fitWidth,
+                          fit: BoxFit.fitHeight,
                           placeholder: const AssetImage("images/default.png"),
-                          imageErrorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              "images/default.png",
-                              width: 100,
-                            );
-                          },
                         ),
                       ),
                     ),

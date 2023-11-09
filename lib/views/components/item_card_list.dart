@@ -38,7 +38,6 @@ class _ItemCardListViewState extends State<ItemCardListView> {
                   children: [
                     ...widget.itemList!
                         .map((item) => itemCard(context, item, onTap: () {
-                              // todo: 點擊跳轉到 品項編輯edit
                               widget.onTap!(item);
                             }))
                         .toList()

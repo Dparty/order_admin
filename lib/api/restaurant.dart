@@ -1,5 +1,7 @@
 import "dart:convert";
 import "dart:io";
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import "package:order_admin/api/utils.dart";
 import "package:order_admin/models/bill.dart";
@@ -175,7 +177,7 @@ Future<void> deleteItem(String id) async {
     'Authorization': "bearer $token",
   });
   if (response.statusCode != 204) {
-    throw Exception('Failed to create restaurant');
+    throw Exception('Failed to delete item');
   }
 }
 
@@ -204,6 +206,36 @@ Future<UploadImage> uploadItemImage(String itemId, File file) async {
     return UploadImage.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to create restaurant');
+  }
+}
+
+// todo: type
+class ApiClient {
+  static var dio = Dio();
+
+  static Future<void> uploadFile(
+      String itemId, List<int> file, String fileName) async {
+    final token = await getToken();
+    dio.options.headers['content-Type'] = "multipart/form-data";
+    dio.options.headers["authorization"] = "bearer $token";
+
+    FormData formData = FormData.fromMap({
+      "file": MultipartFile.fromBytes(
+        file,
+        filename: fileName,
+        contentType: MediaType("image", "png"),
+      )
+    });
+    Response response = await dio.post(
+        "https://ordering-api-uat.sum-foods.com/items/$itemId/image",
+        // "$baseUrl/items/$itemId/images",  // todo
+        data: formData);
+    if (response.statusCode == 201) {
+      // return UploadImage.fromJson(jsonDecode(response.body));
+      return;
+    } else {
+      throw Exception('Failed to create restaurant');
+    }
   }
 }
 
