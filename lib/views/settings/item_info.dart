@@ -29,6 +29,7 @@ class _EditItemPageState extends State<EditItemPage> {
   TextEditingController? name;
   TextEditingController? pricing;
   TextEditingController? tag;
+  TextEditingController? status;
   List<Attribute>? attributes = [];
 
   bool loading = false;
@@ -45,8 +46,9 @@ class _EditItemPageState extends State<EditItemPage> {
   int _count = 1;
   List<PlatformFile>? _paths;
 
+  String _status = "";
+
   void _addNewPrinter() {
-    print(_selectedPrinters?.length);
     setState(() {
       _selectedPrinters ??= [context.read<RestaurantProvider>().printers[0].id];
       _count = _count + 1;
@@ -72,15 +74,35 @@ class _EditItemPageState extends State<EditItemPage> {
     pricing = TextEditingController(
         text: ((widget.item?.pricing ?? 0) / 100).toString());
     tag = TextEditingController(text: widget.item?.tags?[0].toString());
+    _status = widget.item?.status ?? Status.ACTIVED.name;
     printers = context.read<RestaurantProvider>().printers;
-    // printerIds = widget.item?.printers;
+
     _selectedPrinters = widget.item?.printers ?? [];
     attributes = widget.item?.attributes ?? [];
 
     super.didChangeDependencies();
   }
 
+  bool validate() {
+    if (loading) return false;
+    loading = true;
+    if (_selectedPrinters!.isEmpty) {
+      loading = false;
+      showAlertDialog(context, "請先創建打印機");
+      return false;
+    }
+
+    if (_paths == null) {
+      loading = false;
+      showAlertDialog(context, '請上傳圖片');
+      return false;
+    }
+
+    return true;
+  }
+
   void update() {
+    if (validate() == false) return;
     updateItem(
             context.read<SelectedItemProvider>().selectedItem!.id,
             PutItem(
@@ -88,6 +110,7 @@ class _EditItemPageState extends State<EditItemPage> {
                 tags: [tag!.text],
                 name: name!.text,
                 pricing: (double.parse(pricing!.text) * 100).toInt(),
+                status: _status,
                 attributes: attributes!))
         .then((value) {
       showAlertDialog(context, "更新成功");
@@ -116,19 +139,7 @@ class _EditItemPageState extends State<EditItemPage> {
   }
 
   void create() {
-    if (loading) return;
-    loading = true;
-    if (_selectedPrinters!.isEmpty) {
-      loading = false;
-      showAlertDialog(context, "請先創建打印機");
-      return;
-    }
-
-    if (_paths == null) {
-      loading = false;
-      showAlertDialog(context, '請上傳圖片');
-      return;
-    }
+    if (validate() == false) return;
 
     createItem(
             context.read<RestaurantProvider>().id,
@@ -136,6 +147,7 @@ class _EditItemPageState extends State<EditItemPage> {
                 printers: _selectedPrinters!,
                 tags: [tag!.text],
                 name: name!.text,
+                status: _status,
                 pricing: (double.parse(pricing!.text) * 100).toInt(),
                 attributes: attributes ?? []))
         .then((value) {
@@ -146,6 +158,8 @@ class _EditItemPageState extends State<EditItemPage> {
           _paths = null;
           widget.reload!();
         });
+      } else {
+        showAlertDialog(context, "創建品項成功，可再次上傳圖片");
       }
     });
   }
@@ -289,6 +303,41 @@ class _EditItemPageState extends State<EditItemPage> {
                           }
                           return null;
                         },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: SizedBox(
+                          height: 20,
+                          child: Row(
+                            children: [
+                              const Text('品項狀態:  '),
+                              Radio(
+                                value: "ACTIVED",
+                                groupValue: _status,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      _status = value;
+                                    });
+                                  }
+                                },
+                              ),
+                              const Text('ACTIVED '),
+                              Radio(
+                                value: "DEACTIVED",
+                                groupValue: _status,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      _status = value;
+                                    });
+                                  }
+                                },
+                              ),
+                              const Text('DEACTIVED '),
+                            ],
+                          ),
+                        ),
                       ),
                       ...?attributes?.map((a) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),

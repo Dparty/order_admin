@@ -10,6 +10,7 @@ import 'package:order_admin/views/settings/printers/config_printer_page.dart';
 import 'package:order_admin/create_table_page.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
 import '../api/restaurant.dart';
+import '../configs/constants.dart';
 import 'settings/printers/printers_list.dart';
 
 import '../../components/responsive.dart';
@@ -165,20 +166,16 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
               ],
             ),
           ),
-          // Padding(
-          //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          //     child: TableListWidget(
-          //       restaurantId,
-          //       tables: restaurant.tables,
-          //       delete: removeTable,
-          //       constrainX: 5,
-          //       constrainY: 10,
-          //       testTables: [
-          //         TestTable(seatIndex: 1, seatLabel: "桌號E", x: 1, y: 1),
-          //         TestTable(seatIndex: 2, seatLabel: "桌號B", x: 2, y: 1),
-          //         TestTable(seatIndex: 3, seatLabel: "桌號C", x: 3, y: 2)
-          //       ],
-          //     )),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            // child: TableViewWidget(
+            //   restaurantId,
+            //   tables: restaurant.tables,
+            //   delete: removeTable,
+            //   constrainX: 5,
+            //   constrainY: 10,
+            // )
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: PrintersListView(
@@ -192,12 +189,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
             ),
           ),
         ][_selectedIndex],
-        // ListView.builder(
-        //     itemCount: restaurantList.data.length,
-        //     itemBuilder: (context, index) => RestaurantCard(
-        //           restaurant: restaurantList.data[index],
-        //           key: Key(restaurantList.data[index].id),
-        //         )),
+
         bottomNavigationBar: BottomNavigationBar(
           onTap: _onItemTapped,
           selectedItemColor: const Color.fromARGB(255, 118, 148, 255),
@@ -217,6 +209,10 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: kPrimaryColor,
+            onPressed: () => add(context),
+            child: const Icon(Icons.add)),
       ),
       desktop: DefaultLayout(
         left: SizedBox(

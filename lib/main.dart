@@ -3,10 +3,8 @@ import 'package:order_admin/api/utils.dart';
 import 'package:order_admin/provider/selected_item_provider.dart';
 import 'package:order_admin/provider/selected_printer_provider.dart';
 import 'package:order_admin/views/restaurant_page.dart';
-import 'package:path/path.dart';
 import 'package:order_admin/views/signin/signin_page.dart';
 import 'package:provider/provider.dart';
-import 'provider/selection_button_provider.dart';
 import 'provider/restaurant_provider.dart';
 import 'provider/selected_table_provider.dart';
 import 'provider/shopping_cart_provider.dart';
@@ -41,14 +39,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SelectionButtonProvider()),
         ChangeNotifierProvider(create: (_) => RestaurantProvider()),
         ChangeNotifierProvider(create: (_) => SelectedTableProvider()),
         ChangeNotifierProvider(create: (_) => SelectedPrinterProvider()),
         ChangeNotifierProvider(create: (_) => SelectedItemProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
-
-        // ChangeNotifierProvider(create: (_) => FavouriteProvider()),
       ],
       child: MaterialApp(
         title: "和食云",

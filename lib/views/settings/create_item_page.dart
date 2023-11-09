@@ -34,6 +34,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
   File? imageFile;
   Uint8List webImage = Uint8List(8);
   bool showImage = false;
+  String _status = "";
   _CreateItemPageState(this.restaurantId);
 
   @override
@@ -84,6 +85,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
                     .toList(),
                 tags: [tag.text],
                 name: name.text,
+                status: _status,
                 pricing: (double.parse(pricing.text) * 100).toInt(),
                 attributes: attributes))
         .then((value) {

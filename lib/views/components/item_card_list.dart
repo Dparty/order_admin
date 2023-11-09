@@ -8,13 +8,15 @@ class ItemCardListView extends StatefulWidget {
   int crossAxisCount = 3;
   Item? selectedItem;
   Function? onTap;
+  String? type = 'order'; // order or config
 
-  ItemCardListView(
-      {Key? key,
-      required this.itemList,
-      required this.crossAxisCount,
-      this.onTap})
-      : super(key: key);
+  ItemCardListView({
+    Key? key,
+    required this.itemList,
+    required this.crossAxisCount,
+    this.onTap,
+    this.type,
+  }) : super(key: key);
 
   @override
   State<ItemCardListView> createState() => _ItemCardListViewState();
@@ -39,7 +41,7 @@ class _ItemCardListViewState extends State<ItemCardListView> {
                     ...widget.itemList!
                         .map((item) => itemCard(context, item, onTap: () {
                               widget.onTap!(item);
-                            }))
+                            }, type: widget.type))
                         .toList()
                   ])),
           const SizedBox(height: 15.0)
