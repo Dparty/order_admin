@@ -26,6 +26,7 @@ class EditItemPage extends StatefulWidget {
 }
 
 class _EditItemPageState extends State<EditItemPage> {
+  Item? _item;
   TextEditingController? name;
   TextEditingController? pricing;
   TextEditingController? tag;
@@ -41,9 +42,9 @@ class _EditItemPageState extends State<EditItemPage> {
   File? imageFile;
   Uint8List webImage = Uint8List(8);
   bool showImage = false;
+  String? imgUrl;
 
   List<String>? _selectedPrinters = [];
-  int _count = 1;
   List<PlatformFile>? _paths;
 
   String _status = "";
@@ -51,14 +52,12 @@ class _EditItemPageState extends State<EditItemPage> {
   void _addNewPrinter() {
     setState(() {
       _selectedPrinters ??= [context.read<RestaurantProvider>().printers[0].id];
-      _count = _count + 1;
       _selectedPrinters?.add(context.read<RestaurantProvider>().printers[0].id);
     });
   }
 
   void _deletePrinter() {
     setState(() {
-      _count = _count - 1;
       _selectedPrinters?.removeLast();
     });
   }
@@ -66,6 +65,8 @@ class _EditItemPageState extends State<EditItemPage> {
   @override
   void initState() {
     super.initState();
+
+    _item = widget.item;
   }
 
   @override
@@ -76,14 +77,15 @@ class _EditItemPageState extends State<EditItemPage> {
     tag = TextEditingController(text: widget.item?.tags?[0].toString());
     _status = widget.item?.status ?? Status.ACTIVED.name;
     printers = context.read<RestaurantProvider>().printers;
-
+    _item = widget.item;
+    // imgUrl = widget.item?.images?.isEmpty? null : widget.item?.images[0];
     _selectedPrinters = widget.item?.printers ?? [];
     attributes = widget.item?.attributes ?? [];
 
     super.didChangeDependencies();
   }
 
-  bool validate() {
+  Future<bool> validate() async {
     if (loading) return false;
     loading = true;
     if (_selectedPrinters!.isEmpty) {
@@ -92,41 +94,40 @@ class _EditItemPageState extends State<EditItemPage> {
       return false;
     }
 
-    if (_paths == null) {
-      loading = false;
-      showAlertDialog(context, '請上傳圖片');
-      return false;
+    if (_paths != null) {
+      String res = await ApiClient.uploadFile(
+          _item!.id, _paths!.first.bytes!, _paths!.first.name);
+      setState(() {
+        imgUrl = res;
+        _paths = null;
+      });
+    } else {
+      setState(() {
+        imgUrl = _item!.images.isEmpty ? '' : _item?.images[0];
+      });
     }
-
     return true;
   }
 
-  void update() {
-    if (validate() == false) return;
-    updateItem(
-            context.read<SelectedItemProvider>().selectedItem!.id,
-            PutItem(
-                printers: _selectedPrinters!,
-                tags: [tag!.text],
-                name: name!.text,
-                pricing: (double.parse(pricing!.text) * 100).toInt(),
-                status: _status,
-                attributes: attributes!))
-        .then((value) {
+  void update() async {
+    bool isValid = await validate();
+    if (isValid == false) return;
+    var res = await updateItem(
+        _item!.id,
+        PutItem(
+            printers: _selectedPrinters!,
+            tags: [tag!.text],
+            name: name!.text,
+            pricing: (double.parse(pricing!.text) * 100).toInt(),
+            status: _status,
+            images: imgUrl?.length == 0 ? [] : [imgUrl],
+            attributes: attributes!));
+    if (res != null) {
       showAlertDialog(context, "更新成功");
-      // widget.reload!();
-      if (_paths != null) {
-        //passing file bytes and file name for API call
-        ApiClient.uploadFile(
-                widget.item!.id, _paths!.first.bytes!, _paths!.first.name)
-            .then((value) {
-          showAlertDialog(context, "更新图片成功");
-          _paths = null;
-          widget.reload!();
-        });
-      }
-      loading = false;
-    });
+
+      widget.reload!();
+    }
+    loading = false;
   }
 
   void delete(itemId) {
@@ -138,30 +139,25 @@ class _EditItemPageState extends State<EditItemPage> {
     });
   }
 
-  void create() {
-    if (validate() == false) return;
+  void create() async {
+    var res = await createItem(
+        context.read<RestaurantProvider>().id,
+        PutItem(
+            printers: _selectedPrinters!,
+            tags: [tag!.text],
+            name: name!.text,
+            pricing: (double.parse(pricing!.text) * 100).toInt(),
+            status: _status,
+            images: [],
+            attributes: attributes!));
 
-    createItem(
-            context.read<RestaurantProvider>().id,
-            PutItem(
-                printers: _selectedPrinters!,
-                tags: [tag!.text],
-                name: name!.text,
-                status: _status,
-                pricing: (double.parse(pricing!.text) * 100).toInt(),
-                attributes: attributes ?? []))
-        .then((value) {
-      if (_paths != null) {
-        ApiClient.uploadFile(value.id, _paths!.first.bytes!, _paths!.first.name)
-            .then((value) {
-          showAlertDialog(context, "創建成功");
-          _paths = null;
-          widget.reload!();
-        });
-      } else {
-        showAlertDialog(context, "創建品項成功，可再次上傳圖片");
-      }
-    });
+    if (res != null) {
+      setState(() {
+        _item = res;
+      });
+    }
+
+    update();
   }
 
   void addAttribute() async {

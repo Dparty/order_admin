@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_admin/api/config.dart';
 import 'package:order_admin/configs/constants.dart';
 
 import 'package:order_admin/models/cart_item.dart';
@@ -119,7 +120,8 @@ class CartCardForBill extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
               ),
               child: FadeInImage(
-                image: NetworkImage(item.images[0]!),
+                image: NetworkImage(
+                    item.images.isEmpty ? defaultImage : item.images?[0]),
                 placeholder: const AssetImage("images/default.png"),
                 imageErrorBuilder: (context, error, stackTrace) {
                   return Image.asset("images/default.png",

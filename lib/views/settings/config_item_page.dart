@@ -126,7 +126,8 @@ class _ConfigItemState extends State<ConfigItem> with TickerProviderStateMixin {
                 ...restaurant.itemsMap.keys.map(
                   (label) => ItemCardListView(
                     itemList: restaurant.itemsMap[label]?.toList(),
-                    crossAxisCount: 3,
+                    crossAxisCount:
+                        3, //crossAxisCount: (MediaQuery.of(context).size.width ~/ 350).toInt(),
                     type: PageType.CONFIG.name,
                     onTap: onClickItem,
                   ),

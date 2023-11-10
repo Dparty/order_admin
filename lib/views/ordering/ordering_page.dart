@@ -55,6 +55,7 @@ class _OrderingPageState extends State<OrderingPage> {
 
   pollingBills(Timer timer) {
     listBills(restaurantId, status: 'SUBMITTED').then((orders) {
+      context.read<SelectedTableProvider>().setTableOrders(orders);
       final idList = {...orders.map((e) => e.tableLabel).toList()}.toList();
       setState(() {
         hasOrdersList = idList;
@@ -129,14 +130,14 @@ class _OrderingPageState extends State<OrderingPage> {
                                           .read<SelectedTableProvider>()
                                           .selectTable(table);
 
-                                      listBills(restaurant.id,
-                                              status: 'SUBMITTED',
-                                              tableId: table.id)
-                                          .then((orders) {
-                                        context
-                                            .read<SelectedTableProvider>()
-                                            .setTableOrders(orders);
-                                      });
+                                      // listBills(restaurant.id,
+                                      //         status: 'SUBMITTED',
+                                      //         tableId: table.id)
+                                      //     .then((orders) {
+                                      //   context
+                                      //       .read<SelectedTableProvider>()
+                                      //       .setTableOrders(orders);
+                                      // });
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),

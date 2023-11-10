@@ -80,6 +80,8 @@ class _CheckBillsViewState extends State<CheckBillsView> {
   @override
   Widget build(BuildContext context) {
     List<Bill>? bills = context.watch<SelectedTableProvider>().tableOrders;
+    List<Bill>? selectedTableBiils =
+        bills?.where((i) => i.tableLabel == widget.table?.label).toList();
     final restaurant = context.watch<RestaurantProvider>();
     final table = context.watch<SelectedTableProvider>().selectedTable;
 
@@ -150,7 +152,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                       child: SingleChildScrollView(
                           child: Column(
                     children: [
-                      ...?bills?.mapIndexed(
+                      ...?selectedTableBiils?.mapIndexed(
                         (index, order) => BillCheckbox(
                           label: "取餐號：${order.pickUpCode.toString()}",
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -220,7 +222,8 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                         i < _isSelected.length;
                                         i++) {
                                       if (_isSelected[i] == true) {
-                                        billIdList.add(bills![i].id);
+                                        billIdList
+                                            .add(selectedTableBiils![i].id);
                                       }
                                     }
                                     showDialog(
@@ -270,7 +273,8 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                         i < _isSelected.length;
                                         i++) {
                                       if (_isSelected[i] == true) {
-                                        billIdList.add(bills![i].id);
+                                        billIdList
+                                            .add(selectedTableBiils![i].id);
                                       }
                                     }
 
