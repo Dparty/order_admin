@@ -144,20 +144,10 @@ class _OrderingPageState extends State<OrderingPage> {
                                           .map((e) => e.id)
                                           .toList();
 
-                                      print(selectedTableBills?.length);
-
                                       context
                                           .read<SelectedTableProvider>()
                                           .setSelectedBillIds(
                                               selectedTableBills);
-                                      // listBills(restaurant.id,
-                                      //         status: 'SUBMITTED',
-                                      //         tableId: table.id)
-                                      //     .then((orders) {
-                                      //   context
-                                      //       .read<SelectedTableProvider>()
-                                      //       .setTableOrders(orders);
-                                      // });
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -188,9 +178,6 @@ class _OrderingPageState extends State<OrderingPage> {
           ]),
       right: CheckBillsView(
           table: context.watch<SelectedTableProvider>().selectedTable,
-          // selectedList: List.filled(
-          //     context.watch<SelectedTableProvider>().tableOrders?.length ?? 0,
-          //     true),
           toOrderCallback: () {
             _timeDilationTimer?.cancel();
             _timeDilationTimer = null;

@@ -58,10 +58,8 @@ class BillCheckbox extends StatelessWidget {
 class CheckBillsView extends StatefulWidget {
   final model.Table? table;
   final Function? toOrderCallback;
-  List<bool>? selectedList;
 
-  CheckBillsView(
-      {Key? key, this.table, this.toOrderCallback, this.selectedList})
+  const CheckBillsView({Key? key, this.table, this.toOrderCallback})
       : super(key: key);
 
   @override
@@ -165,7 +163,6 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                         (index, order) => BillCheckbox(
                           label: "取餐號：${order.pickUpCode.toString()}",
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          // value: _isSelected[index],
                           value: selectedIds!.contains(order.id),
                           onChanged: (bool newValue) {
                             setState(() {
@@ -173,15 +170,11 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                 context
                                     .read<SelectedTableProvider>()
                                     .addId(order.id);
-                                // selectedIds.add(order.id);
                               } else {
                                 context
                                     .read<SelectedTableProvider>()
                                     .removeId(order.id);
-
-                                // selectedIds.remove(order.id);
                               }
-                              // _isSelected?[index] = newValue;
                             });
                           },
                         ),
@@ -233,37 +226,21 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                     color: kPrimaryColor),
                                 child: InkWell(
                                   onTap: () async {
-                                    // if (_isSelected
-                                    //     .every((element) => element == false)) {
-                                    //   showAlertDialog(context, "請勾選需要打印的訂單");
-                                    //   return;
-                                    // }
-
                                     if (selectedIds!.isEmpty) {
                                       showAlertDialog(context, "請勾選需要打印的訂單");
                                       return;
                                     }
-
-                                    // List<String> billIdList = [];
-                                    // for (int i = 0;
-                                    //     i < _isSelected.length;
-                                    //     i++) {
-                                    //   if (_isSelected[i] == true) {
-                                    //     billIdList
-                                    //         .add(selectedTableBills![i].id);
-                                    //   }
-                                    // }
                                     showDialog(
                                       context: context,
-                                      builder: (context) => offsetOptions(
+                                      builder: (innerContext) => offsetOptions(
                                         defaultOffset: _offset,
                                         onSelected: (offset) {
                                           setState(() {
                                             _offset = offset;
                                           });
                                         },
-                                        onConfirmed: (context) async {
-                                          await printBills(selectedIds, _offset)
+                                        onConfirmed: () {
+                                          printBills(selectedIds, _offset)
                                               .then((e) {
                                             showAlertDialog(context, "訂單已打印");
                                           });

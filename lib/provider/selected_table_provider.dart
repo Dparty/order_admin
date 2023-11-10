@@ -31,11 +31,6 @@ class SelectedTableProvider with ChangeNotifier {
   void setAllTableOrders(List<Bill>? orders) {
     _tableOrders = orders;
     notifyListeners();
-    // if (_tableOrders == null || equal(orders, _tableOrders) == false) {
-    //   print("update");
-    //   _tableOrders = orders;
-    //   notifyListeners();
-    // }
   }
 
   void setSelectedBillIds(List<String>? ids) {
