@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
 
+import '../../models/bill.dart';
+
 class OrderingPage extends StatefulWidget {
   final String restaurantId;
   const OrderingPage(this.restaurantId, {super.key});
@@ -55,7 +57,7 @@ class _OrderingPageState extends State<OrderingPage> {
 
   pollingBills(Timer timer) {
     listBills(restaurantId, status: 'SUBMITTED').then((orders) {
-      context.read<SelectedTableProvider>().setTableOrders(orders);
+      context.read<SelectedTableProvider>().setAllTableOrders(orders);
       final idList = {...orders.map((e) => e.tableLabel).toList()}.toList();
       setState(() {
         hasOrdersList = idList;
@@ -130,14 +132,22 @@ class _OrderingPageState extends State<OrderingPage> {
                                           .read<SelectedTableProvider>()
                                           .selectTable(table);
 
-                                      // listBills(restaurant.id,
-                                      //         status: 'SUBMITTED',
-                                      //         tableId: table.id)
-                                      //     .then((orders) {
-                                      //   context
-                                      //       .read<SelectedTableProvider>()
-                                      //       .setTableOrders(orders);
-                                      // });
+                                      List<Bill>? bills = context
+                                          .read<SelectedTableProvider>()
+                                          .tableOrders
+                                          ?.toList();
+
+                                      List<String>? selectedTableBills = bills
+                                          ?.where((i) =>
+                                              i.tableLabel == table?.label)
+                                          .toList()
+                                          .map((e) => e.id)
+                                          .toList();
+
+                                      context
+                                          .read<SelectedTableProvider>()
+                                          .setSelectedBillIds(
+                                              selectedTableBills);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
