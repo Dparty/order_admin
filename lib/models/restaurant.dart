@@ -123,12 +123,15 @@ class PutItem {
   final List<String> printers;
   final List<Attribute> attributes;
   final String status;
+  final List images;
+
   PutItem(
       {required this.printers,
       required this.tags,
       required this.name,
       required this.pricing,
       required this.status,
+      required this.images,
       required this.attributes});
   Map<String, dynamic> toJson() {
     return {
@@ -138,6 +141,7 @@ class PutItem {
       'printers': printers,
       'attributes': attributes,
       'status': status,
+      'images': images,
     };
   }
 }

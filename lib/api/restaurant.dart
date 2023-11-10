@@ -213,7 +213,7 @@ Future<UploadImage> uploadItemImage(String itemId, File file) async {
 class ApiClient {
   static var dio = Dio();
 
-  static Future<void> uploadFile(
+  static Future<String> uploadFile(
       String itemId, List<int> file, String fileName) async {
     final token = await getToken();
     dio.options.headers['content-Type'] = "multipart/form-data";
@@ -228,11 +228,12 @@ class ApiClient {
     });
     Response response = await dio.post(
         "https://ordering-api-uat.sum-foods.com/items/$itemId/image",
-        // "$baseUrl/items/$itemId/images",  // todo
+        // "$baseUrl/items/$itemId/images", // todo
         data: formData);
     if (response.statusCode == 201) {
+      return response.data['url'];
       // return UploadImage.fromJson(jsonDecode(response.body));
-      return;
+      // return;
     } else {
       throw Exception('Failed to create restaurant');
     }

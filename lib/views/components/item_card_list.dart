@@ -28,13 +28,15 @@ class _ItemCardListViewState extends State<ItemCardListView> {
     return Scaffold(
       backgroundColor: const Color(0xFFFCFAF8),
       body: ListView(
+        physics: const PageScrollPhysics(),
         children: <Widget>[
           const SizedBox(height: 15.0),
           Container(
-              padding: const EdgeInsets.only(right: 15.0),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
               width: MediaQuery.of(context).size.width - 30.0,
-              height: MediaQuery.of(context).size.height - 50.0,
+              height: MediaQuery.of(context).size.height - 210.0,
               child: GridView.count(
+                  physics: const PageScrollPhysics(),
                   crossAxisCount: widget.crossAxisCount,
                   primary: false,
                   children: [

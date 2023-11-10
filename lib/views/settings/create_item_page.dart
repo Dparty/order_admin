@@ -76,33 +76,34 @@ class _CreateItemPageState extends State<CreateItemPage> {
       showAlertDialog(context, '請上傳圖片');
       return;
     }
-    createItem(
-            restaurantId,
-            PutItem(
-                printers: printers
-                    .where((p) => p.id == printerId)
-                    .map((p) => p.id)
-                    .toList(),
-                tags: [tag.text],
-                name: name.text,
-                status: _status,
-                pricing: (double.parse(pricing.text) * 100).toInt(),
-                attributes: attributes))
-        .then((value) {
-      if (showImage) {
-        if (!kIsWeb) {
-          uploadItemImage(value.id, imageFile!)
-              .then((value) => Navigator.pop(context))
-              .catchError((err) {
-            showAlertDialog(context, err.toString());
-          });
-          loading = false;
-        } else {
-          Navigator.pop(context);
-          loading = false;
-        }
-      }
-    });
+    // old create item for mobile
+    // createItem(
+    //         restaurantId,
+    //         PutItem(
+    //             printers: printers
+    //                 .where((p) => p.id == printerId)
+    //                 .map((p) => p.id)
+    //                 .toList(),
+    //             tags: [tag.text],
+    //             name: name.text,
+    //             status: _status,
+    //             pricing: (double.parse(pricing.text) * 100).toInt(),
+    //             attributes: attributes))
+    //     .then((value) {
+    //   if (showImage) {
+    //     if (!kIsWeb) {
+    //       uploadItemImage(value.id, imageFile!)
+    //           .then((value) => Navigator.pop(context))
+    //           .catchError((err) {
+    //         showAlertDialog(context, err.toString());
+    //       });
+    //       loading = false;
+    //     } else {
+    //       Navigator.pop(context);
+    //       loading = false;
+    //     }
+    //   }
+    // });
   }
 
   void addAttribute() async {
