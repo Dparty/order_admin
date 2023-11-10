@@ -58,8 +58,10 @@ class BillCheckbox extends StatelessWidget {
 class CheckBillsView extends StatefulWidget {
   final model.Table? table;
   final Function? toOrderCallback;
+  List<bool>? selectedList;
 
-  const CheckBillsView({Key? key, this.table, this.toOrderCallback})
+  CheckBillsView(
+      {Key? key, this.table, this.toOrderCallback, this.selectedList})
       : super(key: key);
 
   @override
@@ -67,33 +69,39 @@ class CheckBillsView extends StatefulWidget {
 }
 
 class _CheckBillsViewState extends State<CheckBillsView> {
-  List<bool> _isSelected = [];
   int _offset = 0;
 
   @override
-  void didChangeDependencies() {
-    _isSelected = List.filled(
-        context.watch<SelectedTableProvider>().tableOrders?.length ?? 0, true);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    List<Bill>? bills = context.watch<SelectedTableProvider>().tableOrders;
-    List<Bill>? selectedTableBiils =
+    List<Bill>? bills =
+        context.watch<SelectedTableProvider>().tableOrders?.toList();
+
+    List<Bill>? selectedTableBills =
         bills?.where((i) => i.tableLabel == widget.table?.label).toList();
+    List<String>? selectedTableBillsIds =
+        selectedTableBills?.map((e) => e.id).toList();
+
     final restaurant = context.watch<RestaurantProvider>();
     final table = context.watch<SelectedTableProvider>().selectedTable;
 
+    final selectedIds =
+        context.watch<SelectedTableProvider>().selectedBillIds ?? [];
+
     void setCheckAll(bool select) {
-      _isSelected = List.filled(_isSelected.length, select);
+      if (select == false) {
+        context.read<SelectedTableProvider>().setSelectedBillIds([]);
+      } else {
+        context
+            .read<SelectedTableProvider>()
+            .setSelectedBillIds(selectedTableBillsIds);
+      }
     }
 
     return Scaffold(
         appBar: AppBar(
             automaticallyImplyLeading: false,
             title: Text('${table?.label ?? ''}訂單列表')),
-        body: _isSelected.isEmpty
+        body: selectedTableBills != null && selectedTableBills!.isEmpty
             ? Center(
                 child: Column(
                 children: [
@@ -139,7 +147,8 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                       children: [
                         const Text("全部選擇/取消"),
                         Checkbox(
-                            value: !_isSelected.contains(false),
+                            // value: !_isSelected.contains(false),
+                            value: selectedIds.isNotEmpty,
                             onChanged: (val) {
                               setState(() {
                                 setCheckAll(val!);
@@ -152,14 +161,27 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                       child: SingleChildScrollView(
                           child: Column(
                     children: [
-                      ...?selectedTableBiils?.mapIndexed(
+                      ...?selectedTableBills?.mapIndexed(
                         (index, order) => BillCheckbox(
                           label: "取餐號：${order.pickUpCode.toString()}",
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          value: _isSelected[index],
+                          // value: _isSelected[index],
+                          value: selectedIds!.contains(order.id),
                           onChanged: (bool newValue) {
                             setState(() {
-                              _isSelected?[index] = newValue;
+                              if (newValue == true) {
+                                context
+                                    .read<SelectedTableProvider>()
+                                    .addId(order.id);
+                                // selectedIds.add(order.id);
+                              } else {
+                                context
+                                    .read<SelectedTableProvider>()
+                                    .removeId(order.id);
+
+                                // selectedIds.remove(order.id);
+                              }
+                              // _isSelected?[index] = newValue;
                             });
                           },
                         ),
@@ -211,21 +233,26 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                     color: kPrimaryColor),
                                 child: InkWell(
                                   onTap: () async {
-                                    if (_isSelected
-                                        .every((element) => element == false)) {
+                                    // if (_isSelected
+                                    //     .every((element) => element == false)) {
+                                    //   showAlertDialog(context, "請勾選需要打印的訂單");
+                                    //   return;
+                                    // }
+
+                                    if (selectedIds!.isEmpty) {
                                       showAlertDialog(context, "請勾選需要打印的訂單");
                                       return;
                                     }
 
-                                    List<String> billIdList = [];
-                                    for (int i = 0;
-                                        i < _isSelected.length;
-                                        i++) {
-                                      if (_isSelected[i] == true) {
-                                        billIdList
-                                            .add(selectedTableBiils![i].id);
-                                      }
-                                    }
+                                    // List<String> billIdList = [];
+                                    // for (int i = 0;
+                                    //     i < _isSelected.length;
+                                    //     i++) {
+                                    //   if (_isSelected[i] == true) {
+                                    //     billIdList
+                                    //         .add(selectedTableBills![i].id);
+                                    //   }
+                                    // }
                                     showDialog(
                                       context: context,
                                       builder: (context) => offsetOptions(
@@ -235,8 +262,8 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                             _offset = offset;
                                           });
                                         },
-                                        onConfirmed: () async {
-                                          await printBills(billIdList, _offset)
+                                        onConfirmed: (context) async {
+                                          await printBills(selectedIds, _offset)
                                               .then((e) {
                                             showAlertDialog(context, "訂單已打印");
                                           });
@@ -262,25 +289,14 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                     color: kPrimaryColor),
                                 child: InkWell(
                                   onTap: () async {
-                                    if (_isSelected
-                                        .every((element) => element == false)) {
-                                      showAlertDialog(context, "請勾選需要更改狀態的訂單");
+                                    if (selectedIds!.isEmpty) {
+                                      showAlertDialog(context, "請勾選需要打印的訂單");
                                       return;
-                                    }
-                                    List<String> billIdList = [];
-
-                                    for (int i = 0;
-                                        i < _isSelected.length;
-                                        i++) {
-                                      if (_isSelected[i] == true) {
-                                        billIdList
-                                            .add(selectedTableBiils![i].id);
-                                      }
                                     }
 
                                     showDialog(
                                       context: context,
-                                      builder: (context) => offsetOptions(
+                                      builder: (innerContext) => offsetOptions(
                                         defaultOffset: _offset,
                                         onSelected: (offset) {
                                           setState(() {
@@ -289,7 +305,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                         },
                                         onConfirmed: () async {
                                           await setBills(
-                                                  billIdList, _offset, 'PAIED')
+                                                  selectedIds, _offset, 'PAIED')
                                               .then((e) {
                                             showAlertDialog(context, "訂單已完成");
                                             listBills(restaurant.id,
@@ -298,7 +314,10 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                                 .then((orders) {
                                               context
                                                   .read<SelectedTableProvider>()
-                                                  .setTableOrders(orders);
+                                                  .setAllTableOrders(orders);
+                                              context
+                                                  .read<SelectedTableProvider>()
+                                                  .setSelectedBillIds([]);
                                             });
                                           });
                                         },

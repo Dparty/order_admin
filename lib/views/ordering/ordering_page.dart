@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/selected_table_provider.dart';
 
+import '../../models/bill.dart';
+
 class OrderingPage extends StatefulWidget {
   final String restaurantId;
   const OrderingPage(this.restaurantId, {super.key});
@@ -55,7 +57,7 @@ class _OrderingPageState extends State<OrderingPage> {
 
   pollingBills(Timer timer) {
     listBills(restaurantId, status: 'SUBMITTED').then((orders) {
-      context.read<SelectedTableProvider>().setTableOrders(orders);
+      context.read<SelectedTableProvider>().setAllTableOrders(orders);
       final idList = {...orders.map((e) => e.tableLabel).toList()}.toList();
       setState(() {
         hasOrdersList = idList;
@@ -130,6 +132,24 @@ class _OrderingPageState extends State<OrderingPage> {
                                           .read<SelectedTableProvider>()
                                           .selectTable(table);
 
+                                      List<Bill>? bills = context
+                                          .read<SelectedTableProvider>()
+                                          .tableOrders
+                                          ?.toList();
+
+                                      List<String>? selectedTableBills = bills
+                                          ?.where((i) =>
+                                              i.tableLabel == table?.label)
+                                          .toList()
+                                          .map((e) => e.id)
+                                          .toList();
+
+                                      print(selectedTableBills?.length);
+
+                                      context
+                                          .read<SelectedTableProvider>()
+                                          .setSelectedBillIds(
+                                              selectedTableBills);
                                       // listBills(restaurant.id,
                                       //         status: 'SUBMITTED',
                                       //         tableId: table.id)
@@ -168,6 +188,9 @@ class _OrderingPageState extends State<OrderingPage> {
           ]),
       right: CheckBillsView(
           table: context.watch<SelectedTableProvider>().selectedTable,
+          // selectedList: List.filled(
+          //     context.watch<SelectedTableProvider>().tableOrders?.length ?? 0,
+          //     true),
           toOrderCallback: () {
             _timeDilationTimer?.cancel();
             _timeDilationTimer = null;
