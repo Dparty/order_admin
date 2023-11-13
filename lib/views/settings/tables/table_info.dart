@@ -17,6 +17,8 @@ import 'package:order_admin/provider/selected_table_provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/api/utils.dart';
 
+import '../../../components/qr_code.dart';
+
 class TableInfoView extends StatefulWidget {
   final model.Table? table;
   final Function()? reload;
@@ -232,31 +234,11 @@ class _TableInfoViewState extends State<TableInfoView> {
                                   child: const Text('下載二維碼'),
                                 ),
                               ),
-                              Image.network(
-                                url,
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  }
-                                  return Column(
-                                    children: [
-                                      Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                },
+                              SizedBox(
+                                child: QRCode(
+                                  qrSize: 320,
+                                  qrData: url,
+                                ),
                               )
                             ],
                           )),

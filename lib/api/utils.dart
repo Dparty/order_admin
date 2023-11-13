@@ -25,5 +25,5 @@ Future signout() async {
 
 String createOrderingUrl(String restaurantId, String tableId) {
   return createQrcodeUrl(Uri.encodeComponent(
-      "$restaurantApiDomain/ordering/?restaurantId=$restaurantId&tableId=$tableId"));
+      "$orderingBaseUrl/ordering/?restaurantId=$restaurantId&tableId=$tableId"));
 }
