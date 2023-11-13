@@ -47,22 +47,6 @@ class _TableInfoViewState extends State<TableInfoView> {
     super.didChangeDependencies();
   }
 
-  Future<void> _downloadImage(String url) async {
-    if (kIsWeb) {
-      await WebImageDownloader.downloadImageFromWeb(url);
-    } else {
-      await _saveNetworkImage(url);
-    }
-  }
-
-  _saveNetworkImage(String url) async {
-    if (widget.table == null) return;
-    final response = await Dio()
-        .get(url, options: Options(responseType: ResponseType.bytes));
-    await ImageGallerySaver.saveImage(Uint8List.fromList(response.data),
-        quality: 60, name: "${widget.table!.label}-qrcode");
-  }
-
   void create(id, label, x, y) {
     createTable(id, label, x, y).then((table) {
       showAlertDialog(context, "創建成功");
@@ -86,6 +70,12 @@ class _TableInfoViewState extends State<TableInfoView> {
     });
   }
 
+  Future<void> _downloadImage(url) async {
+    if (kIsWeb) {
+      await WebImageDownloader.downloadImageFromWeb(url);
+    } else {}
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Bill>? bills = context.watch<SelectedTableProvider>().tableOrders;
@@ -93,9 +83,11 @@ class _TableInfoViewState extends State<TableInfoView> {
     var table = context.watch<SelectedTableProvider>().selectedTable;
     final _formKey = GlobalKey<FormState>();
     String url = '';
+    String remoteDownloadUrl = '';
 
     if (table != null) {
       url = createOrderingUrl(restaurant.id, table!.id);
+      remoteDownloadUrl = createOrderingUrlRemote(restaurant.id, table!.id);
     }
 
     return Scaffold(
@@ -224,20 +216,13 @@ class _TableInfoViewState extends State<TableInfoView> {
                           Center(
                               child: Column(
                             children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 50.0, bottom: 8),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    _downloadImage(url);
-                                  },
-                                  child: const Text('下載二維碼'),
-                                ),
-                              ),
                               SizedBox(
                                 child: QRCode(
                                   qrSize: 320,
                                   qrData: url,
+                                  onPressed: () {
+                                    _downloadImage(remoteDownloadUrl);
+                                  },
                                 ),
                               )
                             ],

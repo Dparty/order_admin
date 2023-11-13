@@ -24,6 +24,12 @@ Future signout() async {
 }
 
 String createOrderingUrl(String restaurantId, String tableId) {
+  return "$orderingBaseUrl/ordering/?restaurantId=$restaurantId&tableId=$tableId";
+  // return createQrcodeUrl(Uri.encodeComponent(
+  //     "$orderingBaseUrl/ordering/?restaurantId=$restaurantId&tableId=$tableId"));
+}
+
+String createOrderingUrlRemote(String restaurantId, String tableId) {
   return createQrcodeUrl(Uri.encodeComponent(
       "$orderingBaseUrl/ordering/?restaurantId=$restaurantId&tableId=$tableId"));
 }
