@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:order_admin/models/restaurant.dart';
 import 'package:order_admin/api/restaurant.dart';
 import 'package:provider/provider.dart';
-
+import 'package:order_admin/components/dialog.dart';
 import '../../../provider/selected_printer_provider.dart';
 
 class CreatePrinterPage extends StatefulWidget {
@@ -24,6 +24,7 @@ class CreatePrinterPage extends StatefulWidget {
 }
 
 const List<String> printerTypeEnum = <String>[('BILL'), 'KITCHEN'];
+const List<String> printerModelEnum = <String>[('58mm'), '88mm'];
 
 class _CreatePrinterPageState extends State<CreatePrinterPage> {
   final _formKey = GlobalKey<FormState>();
@@ -31,9 +32,11 @@ class _CreatePrinterPageState extends State<CreatePrinterPage> {
   Printer? printer;
   TextEditingController? name;
   TextEditingController? sn;
+  TextEditingController? description;
   _CreatePrinterPageState(this.restaurantId);
 
   String printerType = printerTypeEnum.first;
+  String printerModel = printerModelEnum.first;
 
   @override
   void initState() {
@@ -45,32 +48,33 @@ class _CreatePrinterPageState extends State<CreatePrinterPage> {
     printer = context.watch<SelectedPrinterProvider>().selectedPrinter;
     name = TextEditingController(text: printer?.name);
     sn = TextEditingController(text: printer?.sn);
+    description = TextEditingController(text: printer?.description);
     printerType = printer?.type ?? printerTypeEnum.first;
+    printerModel = printer?.model ?? printerModelEnum.first;
     super.didChangeDependencies();
   }
 
   void create() {
-    createPrinter(restaurantId, name!.text, sn!.text, printerType)
+    createPrinter(restaurantId, name!.text, sn!.text, printerType,
+            description!.text ?? '', printerModel)
         .then((value) {
+      showAlertDialog(context, "創建成功");
       widget.reload!();
       // Navigator.pop(context);
     });
   }
 
   void update() {
-    updatePrinter(restaurantId, name!.text, sn!.text, printerType)
+    updatePrinter(printer!.id, name!.text, sn!.text, printerType,
+            description!.text ?? '', printerModel)
         .then((value) {
+      showAlertDialog(context, "更新成功");
       widget.reload!();
-      // Navigator.pop(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // name = TextEditingController(text: widget.printer?.name);
-    // sn = TextEditingController(text: widget.printer?.sn);
-    // printerType = widget.printer?.type ?? printerTypeEnum.first;
-
     return Scaffold(
       appBar: AppBar(
         title: printer == null ? const Text('新增打印機') : const Text('編輯打印機'),
@@ -109,28 +113,78 @@ class _CreatePrinterPageState extends State<CreatePrinterPage> {
                     return null;
                   },
                 ),
-                DropdownButton<String>(
-                  value: printerType,
-                  icon: const Icon(Icons.arrow_downward),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
+                TextFormField(
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  controller: description,
+                  decoration: const InputDecoration(
+                    hintText: '描述',
                   ),
-                  onChanged: (String? value) {
-                    // This is called when the user selects an item.
-                    setState(() {
-                      printerType = value!;
-                    });
-                  },
-                  items: printerTypeEnum
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                ),
+                SizedBox(
+                  child: Row(
+                    children: [
+                      const Text("類型：", style: TextStyle(fontSize: 16)),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      DropdownButton<String>(
+                        value: printerType,
+                        icon: const Icon(Icons.arrow_downward),
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onChanged: (String? value) {
+                          setState(() {
+                            printerType = value!;
+                          });
+                        },
+                        items: printerTypeEnum
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("模型：", style: TextStyle(fontSize: 16)),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      DropdownButton<String>(
+                        value: printerModel,
+                        icon: const Icon(Icons.arrow_downward),
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onChanged: (String? value) {
+                          setState(() {
+                            printerModel = value!;
+                          });
+                        },
+                        items: printerModelEnum
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
                 ),
                 printer == null
                     ? Padding(

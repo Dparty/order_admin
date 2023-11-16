@@ -157,7 +157,6 @@ class ItemList {
       pagination: Pagination.fromJson(json['pagination']));
 }
 
-// todo: List<dynamic> refactor
 class PrinterList {
   final List<Printer> data;
 
@@ -173,19 +172,24 @@ class Printer {
   final String sn;
   final String description;
   final String type;
+  final String model;
 
-  Printer(
-      {required this.id,
-      required this.sn,
-      required this.name,
-      required this.description,
-      required this.type});
+  Printer({
+    required this.id,
+    required this.sn,
+    required this.name,
+    required this.description,
+    required this.type,
+    required this.model,
+  });
   factory Printer.fromJson(Map<String, dynamic> json) => Printer(
-      sn: json['sn'],
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      type: json['type']);
+        sn: json['sn'],
+        id: json['id'],
+        name: json['name'],
+        description: json['description'],
+        type: json['type'],
+        model: json['model'],
+      );
 }
 
 class Table {
