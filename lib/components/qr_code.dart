@@ -58,7 +58,7 @@ class QRCode extends StatelessWidget {
   final ScreenshotController screenshotController = ScreenshotController();
 
   // todo: not working in web
-  Future<void> SaveQrCode(context) async {
+  Future<void> saveQrCode(context) async {
     final Uint8List? uint8List = await screenshotController.capture();
     if (uint8List != null) {
       final PermissionStatus status = await Permission.storage.request();
@@ -94,15 +94,15 @@ class QRCode extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         ElevatedButton(
             onPressed: () async {
               await onPressed!();
-              // await SaveQrCode(context);
+              // await saveQrCode(context);
             },
-            child: Text("下載二維碼"))
+            child: const Text("下載二維碼"))
       ],
     );
   }
