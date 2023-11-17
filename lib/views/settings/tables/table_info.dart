@@ -195,7 +195,7 @@ class _TableInfoViewState extends State<TableInfoView> {
                                       onPressed: () {
                                         if (_formKey.currentState!.validate()) {
                                           update(
-                                              restaurant.id,
+                                              table.id,
                                               label?.text,
                                               int.parse(x!.text),
                                               int.parse(y!.text));
