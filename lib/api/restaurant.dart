@@ -69,13 +69,18 @@ Future<PrinterList> listPrinters(String restaurantId) async {
   }
 }
 
-Future<Printer> createPrinter(
-    String restaurant, String name, String sn, String type) async {
+Future<Printer> createPrinter(String restaurant, String name, String sn,
+    String type, String description, String model) async {
   final token = await getToken();
   final response = await http.post(
       Uri.parse("$baseUrl/restaurants/$restaurant/printers"),
-      body:
-          jsonEncode({'name': name, 'sn': sn, 'type': type, 'description': ''}),
+      body: jsonEncode({
+        'name': name,
+        'sn': sn,
+        'type': type,
+        'description': description,
+        'model': model
+      }),
       headers: {'Authorization': "bearer $token"});
   if (response.statusCode == 201) {
     return Printer.fromJson(jsonDecode(response.body));
@@ -84,15 +89,19 @@ Future<Printer> createPrinter(
   }
 }
 
-Future<void> updatePrinter(
-    String restaurant, String name, String sn, String type) async {
+Future<void> updatePrinter(String id, String name, String sn, String type,
+    String description, String model) async {
   final token = await getToken();
-  final response = await http.put(
-      Uri.parse("$baseUrl/restaurants/$restaurant/printers"),
-      body:
-          jsonEncode({'name': name, 'sn': sn, 'type': type, 'description': ''}),
+  final response = await http.put(Uri.parse("$baseUrl/printers/$id"),
+      body: jsonEncode({
+        'name': name,
+        'sn': sn,
+        'type': type,
+        'description': description,
+        'model': model
+      }),
       headers: {'Authorization': "bearer $token"});
-  if (response.statusCode == 204) {
+  if (response.statusCode == 200) {
   } else {
     throw Exception('Failed to update printer');
   }

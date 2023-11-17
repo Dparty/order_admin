@@ -49,6 +49,7 @@ class SelectedTableProvider with ChangeNotifier {
   void resetSelectTable() {
     _selectedTable = null;
     _tableOrders = [];
+    _selectedBillIds = [];
     notifyListeners();
   }
 }

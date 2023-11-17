@@ -13,9 +13,14 @@ class PrintersListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void removePrinter(String id) => deletePrinter(id)
-        .then((_) => reload!())
-        .onError((error, stackTrace) => showAlertDialog(context, "有品項使用此打印機"));
+    void removePrinter(id) {
+      deletePrinter(id).then((_) {
+        reload!();
+        showAlertDialog(context, "刪除打印機成功");
+      }).onError((error, stackTrace) {
+        showAlertDialog(context, "無法刪除，可能有品項使用此打印機");
+      });
+    }
 
     return Container(
       child: ListView(children: [
