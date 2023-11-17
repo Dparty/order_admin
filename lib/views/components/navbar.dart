@@ -4,7 +4,6 @@ import 'navbar_item.dart';
 import '../../main.dart';
 import '../../api/utils.dart';
 import '../restaurant_page.dart';
-import 'package:order_admin/views/ordering/ordering_page.dart';
 
 // providers
 import 'package:provider/provider.dart';

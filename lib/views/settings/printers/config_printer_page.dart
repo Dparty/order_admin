@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/api/restaurant.dart';
-import 'package:order_admin/models/restaurant.dart';
 import 'package:order_admin/provider/selected_printer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';

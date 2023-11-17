@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/models/restaurant.dart';
 import './item_card.dart';
 

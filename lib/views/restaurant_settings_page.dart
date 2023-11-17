@@ -136,7 +136,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
               color: Colors.black,
               onPressed: () => {scaffoldKey.currentState?.openDrawer()},
               // onPressed: () => ScaffoldKey,
-              icon: Icon(Icons.menu_rounded)),
+              icon: const Icon(Icons.menu_rounded)),
         ),
         key: scaffoldKey,
         drawer: NavBar(), //drawer(context)
@@ -166,8 +166,8 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             // child: TableViewWidget(
             //   restaurantId,
             //   tables: restaurant.tables,
@@ -222,13 +222,13 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
             showSettings: true,
           ),
         ),
-        centerTitle: ["品項設置", "餐桌設置", "打印機設置", "點餐"][_selectedNavIndex ?? 0],
+        centerTitle: ["品項設置", "餐桌設置", "打印機設置", "點餐"][_selectedNavIndex],
         center: [
           ConfigItem(),
           ConfigTablePage(restaurantId),
           const ConfigPrinter(),
           OrderingPage(restaurantId),
-        ][_selectedNavIndex ?? 0],
+        ][_selectedNavIndex],
       ),
     );
   }

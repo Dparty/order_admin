@@ -99,7 +99,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
         appBar: AppBar(
             automaticallyImplyLeading: false,
             title: Text('${table?.label ?? ''}訂單列表')),
-        body: selectedTableBills != null && selectedTableBills!.isEmpty
+        body: selectedTableBills != null && selectedTableBills.isEmpty
             ? Center(
                 child: Column(
                 children: [
@@ -123,7 +123,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => OrderItem()));
+                                  builder: (context) => const OrderItem()));
                         },
                         child: const Center(
                             child: Text(
@@ -163,7 +163,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                         (index, order) => BillCheckbox(
                           label: "取餐號：${order.pickUpCode.toString()}",
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          value: selectedIds!.contains(order.id),
+                          value: selectedIds.contains(order.id),
                           onChanged: (bool newValue) {
                             setState(() {
                               if (newValue == true) {
@@ -201,7 +201,8 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => OrderItem()));
+                                          builder: (context) =>
+                                              const OrderItem()));
                                 },
                                 child: const Center(
                                     child: Text(
@@ -226,7 +227,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                     color: kPrimaryColor),
                                 child: InkWell(
                                   onTap: () async {
-                                    if (selectedIds!.isEmpty) {
+                                    if (selectedIds.isEmpty) {
                                       showAlertDialog(context, "請勾選需要打印的訂單");
                                       return;
                                     }

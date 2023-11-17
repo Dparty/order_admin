@@ -12,28 +12,11 @@ import 'provider/shopping_cart_provider.dart';
 import 'configs/theme.dart';
 
 void main() {
-  // runApp(const App());
-  runApp(MyApp());
+  runApp(const App());
 }
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({super.key});
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: "和食云",
-      home: HomePage(),
-    );
-  }
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +31,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: "和食云",
         theme: AppTheme.lightTheme(context),
-        home: HomePage(),
+        home: const HomePage(),
       ),
     );
   }
@@ -62,8 +45,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   void toSigninPage() async {
-    Navigator.pushReplacement(this.context,
-        MaterialPageRoute(builder: (context) => const SigninPage()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const SigninPage()));
   }
 
   @override
@@ -74,10 +57,10 @@ class _HomePageState extends State<HomePage> {
   void init() {
     getToken().then((token) {
       if (token == "") {
-        Navigator.pushReplacement(this.context,
+        Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const SigninPage()));
       } else {
-        Navigator.pushReplacement(this.context,
+        Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const RestaurantsPage()));
       }
     });

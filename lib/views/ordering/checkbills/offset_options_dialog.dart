@@ -67,7 +67,7 @@ class _offsetOptionsState extends State<offsetOptions> {
         content: Builder(builder: (context) {
           var height = MediaQuery.of(context).size.height;
           var width = MediaQuery.of(context).size.width;
-          return Container(
+          return SizedBox(
               height: height - 500,
               width: width - 1000,
               child: Column(

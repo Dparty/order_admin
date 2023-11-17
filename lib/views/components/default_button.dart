@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
-import 'package:order_admin/configs/size_config.dart';
 
 class DefaultButton extends StatelessWidget {
   const DefaultButton({
@@ -20,13 +19,12 @@ class DefaultButton extends StatelessWidget {
       child: TextButton(
         style: TextButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          primary: Colors.white,
           backgroundColor: kPrimaryColor,
         ),
         onPressed: press as void Function()?,
         child: Text(
           text!,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14, //getProportionateScreenWidth(18),
             color: Colors.white,
           ),

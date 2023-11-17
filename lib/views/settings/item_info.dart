@@ -190,7 +190,6 @@ class _EditItemPageState extends State<EditItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    final restaurant = context.watch<RestaurantProvider>();
     var item = context.watch<SelectedItemProvider>().selectedItem;
 
     final _formKey = GlobalKey<FormState>();

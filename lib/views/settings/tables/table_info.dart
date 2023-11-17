@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_downloader_web/image_downloader_web.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/components/dialog.dart';
 
 // models
 import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/models/bill.dart';
 
 // providers
 import 'package:provider/provider.dart';
@@ -78,16 +75,15 @@ class _TableInfoViewState extends State<TableInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    List<Bill>? bills = context.watch<SelectedTableProvider>().tableOrders;
     final restaurant = context.watch<RestaurantProvider>();
     var table = context.watch<SelectedTableProvider>().selectedTable;
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     String url = '';
     String remoteDownloadUrl = '';
 
     if (table != null) {
-      url = createOrderingUrl(restaurant.id, table!.id);
-      remoteDownloadUrl = createOrderingUrlRemote(restaurant.id, table!.id);
+      url = createOrderingUrl(restaurant.id, table.id);
+      remoteDownloadUrl = createOrderingUrlRemote(restaurant.id, table.id);
     }
 
     return Scaffold(
@@ -100,7 +96,7 @@ class _TableInfoViewState extends State<TableInfoView> {
             child: Column(
               children: [
                 Form(
-                  key: _formKey,
+                  key: formKey,
                   child: ListView(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -150,7 +146,7 @@ class _TableInfoViewState extends State<TableInfoView> {
                                   vertical: 16.0, horizontal: 100),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
+                                  if (formKey.currentState!.validate()) {
                                     create(restaurant.id, label?.text,
                                         int.parse(x!.text), int.parse(y!.text));
                                   }
@@ -176,9 +172,9 @@ class _TableInfoViewState extends State<TableInfoView> {
                                       ),
                                       onPressed: () {
                                         showAlertDialog(
-                                            context, "確認刪除餐桌${table?.label}?",
+                                            context, "確認刪除餐桌${table.label}?",
                                             onConfirmed: () =>
-                                                delete(table?.id));
+                                                delete(table.id));
                                       },
                                       child: const Text("刪除餐桌"),
                                     ),
@@ -193,7 +189,7 @@ class _TableInfoViewState extends State<TableInfoView> {
                                         elevation: 0,
                                       ),
                                       onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
+                                        if (formKey.currentState!.validate()) {
                                           update(
                                               table.id,
                                               label?.text,

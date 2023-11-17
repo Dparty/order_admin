@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
 
@@ -16,7 +14,6 @@ import 'package:order_admin/provider/selected_table_provider.dart';
 
 import 'package:order_admin/components/responsive.dart';
 import 'package:order_admin/views/components/main_layout.dart';
-import 'package:screenshot/screenshot.dart';
 
 class ConfigTablePage extends StatefulWidget {
   final String restaurantId;

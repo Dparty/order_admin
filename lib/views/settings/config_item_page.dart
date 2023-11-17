@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:order_admin/configs/constants.dart';
 import 'package:order_admin/models/restaurant.dart';
-import 'package:order_admin/views/settings/create_item_page.dart';
 import 'package:order_admin/views/components/main_layout.dart';
 import 'package:order_admin/views/settings/item_info.dart';
 import 'package:order_admin/api/restaurant.dart';
 
-import 'package:order_admin/components/dialog.dart';
 // providers
 import 'package:provider/provider.dart';
 import 'package:order_admin/provider/restaurant_provider.dart';
 import 'package:order_admin/provider/selected_item_provider.dart';
-import 'package:order_admin/provider/selected_table_provider.dart';
 
 // components
 import 'package:order_admin/views/components/item_card_list.dart';
@@ -54,7 +51,7 @@ class _ConfigItemState extends State<ConfigItem> with TickerProviderStateMixin {
     return MainLayout(
       centerTitle: "品項設置",
       center: ListView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         padding: const EdgeInsets.only(left: 20.0),
         children: <Widget>[
@@ -94,8 +91,8 @@ class _ConfigItemState extends State<ConfigItem> with TickerProviderStateMixin {
                       indicatorColor: Colors.transparent,
                       labelColor: kPrimaryColor,
                       isScrollable: true,
-                      labelPadding: EdgeInsets.only(right: 45.0),
-                      unselectedLabelColor: Color(0xFFCDCDCD),
+                      labelPadding: const EdgeInsets.only(right: 45.0),
+                      unselectedLabelColor: const Color(0xFFCDCDCD),
                       tabs: [
                         const Tab(
                           child: Text('所有品項',

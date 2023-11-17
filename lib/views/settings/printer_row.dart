@@ -22,7 +22,7 @@ class _PrinterRow extends State<PrinterRow> {
   @override
   Widget build(BuildContext context) {
     var printers = context.watch<RestaurantProvider>().printers;
-    return Container(
+    return SizedBox(
         width: 100.0,
         child: Column(children: <Widget>[
           Expanded(

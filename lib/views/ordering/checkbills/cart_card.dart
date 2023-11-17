@@ -14,6 +14,7 @@ import 'package:order_admin/components/plus_minus_buttons.dart';
 
 // CartCard in shopping cart
 class CartCard extends StatelessWidget {
+  final int index;
   const CartCard({
     Key? key,
     required this.item,
@@ -21,7 +22,6 @@ class CartCard extends StatelessWidget {
   }) : super(key: key);
 
   final CartItem item;
-  final index;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class CartCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
               ),
               child: FadeInImage(
-                image: NetworkImage(item.image!),
+                image: NetworkImage(item.image),
                 placeholder: const AssetImage("images/default.png"),
                 imageErrorBuilder: (context, error, stackTrace) {
                   return Image.asset("images/default.png",
@@ -57,7 +57,7 @@ class CartCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.productName!,
+                  item.productName,
                   style: const TextStyle(color: Colors.black, fontSize: 16),
                   maxLines: 2,
                 ),
@@ -68,7 +68,7 @@ class CartCard extends StatelessWidget {
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text("價格：${item.price! / 100}")),
+                    Expanded(child: Text("價格：${item.price / 100}")),
                     Row(
                       children: [
                         PlusMinusButtons(
@@ -121,7 +121,7 @@ class CartCardForBill extends StatelessWidget {
               ),
               child: FadeInImage(
                 image: NetworkImage(
-                    item.images.isEmpty ? defaultImage : item.images?[0]),
+                    item.images.isEmpty ? defaultImage : item.images[0]),
                 placeholder: const AssetImage("images/default.png"),
                 imageErrorBuilder: (context, error, stackTrace) {
                   return Image.asset("images/default.png",
@@ -153,7 +153,7 @@ class CartCardForBill extends StatelessWidget {
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text("價格：\$${item.pricing! / 100}")),
+                    Expanded(child: Text("價格：\$${item.pricing / 100}")),
                   ],
                 )
               ],
