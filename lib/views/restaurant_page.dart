@@ -71,6 +71,7 @@ class _RestaurantState extends State<RestaurantsPage> {
               itemBuilder: (context, index) => RestaurantCard(
                     restaurant: restaurantList.data[index],
                     key: Key(restaurantList.data[index].id),
+                    reload: loadData,
                   ))),
     );
   }
@@ -78,8 +79,9 @@ class _RestaurantState extends State<RestaurantsPage> {
 
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
+  final Function? reload;
 
-  const RestaurantCard({super.key, required this.restaurant});
+  const RestaurantCard({super.key, required this.restaurant, this.reload});
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +89,15 @@ class RestaurantCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(children: [
         Expanded(child: Text(restaurant.name)),
+        IconButton(
+            onPressed: () async {
+              await Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                return CreateRestaurantPage(restaurant: restaurant);
+              }));
+              reload!();
+            },
+            icon: const Icon(Icons.info_outline)),
         IconButton(
             onPressed: () {
               Navigator.push(

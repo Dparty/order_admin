@@ -37,7 +37,7 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
     with SingleTickerProviderStateMixin {
   final String restaurantId;
   model.Restaurant restaurant = const model.Restaurant(
-      id: '', name: '', description: '', items: [], tables: []);
+      id: '', name: '', description: '', items: [], tables: [], categories: []);
   List<model.Item> items = [];
   List<model.Printer> printers = [];
   int _selectedIndex = 0; // for mobile bottom navigation
@@ -55,11 +55,13 @@ class _RestaurantSettingsPageState extends State<RestaurantSettingsPage>
       });
 
       context.read<RestaurantProvider>().setRestaurant(
-          restaurant.id,
-          restaurant.name,
-          restaurant.description,
-          restaurant.items,
-          restaurant.tables);
+            restaurant.id,
+            restaurant.name,
+            restaurant.description,
+            restaurant.items,
+            restaurant.tables,
+            restaurant.categories,
+          );
     });
     listPrinters(restaurantId).then((list) => setState(() {
           printers = list.data;
