@@ -136,11 +136,13 @@ class _ConfigItemState extends State<ConfigItem> with TickerProviderStateMixin {
           item: context.watch<SelectedItemProvider>().selectedItem,
           reload: () => getRestaurant(restaurant.id).then((restaurant) {
                 context.read<RestaurantProvider>().setRestaurant(
-                    restaurant.id,
-                    restaurant.name,
-                    restaurant.description,
-                    restaurant.items,
-                    restaurant.tables);
+                      restaurant.id,
+                      restaurant.name,
+                      restaurant.description,
+                      restaurant.items,
+                      restaurant.tables,
+                      restaurant.categories,
+                    );
                 context.read<SelectedItemProvider>().resetSelectItem();
               })),
     );

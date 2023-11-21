@@ -38,11 +38,13 @@ class _ConfigTablePageState extends State<ConfigTablePage> {
     super.initState();
     getRestaurant(restaurantId).then((restaurant) {
       context.read<RestaurantProvider>().setRestaurant(
-          restaurant.id,
-          restaurant.name,
-          restaurant.description,
-          restaurant.items,
-          restaurant.tables);
+            restaurant.id,
+            restaurant.name,
+            restaurant.description,
+            restaurant.items,
+            restaurant.tables,
+            restaurant.categories,
+          );
     });
   }
 
@@ -351,7 +353,8 @@ class _ConfigTablePageState extends State<ConfigTablePage> {
                         restaurant.name,
                         restaurant.description,
                         restaurant.items,
-                        restaurant.tables);
+                        restaurant.tables,
+                        restaurant.categories);
                     context.read<SelectedTableProvider>().resetSelectTable();
                   })),
         ));
