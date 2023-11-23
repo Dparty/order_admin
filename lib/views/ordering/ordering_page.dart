@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:order_admin/configs/constants.dart';
 
-import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/api/bill.dart';
 
 import 'package:order_admin/models/restaurant.dart' as model;
