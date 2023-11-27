@@ -20,6 +20,7 @@ class _CreateRestaurantPageState extends State<CreateRestaurantPage> {
 
   @override
   void initState() {
+    super.initState();
     name = TextEditingController(text: widget.restaurant?.name);
     description = TextEditingController(text: widget.restaurant?.description);
     _listController = widget.restaurant == null

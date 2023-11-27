@@ -150,7 +150,7 @@ class _OrderingPageState extends State<OrderingPage> {
                                   .tableOrders
                                   ?.where((i) =>
                                       i.tableLabel ==
-                                      restaurant.tables[index]?.label)
+                                      restaurant.tables[index].label)
                                   .toList()
                                   .map((e) => e.id)
                                   .toList());
