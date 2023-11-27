@@ -40,7 +40,7 @@ class _ItemCardListViewState extends State<ItemCardListView> {
                   primary: false,
                   children: [
                     ...widget.itemList!
-                        .map((item) => itemCard(context, item, onTap: () {
+                        .map((item) => itemCard(item, onTap: () {
                               widget.onTap!(item);
                             }, type: widget.type))
                         .toList()

@@ -111,7 +111,7 @@ class NavBar extends StatelessWidget {
       {required int index, Function? onTap}) {
     final restaurant = context.read<RestaurantProvider>();
     if (onTap != null) {
-      onTap!(index);
+      onTap(index);
     }
     context.read<CartProvider>().resetShoppingCart();
     context.read<SelectedTableProvider>().resetSelectTable();

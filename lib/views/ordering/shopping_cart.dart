@@ -107,7 +107,7 @@ class _ShowCurrentBillState extends State<ShowCurrentBill> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("取餐號：${widget.orders?.pickUpCode}"),
+      title: Text("取餐號：${widget.orders.pickUpCode}"),
       content: Builder(builder: (context) {
         var height = MediaQuery.of(context).size.height - 200;
         var width = MediaQuery.of(context).size.width - 800;

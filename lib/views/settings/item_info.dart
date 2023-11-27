@@ -164,11 +164,9 @@ class _EditItemPageState extends State<EditItemPage> {
             images: [],
             attributes: attributes!));
 
-    if (res != null) {
-      setState(() {
-        _item = res;
-      });
-    }
+    setState(() {
+      _item = res;
+    });
 
     update();
   }
@@ -204,7 +202,7 @@ class _EditItemPageState extends State<EditItemPage> {
   @override
   Widget build(BuildContext context) {
     var item = context.watch<SelectedItemProvider>().selectedItem;
-    categories = context.read<RestaurantProvider>().categories ?? [];
+    categories = context.read<RestaurantProvider>().categories;
 
     final _formKey = GlobalKey<FormState>();
 
@@ -258,8 +256,8 @@ class _EditItemPageState extends State<EditItemPage> {
                                     ),
                                     onPressed: () {
                                       showAlertDialog(
-                                          context, "確認刪除品項${item?.name}?",
-                                          onConfirmed: () => delete(item?.id));
+                                          context, "確認刪除品項${item.name}?",
+                                          onConfirmed: () => delete(item.id));
                                     },
                                     label: const Text(
                                       "刪除該品項",
@@ -271,7 +269,7 @@ class _EditItemPageState extends State<EditItemPage> {
                                     ),
                                   ),
                                 ])
-                          : SizedBox(),
+                          : const SizedBox(),
                       TextFormField(
                         controller: name,
                         decoration: const InputDecoration(
@@ -536,7 +534,7 @@ class _EditItemPageState extends State<EditItemPage> {
                       ),
                       _paths != null
                           ? Padding(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Container(
@@ -556,7 +554,7 @@ class _EditItemPageState extends State<EditItemPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: FadeInImage(
                                       image: NetworkImage(
-                                        item!.images.isEmpty
+                                        item.images.isEmpty
                                             ? defaultImage
                                             : item.images[0],
                                       ),
@@ -566,7 +564,7 @@ class _EditItemPageState extends State<EditItemPage> {
                                     ),
                                   ),
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                       item != null
                           ? Padding(
                               padding:

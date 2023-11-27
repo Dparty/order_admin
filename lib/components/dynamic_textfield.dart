@@ -12,6 +12,7 @@ class DynamicTextField extends StatefulWidget {
 class _DynamicTextFieldState extends State<DynamicTextField> {
   @override
   void initState() {
+    super.initState();
     if (widget.listController == []) {
       widget.listController = [TextEditingController()];
     }
