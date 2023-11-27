@@ -94,12 +94,12 @@ class _ConfigItemState extends State<ConfigItem> with TickerProviderStateMixin {
                       labelPadding: const EdgeInsets.only(right: 45.0),
                       unselectedLabelColor: const Color(0xFFCDCDCD),
                       tabs: [
-                        const Tab(
-                          child: Text('所有品項',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                              )),
-                        ),
+                        // const Tab(
+                        //   child: Text('所有品項',
+                        //       style: TextStyle(
+                        //         fontSize: 18.0,
+                        //       )),
+                        // ),
                         ...restaurant.itemsMap.keys.map(
                           (label) => Tab(
                             child: Text(label,
