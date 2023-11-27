@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:order_admin/configs/constants.dart';
 
-import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/api/bill.dart';
 
 import 'package:order_admin/models/restaurant.dart' as model;
@@ -151,7 +150,7 @@ class _OrderingPageState extends State<OrderingPage> {
                                   .tableOrders
                                   ?.where((i) =>
                                       i.tableLabel ==
-                                      restaurant.tables[index]?.label)
+                                      restaurant.tables[index].label)
                                   .toList()
                                   .map((e) => e.id)
                                   .toList());

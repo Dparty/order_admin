@@ -32,6 +32,7 @@ class _EditItemPageState extends State<EditItemPage> {
   TextEditingController? tag;
   TextEditingController? status;
   List<Attribute>? attributes = [];
+  List<String>? categories = [];
 
   bool loading = false;
   List<Printer> printers = [];
@@ -48,6 +49,10 @@ class _EditItemPageState extends State<EditItemPage> {
   List<PlatformFile>? _paths;
 
   String _status = "";
+
+  final FocusNode _focusNode = FocusNode();
+  final GlobalKey _autocompleteKey = GlobalKey();
+  String? selectedTag = "";
 
   void _addNewPrinter() {
     setState(() {
@@ -88,6 +93,13 @@ class _EditItemPageState extends State<EditItemPage> {
   Future<bool> validate() async {
     if (loading) return false;
     loading = true;
+
+    if (tag!.text == "") {
+      loading = false;
+      showAlertDialog(context, "請輸入分類");
+      return false;
+    }
+
     if (_selectedPrinters!.isEmpty) {
       loading = false;
       showAlertDialog(context, "請先創建打印機");
@@ -115,13 +127,14 @@ class _EditItemPageState extends State<EditItemPage> {
     var res = await updateItem(
         _item!.id,
         PutItem(
-            printers: _selectedPrinters!,
-            tags: [tag!.text],
-            name: name!.text,
-            pricing: (double.parse(pricing!.text) * 100).toInt(),
-            status: _status,
-            images: imgUrl?.length == 0 ? [] : [imgUrl],
-            attributes: attributes!));
+          printers: _selectedPrinters!,
+          tags: [tag!.text],
+          name: name!.text,
+          pricing: (double.parse(pricing!.text) * 100).toInt(),
+          status: _status,
+          images: imgUrl?.length == 0 ? [] : [imgUrl],
+          attributes: attributes!,
+        ));
     if (res != null) {
       showAlertDialog(context, "更新成功");
 
@@ -191,6 +204,7 @@ class _EditItemPageState extends State<EditItemPage> {
   @override
   Widget build(BuildContext context) {
     var item = context.watch<SelectedItemProvider>().selectedItem;
+    categories = context.read<RestaurantProvider>().categories ?? [];
 
     final _formKey = GlobalKey<FormState>();
 
@@ -286,19 +300,133 @@ class _EditItemPageState extends State<EditItemPage> {
                           return null;
                         },
                       ),
+                      // TextFormField(
+                      //   controller: tag,
+                      //   decoration: const InputDecoration(
+                      //     hintText: '分類',
+                      //   ),
+                      //   autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //   validator: (String? value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       return '請輸入品項分類';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
+                      // Autocomplete<String>(
+                      //   optionsBuilder: (TextEditingValue textEditingValue) {
+                      //     return categories!.where((String option) {
+                      //       return option
+                      //           .contains(textEditingValue.text.toLowerCase());
+                      //     });
+                      //   },
+                      //   onSelected: (String selection) {
+                      //     debugPrint('You just selected $selection');
+                      //   },
+                      // ),      // Autocomplete<String>(
+                      //   optionsBuilder: (TextEditingValue textEditingValue) {
+                      //     return categories!.where((String option) {
+                      //       return option
+                      //           .contains(textEditingValue.text.toLowerCase());
+                      //     });
+                      //   },
+                      //   onSelected: (String selection) {
+                      //     debugPrint('You just selected $selection');
+                      //   },
+                      // ),
+
                       TextFormField(
                         controller: tag,
+                        focusNode: _focusNode,
                         decoration: const InputDecoration(
-                          hintText: '分類',
+                          hintText: '請輸入分類',
                         ),
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (String? value) {
-                          if (value == null || value.isEmpty) {
-                            return '請輸入品項分類';
-                          }
-                          return null;
+                        onFieldSubmitted: (String value) {
+                          RawAutocomplete.onFieldSubmitted<String>(
+                              _autocompleteKey);
                         },
                       ),
+                      RawAutocomplete<String>(
+                        key: _autocompleteKey,
+                        focusNode: _focusNode,
+                        textEditingController: tag,
+                        optionsBuilder: (TextEditingValue textEditingValue) {
+                          return categories!.where((String option) {
+                            return option
+                                .contains(textEditingValue.text.toLowerCase());
+                          }).toList();
+                        },
+                        optionsViewBuilder: (
+                          BuildContext context,
+                          AutocompleteOnSelected<String> onSelected,
+                          Iterable<String> options,
+                        ) {
+                          return Align(
+                            alignment: Alignment.topLeft,
+                            child: Material(
+                              elevation: 4.0,
+                              child: SizedBox(
+                                height: 100,
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: options
+                                      .map((String option) => GestureDetector(
+                                            onTap: () {
+                                              onSelected(option);
+                                            },
+                                            child: ListTile(
+                                              title: Text(option),
+                                            ),
+                                          ))
+                                      .toList(),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      // RawAutocomplete<String>(
+                      //   key: _autocompleteKey,
+                      //   focusNode: _focusNode,
+                      //   // textEditingController: tag,
+                      //   optionsBuilder: (TextEditingValue textEditingValue) {
+                      //     return categories!.where((String option) {
+                      //       print(option);
+                      //       return option
+                      //           .contains(textEditingValue.text.toLowerCase());
+                      //     }).toList();
+                      //   },
+                      //   optionsViewBuilder: (BuildContext context,
+                      //       AutocompleteOnSelected<String> onSelected,
+                      //       Iterable<String> options) {
+                      //     return Align(
+                      //       alignment: Alignment.topLeft,
+                      //       child: Material(
+                      //         elevation: 4.0,
+                      //         child: SizedBox(
+                      //           height: 200.0,
+                      //           child: ListView.builder(
+                      //             padding: const EdgeInsets.all(8.0),
+                      //             itemCount: options.length,
+                      //             itemBuilder:
+                      //                 (BuildContext context, int index) {
+                      //               final String option =
+                      //                   options.elementAt(index);
+                      //               return GestureDetector(
+                      //                 onTap: () {
+                      //                   onSelected(option);
+                      //                 },
+                      //                 child: ListTile(
+                      //                   title: Text(option),
+                      //                 ),
+                      //               );
+                      //             },
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: SizedBox(
@@ -317,7 +445,7 @@ class _EditItemPageState extends State<EditItemPage> {
                                   }
                                 },
                               ),
-                              const Text('ACTIVED '),
+                              const Text('正常 '),
                               Radio(
                                 value: "DEACTIVED",
                                 groupValue: _status,
@@ -329,7 +457,7 @@ class _EditItemPageState extends State<EditItemPage> {
                                   }
                                 },
                               ),
-                              const Text('DEACTIVED '),
+                              const Text('估空 '),
                             ],
                           ),
                         ),

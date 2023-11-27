@@ -32,16 +32,43 @@ Future<RestaurantList> listRestaurant() async {
   }
 }
 
-Future<Restaurant> createRestaurant(String name, String description) async {
+Future<Restaurant> createRestaurant(
+    String name, String description, List<String> categories) async {
   final token = await getToken();
   final response = await http.post(
     Uri.parse("$baseUrl/restaurants"),
-    body: jsonEncode({'name': name, 'description': description}),
+    body: jsonEncode(
+        {'name': name, 'description': description, 'categories': categories}),
     headers: {'Authorization': "bearer $token"},
   );
   if (response.statusCode == 201) {
     return Restaurant.fromJson(jsonDecode(response.body));
   } else {
+    throw Exception('Failed to create restaurant');
+  }
+}
+
+Future<Restaurant> updateRestaurant(
+    String id, String name, String description, List<String> categories) async {
+  final token = await getToken();
+  final response = await http.put(
+    Uri.parse("$baseUrl/restaurants/$id"),
+    body: jsonEncode(
+        {'name': name, 'description': description, 'categories': categories}),
+    headers: {'Authorization': "bearer $token"},
+  );
+  if (response.statusCode == 201) {
+    return Restaurant.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to update restaurant');
+  }
+}
+
+Future<void> deleteRestaurant(String id) async {
+  final token = await getToken();
+  final response = await http.delete(Uri.parse("$baseUrl/restaurants/$id"),
+      headers: {'Authorization': "bearer $token"});
+  if (response.statusCode != 204) {
     throw Exception('Failed to create restaurant');
   }
 }

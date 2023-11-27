@@ -39,8 +39,10 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final restaurant = context.watch<RestaurantProvider>();
+    // _tabController =
+    //     TabController(length: restaurant.itemsMap.keys.length + 1, vsync: this);
     _tabController =
-        TabController(length: restaurant.itemsMap.keys.length + 1, vsync: this);
+        TabController(length: restaurant.itemsMap.keys.length, vsync: this);
 
     return DefaultLayout(
         left: SizedBox(
@@ -73,12 +75,12 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
                         labelPadding: const EdgeInsets.only(right: 45.0),
                         unselectedLabelColor: const Color(0xFFCDCDCD),
                         tabs: [
-                          const Tab(
-                            child: Text('所有品項',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                )),
-                          ),
+                          // const Tab(
+                          //   child: Text('所有品項',
+                          //       style: TextStyle(
+                          //         fontSize: 18.0,
+                          //       )),
+                          // ),
                           ...restaurant.itemsMap.keys.map(
                             (label) => Tab(
                               child: Text(label,
@@ -93,11 +95,11 @@ class _OrderItemState extends State<OrderItem> with TickerProviderStateMixin {
             SizedBox(
                 height: MediaQuery.of(context).size.height - 180.0,
                 child: TabBarView(controller: _tabController, children: [
-                  ItemCardListView(
-                    itemList: restaurant.items,
-                    crossAxisCount: 3,
-                    onTap: onTapCallback,
-                  ),
+                  // ItemCardListView(
+                  //   itemList: restaurant.items,
+                  //   crossAxisCount: 3,
+                  //   onTap: onTapCallback,
+                  // ),
                   ...restaurant.itemsMap.keys.map(
                     (label) => ItemCardListView(
                       itemList: restaurant.itemsMap[label]?.toList(),

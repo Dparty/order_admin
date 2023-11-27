@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:order_admin/api/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart';
 import 'package:order_admin/models/restaurant.dart' as model;
-import 'package:order_admin/views/ordering/checkbills/cart_card.dart';
 import 'package:order_admin/views/ordering/mobile/specification_page.dart';
 
 class CreateBillPage extends StatefulWidget {

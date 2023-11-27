@@ -12,22 +12,29 @@ class Restaurant {
 
   final List<Printer>? printers;
   final List<Table> tables;
+  final List<String> categories;
 
-  const Restaurant(
-      {required this.id,
-      required this.name,
-      required this.description,
-      required this.items,
-      this.printers,
-      required this.tables});
+  const Restaurant({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.items,
+    this.printers,
+    required this.tables,
+    required this.categories,
+  });
 
   factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
-      id: json["id"],
-      name: json["name"],
-      description: json["description"],
-      items: (json['items'] as Iterable).map((i) => Item.fromJson(i)).toList(),
-      tables:
-          (json['tables'] as Iterable).map((i) => Table.fromJson(i)).toList());
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        items:
+            (json['items'] as Iterable).map((i) => Item.fromJson(i)).toList(),
+        tables:
+            (json['tables'] as Iterable).map((i) => Table.fromJson(i)).toList(),
+        categories:
+            (json['categories'] as Iterable).map((a) => a as String).toList(),
+      );
 }
 
 class RestaurantList {
@@ -125,14 +132,15 @@ class PutItem {
   final String status;
   final List images;
 
-  PutItem(
-      {required this.printers,
-      required this.tags,
-      required this.name,
-      required this.pricing,
-      required this.status,
-      required this.images,
-      required this.attributes});
+  PutItem({
+    required this.printers,
+    required this.tags,
+    required this.name,
+    required this.pricing,
+    required this.status,
+    required this.images,
+    required this.attributes,
+  });
   Map<String, dynamic> toJson() {
     return {
       'name': name,

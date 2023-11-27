@@ -46,7 +46,7 @@ class _OptionSelectState extends State<OptionSelect> {
       content: Builder(builder: (context) {
         var height = MediaQuery.of(context).size.height;
         var width = MediaQuery.of(context).size.width;
-        return Container(
+        return SizedBox(
             height: height - 400,
             width: width - 400,
             child: Column(
@@ -96,7 +96,7 @@ class _OptionSelectState extends State<OptionSelect> {
                                                         .label] = option.label;
                                                   }
                                                   tmpPrice =
-                                                      (widget.item.pricing! /
+                                                      (widget.item.pricing /
                                                               100) +
                                                           (option.extra / 100)
                                                               .toDouble();
@@ -112,7 +112,7 @@ class _OptionSelectState extends State<OptionSelect> {
                       .toList(),
                   Row(
                     children: [
-                      Expanded(child: Text("價格：${tmpPrice}")),
+                      Expanded(child: Text("價格：$tmpPrice")),
                       Row(
                         children: [
                           ElevatedButton(
