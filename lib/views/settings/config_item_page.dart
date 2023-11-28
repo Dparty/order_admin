@@ -34,8 +34,12 @@ class _ConfigItemState extends State<ConfigItem> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final restaurant = context.watch<RestaurantProvider>();
+    // _tabController = TabController(
+    //     length: restaurant.itemsMap.keys.length + 1,
+    //     initialIndex: widget.lastIndex,
+    //     vsync: this);
     _tabController = TabController(
-        length: restaurant.itemsMap.keys.length + 1,
+        length: restaurant.itemsMap.keys.length,
         initialIndex: widget.lastIndex,
         vsync: this);
     _tabController?.addListener(() {
@@ -94,12 +98,12 @@ class _ConfigItemState extends State<ConfigItem> with TickerProviderStateMixin {
                       labelPadding: const EdgeInsets.only(right: 45.0),
                       unselectedLabelColor: const Color(0xFFCDCDCD),
                       tabs: [
-                        const Tab(
-                          child: Text('所有品項',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                              )),
-                        ),
+                        // const Tab(
+                        //   child: Text('所有品項',
+                        //       style: TextStyle(
+                        //         fontSize: 18.0,
+                        //       )),
+                        // ),
                         ...restaurant.itemsMap.keys.map(
                           (label) => Tab(
                             child: Text(label,
@@ -114,12 +118,12 @@ class _ConfigItemState extends State<ConfigItem> with TickerProviderStateMixin {
           SizedBox(
               height: MediaQuery.of(context).size.height - 180.0,
               child: TabBarView(controller: _tabController, children: [
-                ItemCardListView(
-                  itemList: restaurant.items,
-                  crossAxisCount: 3,
-                  onTap: onClickItem,
-                  type: PageType.CONFIG.name,
-                ),
+                // ItemCardListView(
+                //   itemList: restaurant.items,
+                //   crossAxisCount: 3,
+                //   onTap: onClickItem,
+                //   type: PageType.CONFIG.name,
+                // ),
                 ...restaurant.itemsMap.keys.map(
                   (label) => ItemCardListView(
                     itemList: restaurant.itemsMap[label]?.toList(),
