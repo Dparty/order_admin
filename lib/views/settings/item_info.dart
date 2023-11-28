@@ -79,7 +79,7 @@ class _EditItemPageState extends State<EditItemPage> {
     name = TextEditingController(text: widget.item?.name);
     pricing = TextEditingController(
         text: ((widget.item?.pricing ?? 0) / 100).toString());
-    tag = TextEditingController(text: widget.item?.tags?[0].toString());
+    tag = TextEditingController(text: widget.item?.tags[0].toString());
     _status = widget.item?.status ?? Status.ACTIVED.name;
     printers = context.read<RestaurantProvider>().printers;
     _item = widget.item;
