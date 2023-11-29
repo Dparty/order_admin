@@ -3,11 +3,8 @@ import 'dart:async';
 import 'package:order_admin/configs/constants.dart';
 
 import 'package:order_admin/api/bill.dart';
-
-import 'package:order_admin/models/restaurant.dart' as model;
 import 'package:order_admin/views/components/main_layout.dart';
 
-import 'package:order_admin/views/ordering/mobile/create_bill_page.dart';
 import 'package:order_admin/views/ordering/checkbills/check_bills.dart';
 
 import 'package:provider/provider.dart';
@@ -75,16 +72,6 @@ class _OrderingPageState extends State<OrderingPage> {
     _timeDilationTimer?.cancel();
     _timeDilationTimer = null;
     super.dispose();
-  }
-
-  void toCreateBillPage(model.Table table) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CreateBillPage(
-                  table: table,
-                  items: context.watch<RestaurantProvider>().items,
-                )));
   }
 
   @override
