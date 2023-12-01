@@ -6,13 +6,6 @@ import 'package:permission_handler/permission_handler.dart';
 // QR Flutter package
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:image_downloader_web/image_downloader_web.dart';
-
-import 'dart:typed_data';
-import 'dart:io';
-import 'dart:ui' as ui;
-import 'package:flutter/rendering.dart';
 
 class QRCode extends StatelessWidget {
   QRCode({

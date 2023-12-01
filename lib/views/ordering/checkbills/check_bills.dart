@@ -267,7 +267,7 @@ class _CheckBillsViewState extends State<CheckBillsView> {
                                     color: kPrimaryColor),
                                 child: InkWell(
                                   onTap: () async {
-                                    if (selectedIds!.isEmpty) {
+                                    if (selectedIds.isEmpty) {
                                       showAlertDialog(context, "請勾選需要打印的訂單");
                                       return;
                                     }

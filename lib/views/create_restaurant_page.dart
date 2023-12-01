@@ -65,7 +65,7 @@ class _CreateRestaurantPageState extends State<CreateRestaurantPage> {
     String cleanupWhitespace(String input) =>
         input.replaceAll(RegExp(r"\s+"), "");
     var temp = cleanupWhitespace(str).split('r/[\n\s+,，；;]/g');
-    return temp.where((String element) => element != '').toList() ?? [];
+    return temp.where((String element) => element != '').toList();
   }
 
   @override
